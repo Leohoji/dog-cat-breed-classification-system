@@ -5,11 +5,22 @@ from mysql_password import PASSWORD
 class DatabaseManager:
     @staticmethod
     def connect(self):
+        """
+        Connect local MySQL database.
+        """
         self.connection = mysql.connector.connect(host='localhost',
                                                   port='3306',
                                                   user='root',
                                                   password=PASSWORD)
         self.cursor = self.connection.cursor()
+    
+    @staticmethod
+    def disconnect(self):
+        """
+        Disconnect local MySQL database.
+        """
+        self.cursor.close()
+        self.connection.close()
 
     @staticmethod
     def add_member(user_data):
