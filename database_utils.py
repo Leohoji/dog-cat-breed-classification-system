@@ -71,6 +71,15 @@ class DatabaseManager:
 
         # query for collecting member info
         mem_info_record = self.get_member_info(self.cursor, user_name)
+
+        # check information
+        if not mem_info_record:
+            self.add_member(user_name, user_password)
+            response = 'success'
+        else: response = 'fail'
+
+        self.disconnect() # disconnect database
+        return response
         
     def get_member_info(self, cursor, user_name:str) -> list:
         """
@@ -88,7 +97,7 @@ class DatabaseManager:
 
         return mem_info_record
 
-    def add_member(user_data):
+    def add_member(self, user_name, user_password):
         pass
 
     def get_animal_info(breed):
