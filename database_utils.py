@@ -1,5 +1,5 @@
 import mysql.connector
-from mysql_password import HOST, PORT, USER, PASSWORD
+from mysql_info import DATABASE_NAME, HOST, PORT, USER, PASSWORD
 
 # database connection and operations
 class DatabaseManager:
@@ -10,8 +10,10 @@ class DatabaseManager:
         self.connection = mysql.connector.connect(host=HOST,
                                                   port=PORT,
                                                   user=USER,
-                                                  password=PASSWORD)
+                                                  password=PASSWORD,
+                                                  database=DATABASE_NAME)
         self.cursor = self.connection.cursor()
+        self.cursor.execute("SET SQL_SAFE_UPDATES = 0;")
     
     def disconnect(self):
         """
@@ -20,7 +22,7 @@ class DatabaseManager:
         self.cursor.close()
         self.connection.close()
 
-    def login_verify(self, user_data:dict):
+    def login_verify(self, user_data:dict) -> str:
         """
         Verify user data from login interface.
 
@@ -29,7 +31,30 @@ class DatabaseManager:
         Returns:
             String of 'user not exists', 'wrong info', or 'yes'.
         """
-        pass
+        self.connect() # login database
+        user_name = user_data['user_name']
+        user_password = user_data['user_password']
+        print(f"input: {(user_name, user_password)}")
+        
+        # query for collecting member info
+        query = f"SELECT * FROM `member_info` WHERE user_name = %(user_name)s;"
+        self.cursor.execute(query, {'user_name': user_name})
+        mem_info_record = self.cursor.fetchone()
+
+        # check information
+        if not mem_info_record:
+            result = 'user not exists'
+        else:
+            _, UserName, UserPassword, _ = mem_info_record
+            result = (UserName, UserPassword)
+            print(f"output: {result}")
+            if user_password != UserPassword:
+                result = 'wrong password' # password is incorrect
+            else:
+                result = 'yes'
+
+        self.disconnect() # disconnect database
+        return result
 
     def add_member(user_data):
         pass
@@ -41,6 +66,11 @@ class DatabaseManager:
         pass
 
 if __name__ == '__main__':
+    # test user data, first is all correct, second one's password is incorrect
+    user_data_1 = {'user_name': '12345qwer@gmail.com', 'user_password': 'sdlkjfg455'}
+    user_data_2 = {'user_name': '56789qwer@gmail.com', 'user_password': 'xxxxxxxxx'}
+    user_data_3 = {'user_name': 'xxxxxxxxxx', 'user_password': 'xxxxxxxxx'}
     mysql_manager = DatabaseManager()
-    mysql_manager.connect()
-    print('ok')
+    for data in (user_data_1, user_data_2, user_data_3):
+        result = mysql_manager.login_verify(data)
+        print(result)
