@@ -39,9 +39,7 @@ class DatabaseManager:
         print(f"input: {(user_name, user_password)}")
         
         # query for collecting member info
-        query = f"SELECT * FROM `member_info` WHERE user_name = %(user_name)s;"
-        self.cursor.execute(query, {'user_name': user_name})
-        mem_info_record = self.cursor.fetchone()
+        mem_info_record = self.get_member_info(self.cursor, user_name)
 
         # check information
         if not mem_info_record:
@@ -70,8 +68,26 @@ class DatabaseManager:
         self.connect() # login database
         user_name, user_password = self.get_user_info(user_data) # get user data
         print(f"input: {(user_name, user_password)}")
+
+        # query for collecting member info
+        mem_info_record = self.get_member_info(self.cursor, user_name)
         
-    
+    def get_member_info(self, cursor, user_name:str) -> list:
+        """
+        Get member information from MySQL database.
+
+        Args:
+            cursor: Cursor object of mysql.connector
+            user_name: Member's user name
+        Returns:
+            List of member information.
+        """
+        query = f"SELECT * FROM `member_info` WHERE user_name = %(user_name)s;"
+        cursor.execute(query, {'user_name': user_name})
+        mem_info_record = cursor.fetchone()
+
+        return mem_info_record
+
     def add_member(user_data):
         pass
 
