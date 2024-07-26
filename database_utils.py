@@ -27,6 +27,10 @@ class DatabaseManager:
         self.connection.close()
 
     @staticmethod
+    def login_verify(self, user_data:dict):
+        pass
+
+    @staticmethod
     def add_member(user_data):
         pass
 
@@ -37,3 +41,7 @@ class DatabaseManager:
     @staticmethod
     def update_historical_data(user, animal, feedback=None):
         pass
+
+if __name__ == '__main__':
+    DatabaseManager.connect()
+    print('ok')
