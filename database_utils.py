@@ -3,6 +3,9 @@ from mysql_info import DATABASE_NAME, HOST, PORT, USER, PASSWORD
 
 # database connection and operations
 class DatabaseManager:
+    def __init__(self):
+        self.get_user_info = lambda user_data: (user_data['user_name'], user_data['user_password'])
+
     def connect(self):
         """
         Connect local MySQL database.
@@ -29,7 +32,7 @@ class DatabaseManager:
         Args:
             user_data: Dictionary of user's information.
         Returns:
-            String of 'user not exists', 'wrong info', or 'yes'.
+            String of 'user not exists', 'wrong password', or 'yes'.
         """
         self.connect() # login database
         user_name = user_data['user_name']
@@ -56,6 +59,21 @@ class DatabaseManager:
         self.disconnect() # disconnect database
         return result
 
+    def sign_up_verify(self, user_data:dict) -> str:
+        """
+        Verify user data from sign_up interface.
+
+        Args:
+            user_data: Dictionary of user's information.
+        Returns:
+            String of 'success', or 'fail'.
+        """
+        self.connect() # login database
+        user_name = user_data['user_name']
+        user_password = user_data['user_password']
+        print(f"input: {(user_name, user_password)}")
+        
+    
     def add_member(user_data):
         pass
 
