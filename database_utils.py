@@ -35,8 +35,7 @@ class DatabaseManager:
             String of 'user not exists', 'wrong password', or 'yes'.
         """
         self.connect() # login database
-        user_name = user_data['user_name']
-        user_password = user_data['user_password']
+        user_name, user_password = self.get_user_info(user_data) # get user data
         print(f"input: {(user_name, user_password)}")
         
         # query for collecting member info
@@ -69,8 +68,7 @@ class DatabaseManager:
             String of 'success', or 'fail'.
         """
         self.connect() # login database
-        user_name = user_data['user_name']
-        user_password = user_data['user_password']
+        user_name, user_password = self.get_user_info(user_data) # get user data
         print(f"input: {(user_name, user_password)}")
         
     
