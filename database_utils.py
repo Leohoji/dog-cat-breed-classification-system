@@ -1,21 +1,17 @@
 import mysql.connector
-from mysql_password import PASSWORD
+from mysql_password import HOST, PORT, USER, PASSWORD
 
 # database connection and operations
 class DatabaseManager:
     @staticmethod
-    def connect(self, 
-                host='localhost', 
-                port='3306', 
-                user='root', 
-                password=PASSWORD):
+    def connect(self):
         """
         Connect local MySQL database.
         """
-        self.connection = mysql.connector.connect(host=host,
-                                                  port=port,
-                                                  user=user,
-                                                  password=password)
+        self.connection = mysql.connector.connect(host=HOST,
+                                                  port=PORT,
+                                                  user=USER,
+                                                  password=PASSWORD)
         self.cursor = self.connection.cursor()
     
     @staticmethod
