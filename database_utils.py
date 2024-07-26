@@ -114,10 +114,29 @@ class DatabaseManager:
         query = f"INSERT INTO `member_info` (user_name, user_password) VALUES (%s, %s);"
         cursor.execute(query, (user_name, user_password))
 
-    def get_animal_info(breed):
+    def get_animal_info(self, breed):
         pass
+    
+    def get_historical_data(self, user_name:str) -> list:
+        """
+        Collect user's historical data from check data interface.
 
-    def update_historical_data(user, animal, feedback=None):
+        Args:
+            user_name: Member's user name
+        Returns:
+            List of historical data.
+        """
+        cursor = self.connect() # login database
+        query = f"SELECT * FROM `user_history` WHERE user_name = %(user_name)s;"
+        cursor.execute(query, {'user_name': user_name})
+        historical_data = cursor.fetchall()
+        for data in historical_data:
+            print(data)
+        
+        self.disconnect() # disconnect database
+        return True
+
+    def update_historical_data(self, user, animal, feedback=None):
         pass
 
 if __name__ == '__main__':
@@ -129,6 +148,10 @@ if __name__ == '__main__':
         fake_password = ''.join(random.choices(string.ascii_letters, k=4)) + ''.join(random.choices('0123456789', k=4))
         
         return (fake_name, fake_password)
+    
+    def convert_image_to_blob(image_path='cat.jpg'):
+        with open(image_path, 'rb') as file:
+            return file.read()
     
     # test user data, first is all correct, second one's password is incorrect
     user_data_1 = {'user_name': '12345qwer@gmail.com', 'user_password': 'sdlkjfg455'}
@@ -152,3 +175,6 @@ if __name__ == '__main__':
         for data in (fake_data_1, fake_data_2):
             response = mysql_manager.sign_up_verify(data)
             print(response)
+    
+    # Test for getting historical data
+    mysql_manager.get_historical_data(user_name=user_data_1['user_name'])
