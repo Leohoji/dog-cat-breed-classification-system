@@ -23,6 +23,7 @@ class DatabaseManager:
         Disconnect local MySQL database.
         """
         self.cursor.close()
+        self.connection.commit()
         self.connection.close()
 
     def login_verify(self, user_data:dict) -> str:
