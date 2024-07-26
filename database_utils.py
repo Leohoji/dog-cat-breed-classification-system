@@ -114,7 +114,7 @@ class DatabaseManager:
         query = f"INSERT INTO `member_info` (user_name, user_password) VALUES (%s, %s);"
         cursor.execute(query, (user_name, user_password))
 
-    def get_animal_info(self, breed):
+    def get_animal_info(self, animal_breed):
         pass
     
     def get_historical_data(self, user_name:str) -> list:
@@ -136,8 +136,13 @@ class DatabaseManager:
         self.disconnect() # disconnect database
         return True
 
-    def update_historical_data(self, user, animal, feedback=None):
-        pass
+    def update_historical_data(self, user_name, image, feedback=''):
+        cursor = self.connect() # login database
+        results = feedback if feedback else 'yes'
+        query = f"INSERT INTO `user_history` (user_name, image, results) VALUES (%s, %s, %s);"
+        cursor.execute(query, (user_name, image, results))
+        self.disconnect() # disconnect database
+        return True
 
 if __name__ == '__main__':
     import string
