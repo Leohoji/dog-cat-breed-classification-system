@@ -115,7 +115,14 @@ class DatabaseManager:
         cursor.execute(query, (user_name, user_password))
 
     def get_animal_info(self, animal_breed):
-        pass
+        cursor = self.connect() # login database
+        query = f"SELECT * FROM `animal` WHERE user_name = %(animal_breed)s;"
+        cursor.execute(query, {'animal_breed': animal_breed})
+        animal_info = cursor.fetchone()
+        print(animal_info)
+        
+        self.disconnect() # disconnect database
+        return True
     
     def get_historical_data(self, user_name:str) -> list:
         """
