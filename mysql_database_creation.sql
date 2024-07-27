@@ -1,5 +1,5 @@
-SHOW DATABASES;
-CREATE DATABASE `cat_dog_system`;
+-- SHOW DATABASES;
+-- CREATE DATABASE `cat_dog_system`;
 USE `cat_dog_system`;
 SET SQL_SAFE_UPDATES = 0;
 
