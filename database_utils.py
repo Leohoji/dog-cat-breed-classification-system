@@ -157,7 +157,17 @@ class DatabaseManager:
         self.disconnect() # disconnect database
         return True
 
-    def update_historical_data(self, user_name, image, feedback=''):
+    def update_historical_data(self, user_name:str, image:bytes, feedback:str='') -> bool:
+        """
+        Update historical data for user's classification result into MySQL database.
+
+        Args:
+            user_name: Member's user name
+            image: Image for classification
+            feedback: If classification result by classifier is wrong, user will add feedback.
+        Returns:
+            True for success or False for failure.
+        """
         cursor = self.connect() # login database
         results = feedback if feedback else 'yes'
         query = f"INSERT INTO `user_history` (user_name, image, results) VALUES (%s, %s, %s);"
@@ -208,3 +218,7 @@ if __name__ == '__main__':
     # Test for getting animal data
     animal_data = mysql_manager.get_animal_info(animal_breed='Labrador')
     print(animal_data)
+
+    # Test for updating historical data
+    update_result = mysql_manager.update_historical_data(user_name=user_data_1['user_name'], image=None)
+    print(update_result)
