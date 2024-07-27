@@ -1,0 +1,5 @@
+HOST = 'localhost'
+PORT = '3306'
+USER = 'root'
+PASSWORD = '8521200711'
+DATABASE_NAME = 'cat_dog_system'

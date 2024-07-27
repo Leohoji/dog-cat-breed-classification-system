@@ -114,15 +114,29 @@ class DatabaseManager:
         query = f"INSERT INTO `member_info` (user_name, user_password) VALUES (%s, %s);"
         cursor.execute(query, (user_name, user_password))
 
-    def get_animal_info(self, animal_breed):
+    def get_animal_info(self, animal_breed:str) -> dict:
+        """
+        Get animal breed information from MySQL database.
+
+        Args:
+            animal_breed
+        Returns:
+            Animal breed information in dictionary data type.
+        """
         cursor = self.connect() # login database
-        query = f"SELECT * FROM `animal` WHERE user_name = %(animal_breed)s;"
+        query = f"SELECT * FROM `animal` WHERE animal_breed = %(animal_breed)s;"
         cursor.execute(query, {'animal_breed': animal_breed})
         animal_info = cursor.fetchone()
         print(animal_info)
         
+        # create animal data
+        keys = ('animal_id', 'animal_breed', 'image_1', 'image_2', 'image_3', 'animal_description')
+        animal_data = {}
+        for key, value in zip(keys, animal_info):
+            animal_data[key] = value
+
         self.disconnect() # disconnect database
-        return True
+        return animal_data
     
     def get_historical_data(self, user_name:str) -> list:
         """
@@ -138,7 +152,7 @@ class DatabaseManager:
         cursor.execute(query, {'user_name': user_name})
         historical_data = cursor.fetchall()
         for data in historical_data:
-            print(data)
+            print(f"Historical data: {data}")
         
         self.disconnect() # disconnect database
         return True
@@ -190,3 +204,7 @@ if __name__ == '__main__':
     
     # Test for getting historical data
     mysql_manager.get_historical_data(user_name=user_data_1['user_name'])
+
+    # Test for getting animal data
+    animal_data = mysql_manager.get_animal_info(animal_breed='Labrador')
+    print(animal_data)
