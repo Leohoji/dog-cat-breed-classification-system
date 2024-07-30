@@ -74,11 +74,10 @@ class DatabaseManager:
         Returns:
             Animal breed information in dictionary data type.
         """
-        cursor = self.connect() # login database
+        self.connect() # login database
         query = f"SELECT * FROM `animal` WHERE animal_breed = %(animal_breed)s;"
-        cursor.execute(query, {'animal_breed': animal_breed})
-        animal_info = cursor.fetchone()
-        print(animal_info)
+        self.cursor.execute(query, {'animal_breed': animal_breed})
+        animal_info = self.cursor.fetchone()
         
         # create animal data
         keys = ('animal_id', 'animal_breed', 'image_1', 'image_2', 'image_3', 'animal_description')
@@ -98,10 +97,10 @@ class DatabaseManager:
         Returns:
             List of historical data.
         """
-        cursor = self.connect() # login database
+        self.connect() # login database
         query = f"SELECT * FROM `user_history` WHERE user_name = %(user_name)s;"
-        cursor.execute(query, {'user_name': user_name})
-        historical_data = cursor.fetchall()
+        self.cursor.execute(query, {'user_name': user_name})
+        historical_data = self.cursor.fetchall()
         for data in historical_data:
             print(f"Historical data: {data}")
         
@@ -119,10 +118,10 @@ class DatabaseManager:
         Returns:
             True for success or False for failure.
         """
-        cursor = self.connect() # login database
+        self.connect() # login database
         results = feedback if feedback else 'yes'
         query = f"INSERT INTO `user_history` (user_name, image, results) VALUES (%s, %s, %s);"
-        cursor.execute(query, (user_name, image, results))
+        self.cursor.execute(query, (user_name, image, results))
         self.disconnect() # disconnect database
         return True
 
@@ -136,10 +135,6 @@ if __name__ == '__main__':
         
         return {'user_name': fake_name, 'user_password': fake_password}
     
-    def convert_image_to_blob(image_path='cat.jpg'):
-        with open(image_path, 'rb') as file:
-            return file.read()
-    
     # test user data, first is all correct, second one's password is incorrect
     user_data_1 = {'user_name': '12345qwer@gmail.com', 'user_password': 'sdlkjfg455'}
     user_data_2 = {'user_name': '56789qwer@gmail.com', 'user_password': 'xxxxxxxxx'}
@@ -150,13 +145,14 @@ if __name__ == '__main__':
         result = mysql_manager.get_member_info(data)
         print(result)
     
-    # # Test for getting historical data
-    # mysql_manager.get_historical_data(user_name=user_data_1['user_name'])
+    # Test for getting historical data
+    res = mysql_manager.get_historical_data(user_name=user_data_1['user_name'])
+    print(res)
 
-    # # Test for getting animal data
-    # animal_data = mysql_manager.get_animal_info(animal_breed='Labrador')
-    # print(animal_data)
+    # Test for getting animal data
+    animal_data = mysql_manager.get_animal_info(animal_breed='Labrador')
+    print(animal_data)
 
-    # # Test for updating historical data
-    # update_result = mysql_manager.update_historical_data(user_name=user_data_1['user_name'], image=None)
-    # print(update_result)
+    # Test for updating historical data
+    update_result = mysql_manager.update_historical_data(user_name=user_data_1['user_name'], image=None)
+    print(update_result)
