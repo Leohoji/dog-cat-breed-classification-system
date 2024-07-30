@@ -22,12 +22,7 @@ class DatabaseManager:
             self.cursor = self.connection.cursor()
             self.cursor.execute("SET SQL_SAFE_UPDATES = 0;")
 
-            return True
-        
-        except Exception as E:
-            traceback.print_exc()
-
-            return E.__class__.__name__
+        except: traceback.print_exc()
     
     def disconnect(self):
         """
@@ -71,16 +66,16 @@ class DatabaseManager:
         Returns:
             List of member information.
         """
-        cursor = self.connect() # login database
+        self.connect() # login database
         user_name = user_data['user_name'] # get user data
         query = f"SELECT * FROM `member_info` WHERE user_name = %(user_name)s;"
-        cursor.execute(query, {'user_name': user_name})
-        mem_info = cursor.fetchone()
+        self.cursor.execute(query, {'user_name': user_name})
+        mem_info = self.cursor.fetchone()
         self.disconnect() # disconnect database
 
         return mem_info
 
-    def add_member(self, cursor, user_name:str, user_password:str) -> str:
+    def add_member(self, user_name:str, user_password:str) -> str:
         """
         Add member information to MySQL database.
 
@@ -90,7 +85,7 @@ class DatabaseManager:
             user_password: User's password for table insertion.
         """
         query = f"INSERT INTO `member_info` (user_name, user_password) VALUES (%s, %s);"
-        cursor.execute(query, (user_name, user_password))
+        self.cursor.execute(query, (user_name, user_password))
 
     def get_animal_info(self, animal_breed:str) -> dict:
         """
