@@ -49,3 +49,12 @@ class Verification:
         else: response = 'fail' 
 
         return response
+    
+    def collect_historical_data(self):
+        pass
+
+    def save_to_historical_data(self):
+        pass
+
+    def send_results(self):
+        pass
