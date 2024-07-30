@@ -101,11 +101,9 @@ class DatabaseManager:
         query = f"SELECT * FROM `user_history` WHERE user_name = %(user_name)s;"
         self.cursor.execute(query, {'user_name': user_name})
         historical_data = self.cursor.fetchall()
-        for data in historical_data:
-            print(f"Historical data: {data}")
-        
         self.disconnect() # disconnect database
-        return True
+
+        return historical_data
 
     def update_historical_data(self, user_name:str, image:bytes, feedback:str='') -> bool:
         """
@@ -154,5 +152,5 @@ if __name__ == '__main__':
     print(animal_data)
 
     # Test for updating historical data
-    update_result = mysql_manager.update_historical_data(user_name=user_data_1['user_name'], image=None)
-    print(update_result)
+    # update_result = mysql_manager.update_historical_data(user_name=user_data_1['user_name'], image=None)
+    # print(update_result)
