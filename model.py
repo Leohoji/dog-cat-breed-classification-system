@@ -30,37 +30,6 @@ class DatabaseManager:
         self.connection.commit()
         self.connection.close()
 
-    def login_verify(self, user_data:dict) -> str:
-        """
-        Verify user data from login interface.
-
-        Args:
-            user_data: Dictionary of user's information.
-        Returns:
-            String of 'user not exists', 'wrong password', or 'yes'.
-        """
-        cursor = self.connect() # login database
-        user_name, user_password = self.get_user_info(user_data) # get user data
-        print(f"input: {(user_name, user_password)}")
-        
-        # query for collecting member info
-        mem_info_record = self.get_member_info(cursor, user_name)
-
-        # check information
-        if not mem_info_record:
-            result = 'user not exists'
-        else:
-            _, UserName, UserPassword, _ = mem_info_record
-            result = (UserName, UserPassword)
-            print(f"output: {result}")
-            if user_password != UserPassword:
-                result = 'wrong password' # password is incorrect
-            else:
-                result = 'yes'
-
-        self.disconnect() # disconnect database
-        return result
-
     def sign_up_verify(self, user_data:dict) -> str:
         """
         Verify user data from sign_up interface.
