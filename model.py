@@ -6,7 +6,7 @@ class DatabaseManager:
     def __init__(self):
         self.get_user_info = lambda user_data: (user_data['user_name'], user_data['user_password'])
 
-    def connect(self):
+    def connect(self) -> bool:
         """
         Connect local MySQL database.
 
@@ -20,7 +20,7 @@ class DatabaseManager:
         self.cursor = self.connection.cursor()
         self.cursor.execute("SET SQL_SAFE_UPDATES = 0;")
 
-        return self.cursor
+        return True
     
     def disconnect(self):
         """
