@@ -1,4 +1,4 @@
-from database_utils import DatabaseManager
+from model import DatabaseManager
 
 class Verification:
     def login_verify(self, user_data:dict) -> str:
