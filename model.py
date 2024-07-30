@@ -86,21 +86,23 @@ class DatabaseManager:
         self.disconnect() # disconnect database
         return response
         
-    def get_member_info(self, cursor, user_name:str) -> list:
+    def get_member_info(self, user_data:dict) -> list:
         """
         Get member information from MySQL database.
 
         Args:
-            cursor: Cursor object of mysql.connector
-            user_name: Member's user name
+            user_data: Dictionary of user's information.
         Returns:
             List of member information.
         """
+        cursor = self.connect() # login database
+        user_name = user_data['user_name'] # get user data
         query = f"SELECT * FROM `member_info` WHERE user_name = %(user_name)s;"
         cursor.execute(query, {'user_name': user_name})
-        mem_info_record = cursor.fetchone()
+        mem_info = cursor.fetchone()
+        self.disconnect() # disconnect database
 
-        return mem_info_record
+        return mem_info
 
     def add_member(self, cursor, user_name:str, user_password:str) -> str:
         """
