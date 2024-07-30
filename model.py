@@ -31,31 +31,6 @@ class DatabaseManager:
         self.cursor.close()
         self.connection.commit()
         self.connection.close()
-
-    def sign_up_verify(self, user_data:dict) -> str:
-        """
-        Verify user data from sign_up interface.
-
-        Args:
-            user_data: Dictionary of user's information.
-        Returns:
-            String of 'success', or 'fail'.
-        """
-        cursor = self.connect() # login database
-        user_name, user_password = self.get_user_info(user_data) # get user data
-        print(f"input: {(user_name, user_password)}")
-
-        # query for collecting member info
-        mem_info_record = self.get_member_info(cursor, user_name)
-
-        # check information
-        if not mem_info_record:
-            self.add_member(cursor, user_name, user_password)
-            response = 'success'
-        else: response = 'fail'
-
-        self.disconnect() # disconnect database
-        return response
         
     def get_member_info(self, user_data:dict) -> list:
         """
@@ -84,8 +59,11 @@ class DatabaseManager:
             user_name: User's name for table insertion.
             user_password: User's password for table insertion.
         """
+        self.connect() # login database
         query = f"INSERT INTO `member_info` (user_name, user_password) VALUES (%s, %s);"
         self.cursor.execute(query, (user_name, user_password))
+        self.disconnect() # disconnect database
+        print(f"Successfully add {user_name} and {user_password} into `member_info` table.")
 
     def get_animal_info(self, animal_breed:str) -> dict:
         """
@@ -156,7 +134,7 @@ if __name__ == '__main__':
             fake_name = ''.join(random.choices(string.ascii_letters, k=8)) + '@gmail.com'
         fake_password = ''.join(random.choices(string.ascii_letters, k=4)) + ''.join(random.choices('0123456789', k=4))
         
-        return (fake_name, fake_password)
+        return {'user_name': fake_name, 'user_password': fake_password}
     
     def convert_image_to_blob(image_path='cat.jpg'):
         with open(image_path, 'rb') as file:
@@ -165,33 +143,20 @@ if __name__ == '__main__':
     # test user data, first is all correct, second one's password is incorrect
     user_data_1 = {'user_name': '12345qwer@gmail.com', 'user_password': 'sdlkjfg455'}
     user_data_2 = {'user_name': '56789qwer@gmail.com', 'user_password': 'xxxxxxxxx'}
-    user_data_3 = {'user_name': 'xxxxxxxxxx', 'user_password': 'xxxxxxxxx'}
+    user_data_3 = generate_fake_data()
+    print(f"Fake member info: {(user_data_3['user_name'], user_data_3['user_password'])}")
     mysql_manager = DatabaseManager()
     for data in (user_data_1, user_data_2, user_data_3):
-        result = mysql_manager.login_verify(data)
+        result = mysql_manager.get_member_info(data)
         print(result)
     
-    # test sign up verification, first is random, second is 
-    test_sign_up = False
-    if test_sign_up:
-        fake_user_name_1, fake_user_password_1 = generate_fake_data()
-        print(f"Fake member 1: {(fake_user_name_1, fake_user_password_1)}")
-        fake_user_name_2, fake_user_password_2 = generate_fake_data(fake_name=user_data_1['user_name'])
-        print(f"Fake member 2: {(fake_user_name_2, fake_user_password_2)}")
-        fake_data_1 = {'user_name': fake_user_name_1, 'user_password': fake_user_password_1}
-        fake_data_2 = {'user_name': fake_user_name_2, 'user_password': fake_user_password_2}
+    # # Test for getting historical data
+    # mysql_manager.get_historical_data(user_name=user_data_1['user_name'])
 
-        for data in (fake_data_1, fake_data_2):
-            response = mysql_manager.sign_up_verify(data)
-            print(response)
-    
-    # Test for getting historical data
-    mysql_manager.get_historical_data(user_name=user_data_1['user_name'])
+    # # Test for getting animal data
+    # animal_data = mysql_manager.get_animal_info(animal_breed='Labrador')
+    # print(animal_data)
 
-    # Test for getting animal data
-    animal_data = mysql_manager.get_animal_info(animal_breed='Labrador')
-    print(animal_data)
-
-    # Test for updating historical data
-    update_result = mysql_manager.update_historical_data(user_name=user_data_1['user_name'], image=None)
-    print(update_result)
+    # # Test for updating historical data
+    # update_result = mysql_manager.update_historical_data(user_name=user_data_1['user_name'], image=None)
+    # print(update_result)

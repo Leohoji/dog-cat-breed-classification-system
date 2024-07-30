@@ -41,4 +41,11 @@ class Verification:
         # get member information
         member_info = mysql_connector.get_member_info(user_data)
 
-        pass
+        # check information
+        if not member_info:
+            user_name, user_password  = mysql_connector.get_user_info(user_data)
+            mysql_connector.add_member(user_name, user_password)
+            response = 'success'
+        else: response = 'fail' 
+
+        return response
