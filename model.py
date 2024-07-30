@@ -1,3 +1,4 @@
+import traceback
 import mysql.connector
 from mysql_info import DATABASE_NAME, HOST, PORT, USER, PASSWORD
 
@@ -12,15 +13,21 @@ class DatabaseManager:
 
         Returns: Cursor object of mysql.connector.
         """
-        self.connection = mysql.connector.connect(host=HOST,
-                                                  port=PORT,
-                                                  user=USER,
-                                                  password=PASSWORD,
-                                                  database=DATABASE_NAME)
-        self.cursor = self.connection.cursor()
-        self.cursor.execute("SET SQL_SAFE_UPDATES = 0;")
+        try:
+            self.connection = mysql.connector.connect(host=HOST,
+                                                    port=PORT,
+                                                    user=USER,
+                                                    password=PASSWORD,
+                                                    database=DATABASE_NAME)
+            self.cursor = self.connection.cursor()
+            self.cursor.execute("SET SQL_SAFE_UPDATES = 0;")
 
-        return True
+            return True
+        
+        except Exception as E:
+            traceback.print_exc()
+
+            return E.__class__.__name__
     
     def disconnect(self):
         """
