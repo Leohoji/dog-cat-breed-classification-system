@@ -1,13 +1,8 @@
-import cv2
 import math
-import numpy as np
 import pandas as pd
-import seaborn as sns
-from pathlib import Path
 from functools import partial
 import tensorflow as tf
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
-from tensorflow.keras.applications.efficientnet import EfficientNetB0
 from tensorflow.keras.applications.efficientnet import preprocess_input as EFNetPreProcessInput
 
 class DataTransformer:
@@ -97,3 +92,144 @@ class DataAugmentation:
                                                                      subset='validation', 
                                                                      shuffle=False)
         return (self.train_gen_flow, self.valid_gen_flow)
+    
+class AnimalClassifier:
+    def __init__(self, base_model, input_shape, output_shape, epochs=5, Init_lr=1e-3,
+                 fine_tune_ratio=None, fine_tune_epochs=3, lr_decay_type:str=''):
+        """
+        Args:
+          base_model: Transfer learning model passed into building structure.
+          input_shape: Input shape for the transfer model.
+          output_shape: Output shape for the transfer model.
+          epochs: Epochs for model training.
+          fine_tune_ratio: Ratio for trainable layers of base model.
+          fine_tune_epochs: Epochs for model fine-tuning.
+          lr_decay_type: Type of learning rate decay
+        """
+        self.base_model       = base_model
+        self.input_shape      = input_shape
+        self.output_shape     = output_shape
+        self.epochs           = epochs
+        self.fine_tune_ratio  = fine_tune_ratio
+        self.fine_tune_epochs = fine_tune_epochs
+        self.Epoch            = self.epochs + self.fine_tune_epochs
+
+        # ----------------------------
+        # Model optimization
+        # 1. learning rate scheduler
+        # 2. learning rate decay
+        # ----------------------------
+        self.Init_lr           = Init_lr
+        self.Adam              = tf.keras.optimizers.Adam
+        self.compile_model     = lambda model, lr=self.Init_lr: model.compile(loss='categorical_crossentropy', 
+                                                                              optimizer=self.Adam(learning_rate=lr), 
+                                                                              metrics=['accuracy'])
+        self.early_stopping    = tf.keras.callbacks.EarlyStopping(monitor='val_loss', mode='min', patience=3, 
+                                                                  verbose=2, restore_best_weights=True)
+        if lr_decay_type:
+            self.lr_decay_type = lr_decay_type
+            self.Min_lr        = self.Init_lr * 0.001
+            self.lr_func       = self.get_lr_scheduler(lr_decay_type=self.lr_decay_type, 
+                                                       lr=self.Init_lr, 
+                                                       min_lr=self.Min_lr, 
+                                                       total_iters=self.Epoch)
+            self.lr_scheduler  = tf.keras.callbacks.LearningRateScheduler(self.lr_func, verbose=1)
+            self.callbacks     = [self.lr_scheduler]
+        else:
+            self.reduce_lr     = tf.keras.callbacks.ReduceLROnPlateau(monitor='val_loss', factor=0.8, patience=1, 
+                                                                      verbose=2, min_lr=self.Init_lr * 0.0001, mode='min')
+            self.callbacks     = [self.reduce_lr]
+
+    def build_model(self):
+        """Build a transfer learning model."""
+        self.base_model.trainable = False
+    
+        inputs = tf.keras.layers.Input(shape=self.input_shape, name="input_layer")
+        x = self.base_model(inputs, training=False)
+        x = tf.keras.layers.GlobalAveragePooling2D(name="global_average_pooling_layer")(x)
+        outputs = tf.keras.layers.Dense(self.output_shape, activation="softmax", name="output_layer")(x)
+        model = tf.keras.Model(inputs, outputs, name="animal_classifier")
+    
+        print(model.summary())
+    
+        return model
+
+    def get_lr_scheduler(self, lr_decay_type:str, lr:float, min_lr:float, total_iters:int,
+                         warmup_iters_ratio:float=0.1, warmup_lr_ratio:float=0.1, no_aug_iter_ratio:float=0.3, step_num:int=10):
+        """
+        Functions for learning rate decay, cosine or step decay.
+    
+        Args:
+            lr_decay_type: Type of learning rate decay, cos or step
+            lr: Learning rate
+            min_lr: Minimum learning rate
+            total_iters: Total iterations of training
+            warmup_iters_ratio: Ratio for warm up iteration
+            warmup_lr_ratio: Ratio for warm up learning rate
+            no_aug_iter_ratio: Ratio for no augmentation iterations, this phase will maintain at minimum learning rate.
+            step_num: Number of steps for step decay
+        Returns:
+            Function for learning rate decay.
+        """
+        def yolox_warm_cos_lr(lr, min_lr, total_iters, warmup_total_iters, warmup_lr_start, no_aug_iter, iters):
+            if iters <= warmup_total_iters: # warm up iters
+                lr = (lr - warmup_lr_start) * pow(iters / float(warmup_total_iters), 2) + warmup_lr_start
+            elif iters >= total_iters - no_aug_iter: # no augmentation iters, it will maintain at minimum iter
+                lr = min_lr
+            else: # learning rate decay
+                lr = min_lr + 0.5 * \
+                    (lr - min_lr) * \
+                    (1.0 + math.cos(math.pi * (iters - warmup_total_iters) / (total_iters - warmup_total_iters - no_aug_iter)))
+            return lr
+
+        def step_lr(lr, decay_rate, step_size, iters):
+            if step_size < 1:
+                raise ValueError("step_size must above 1.")
+            n       = iters // step_size # Number of steps
+            out_lr  = lr * decay_rate ** n # learning rate decay
+            return out_lr
+        
+        if lr_decay_type == "cos":
+            warmup_total_iters  = min(max(warmup_iters_ratio * total_iters, 1), 3) # range [1, 3]
+            warmup_lr_start     = max(warmup_lr_ratio * lr, 1e-3) # at least 1e-3
+            no_aug_iter         = min(max(no_aug_iter_ratio * total_iters, 1), 3) # range [1, 5]
+            func = partial(yolox_warm_cos_lr ,lr, min_lr, total_iters, warmup_total_iters, warmup_lr_start, no_aug_iter)
+        else:
+            decay_rate          = (min_lr / lr) ** (1 / (step_num - 1)) # decay rate
+            step_size           = total_iters / step_num
+            func                = partial(step_lr, lr, decay_rate, step_size)
+
+        return func
+
+    def train(self, train_data, valid_data):
+        self.model = self.build_model()
+        self.compile_model(self.model, lr=self.Init_lr)
+        self.original_history = self.model.fit(train_data, 
+                                               epochs=self.epochs,
+                                               validation_data=valid_data,
+                                               callbacks=[self.callbacks],
+                                               initial_epoch=0)
+        if self.fine_tune_ratio:
+            self.fine_tune_model_layers()
+            self.compile_model(self.model, lr=self.Init_lr * 0.1)
+            self.new_history = self.model.fit(train_data, 
+                                              epochs=self.epochs+self.fine_tune_epochs,
+                                              validation_data=valid_data,
+                                              callbacks=[self.callbacks],
+                                              initial_epoch=self.epochs)
+        else: 
+            pass
+
+    def fine_tune_model_layers(self):
+        """Set specific layers being trainable for further model training."""
+        fine_tune_base_model = self.model.layers[1]
+        layer_number = -int(len(fine_tune_base_model.layers) * self.fine_tune_ratio)
+    
+        # Unfreeze all of the layers in the base model
+        fine_tune_base_model.trainable = True
+    
+        # Refreeze every layer except for the last 5
+        for layer in fine_tune_base_model.layers[:layer_number]:
+            layer.trainable = False
+    
+        print(f"Change last {-layer_number} layers of {fine_tune_base_model.name} successfully, please recompile model again.")
