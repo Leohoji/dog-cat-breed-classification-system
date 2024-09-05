@@ -118,7 +118,7 @@ def train_classifier(species:str='', save_model=False) -> AnimalClassifier:
 
     # prepare label classes
     class_indices = train_data_gen.class_indices
-    real_classes = get_classes(class_indices, save_path='%s_classes.npy'%(species))
+    real_classes = get_classes(class_indices, save_path=Path.cwd().joinpath('%s_classes.npy'%(species)))
     
     # Model training
     base_model = EfficientNetB0(include_top=False)
@@ -133,10 +133,10 @@ def train_classifier(species:str='', save_model=False) -> AnimalClassifier:
     breed_classifier.train(train_data_gen, valid_data_gen)
 
     # Model saving
-    if save_model: breed_classifier.model.save('%s_classifier.h5'%(species))
+    if save_model: breed_classifier.model.save(Path.cwd().joinpath('%s_classifier.h5'%(species)))
 
     # Model evaluation
-    species_path = './test_images/%s' % (species)
+    species_path = Path(TEST_PATH).joinpath(species)
     acc_score = evaluate(class_indices, real_classes, species_path, breed_classifier.model)
     print(f"Accuracy score on testing dataset: {acc_score}")
 
