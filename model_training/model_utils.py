@@ -5,8 +5,6 @@ import pandas as pd
 import seaborn as sns
 from pathlib import Path
 from functools import partial
-from datetime import datetime as dt
-from dateutil.relativedelta import relativedelta
 import tensorflow as tf
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 from tensorflow.keras.applications.efficientnet import EfficientNetB0
@@ -44,3 +42,58 @@ class DataTransformer:
         df = df.drop('index', axis=1)
         
         return df
+    
+class DataAugmentation:
+    def __init__(self, 
+                 dataframe:pd.DataFrame, 
+                 img_data_path:str, 
+                 img_size:int=224, 
+                 batch_size:int=32, 
+                 preprocess_function=EFNetPreProcessInput):
+        self.dataframe = dataframe
+        self.DATA_PATH = img_data_path
+        self.IMG_SIZE = img_size
+        self.BATCH_SIZE = batch_size
+        self.preprocess_function = preprocess_function
+        self.IMG_SHAPE = (self.IMG_SIZE, self.IMG_SIZE)
+        self.train_datagen, self.valid_datagen = self.data_generator()
+        
+    def data_generator(self):
+        """Generate data via ImageDataGenerator object."""
+        train_datagen = ImageDataGenerator(preprocessing_function=self.preprocess_function,
+                                           shear_range=0.2,
+                                           zoom_range=0.2,
+                                           horizontal_flip=True,
+                                           vertical_flip=True,
+                                           validation_split=0.2,
+                                           rotation_range=90,
+                                           width_shift_range=0.2, 
+                                           height_shift_range=0.2)
+        
+        valid_datagen = ImageDataGenerator(preprocessing_function=self.preprocess_function, 
+                                           validation_split=0.2)
+
+        return (train_datagen, valid_datagen)
+
+    def create_flow(self):
+        """Create flow data of data generator."""
+        self.train_gen_flow = self.train_datagen.flow_from_dataframe(dataframe=self.dataframe,
+                                                                     directory=self.DATA_PATH,
+                                                                     x_col='IMAGE',
+                                                                     y_col='CLASSNAME',
+                                                                     target_size=self.IMG_SHAPE,
+                                                                     batch_size=self.BATCH_SIZE,
+                                                                     class_mode="categorical",
+                                                                     subset='training',
+                                                                     shuffle=True)
+    
+        self.valid_gen_flow = self.valid_datagen.flow_from_dataframe(dataframe=self.dataframe,
+                                                                     directory=self.DATA_PATH,
+                                                                     x_col='IMAGE',
+                                                                     y_col='CLASSNAME',
+                                                                     target_size=self.IMG_SHAPE,
+                                                                     batch_size=self.BATCH_SIZE,
+                                                                     class_mode="categorical",
+                                                                     subset='validation', 
+                                                                     shuffle=False)
+        return (self.train_gen_flow, self.valid_gen_flow)
