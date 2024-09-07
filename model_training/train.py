@@ -75,7 +75,7 @@ def evaluate(class_indices:dict, real_classes:list, species_path:str, model:tf.k
     """
     Evaluate model performance from test images collected before.
 
-    Ags:
+    Args:
         class_indices: Dictionary of class names and class indices
         real_classes: List of real classes
         species_path: Test images path
