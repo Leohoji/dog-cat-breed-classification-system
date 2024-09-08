@@ -84,7 +84,7 @@ class Classification:
         # Database manager object
         self.mysql_connector = DatabaseManager() 
 
-    def decode_base64_image(self):
+    def decode_base64_image(self) -> np.array:
         """Decode the base64 string and return the image as a PIL object"""
         # Decode the base64 string back to bytes
         img_data = base64.b64decode(self.base64_image_string)
@@ -97,7 +97,7 @@ class Classification:
         
         return self.img_array
 
-    def Model_Predict(self):
+    def Model_Predict(self) -> str:
         """Predict image after preprocessing and return predicted class"""
         # Image preprocessing
         image_rgb = self.decode_base64_image()
@@ -113,11 +113,18 @@ class Classification:
         
         return final_class
 
-    def save_to_historical_data(self, user_data):
-        pass
+    def send_results(self) -> str:
+        """
+        Send model prediction results to front-end in JSON data type.
+        1. Model predicts the breed of image.
+        2. Add prediction result to data.
+        3. Convert results data into JSON format.
+        """
+        final_pred = self.Model_Predict()
+        self.data['model_pred'] = final_pred
+        results = json.dumps(self.data, indent=4)
 
-    def send_results(self):
-        pass
+        return results
 
 class CheckHistoricalData:
     def collect_historical_data(self):
@@ -126,5 +133,9 @@ class CheckHistoricalData:
 class LearningSystem:
     def feedback(self):
         pass
+
+    def save_to_historical_data(self, user_data:dict):
+        pass
+
     def fine_tune_classifier(self):
         pass

@@ -14,11 +14,10 @@ class DatabaseManager:
         Returns: Cursor object of mysql.connector.
         """
         try:
-            self.connection = mysql.connector.connect(host=HOST,
-                                                    port=PORT,
-                                                    user=USER,
-                                                    password=PASSWORD,
-                                                    database=DATABASE_NAME)
+            self.connection = mysql.connector.connect(host=HOST, port=PORT,
+                                                      user=USER, password=PASSWORD,
+                                                      database=DATABASE_NAME, 
+                                                      auth_plugin='mysql_native_password')
             self.cursor = self.connection.cursor()
             self.cursor.execute("SET SQL_SAFE_UPDATES = 0;")
 
@@ -145,7 +144,7 @@ if __name__ == '__main__':
     
     # Test for getting historical data
     res = mysql_manager.get_historical_data(user_name=user_data_1['user_name'])
-    print(res)
+    print(f"historical data \n {res}")
 
     # Test for getting animal data
     animal_data = mysql_manager.get_animal_info(animal_breed='Labrador')
