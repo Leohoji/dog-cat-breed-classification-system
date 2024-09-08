@@ -62,6 +62,7 @@ class Verification:
 
         return response
 
+# data = { 'species': ##, 'image': ## }
 class Classification:
     def __init__(self, json_payload):
         self.json_payload = json_payload
@@ -116,3 +117,10 @@ class Classification:
 
     def save_to_historical_data(self):
         pass
+
+class CheckHistoricalData:
+    def collect_historical_data(self):
+        pass
+
+class LearningSystem:
+    pass
