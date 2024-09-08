@@ -1,8 +1,10 @@
 from model import DatabaseManager
 
-mysql_connector = DatabaseManager()
 
 class Verification:
+    def __init__(self):
+        self.mysql_connector = DatabaseManager()
+
     def login_verify(self, user_data:dict) -> str:
         """
         Verify user data from login interface.
@@ -13,7 +15,7 @@ class Verification:
             String of 'user not exists', 'wrong password', or 'yes'.
         """
         # get member information
-        member_info = mysql_connector.get_member_info(user_data)
+        member_info = self.mysql_connector.get_member_info(user_data)
 
         # check information
         if not member_info:
@@ -39,12 +41,12 @@ class Verification:
             String of 'success', or 'fail'.
         """
         # get member information
-        member_info = mysql_connector.get_member_info(user_data)
+        member_info = self.mysql_connector.get_member_info(user_data)
 
         # check information
         if not member_info:
-            user_name, user_password  = mysql_connector.get_user_info(user_data)
-            mysql_connector.add_member(user_name, user_password)
+            user_name, user_password  = self.mysql_connector.get_user_info(user_data)
+            self.mysql_connector.add_member(user_name, user_password)
             response = 'success'
         else: response = 'fail' 
 
