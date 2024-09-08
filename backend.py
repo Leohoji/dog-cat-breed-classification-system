@@ -64,7 +64,7 @@ class Verification:
 
 # data = { 'species': ##, 'image': ## }
 class Classification:
-    def __init__(self, json_payload):
+    def __init__(self, json_payload:str):
         self.json_payload = json_payload
 
         # Parse the JSON payload
@@ -98,6 +98,7 @@ class Classification:
         return self.img_array
 
     def Model_Predict(self):
+        """Predict image after preprocessing and return predicted class"""
         # Image preprocessing
         image_rgb = self.decode_base64_image()
         image_rgb = image_rgb.astype(np.float32)
@@ -112,10 +113,10 @@ class Classification:
         
         return final_class
 
-    def send_results(self):
+    def save_to_historical_data(self, user_data):
         pass
 
-    def save_to_historical_data(self):
+    def send_results(self):
         pass
 
 class CheckHistoricalData:
@@ -123,4 +124,7 @@ class CheckHistoricalData:
         pass
 
 class LearningSystem:
-    pass
+    def feedback(self):
+        pass
+    def fine_tune_classifier(self):
+        pass
