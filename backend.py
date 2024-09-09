@@ -61,7 +61,7 @@ class Verification(DatabaseManager):
 
 # data = { 'species': ##, 'image': ## }
 class Classification:
-    def __init__(self, json_payload:str):
+    def __init__(self, json_payload:json):
         self.json_payload = json_payload
 
         # Parse the JSON payload
@@ -107,7 +107,7 @@ class Classification:
         
         return final_class
 
-    def send_results(self) -> str:
+    def send_results(self) -> json:
         """
         Send model prediction results to front-end in JSON data type.
         1. Model predicts the breed of image.
@@ -120,7 +120,7 @@ class Classification:
 
         return results
 
-def collect_historical_data(user_data:str) -> str:
+def collect_historical_data(user_data:json) -> json:
     """
     Get historical data of user from front-end interface.
 
@@ -136,12 +136,12 @@ def collect_historical_data(user_data:str) -> str:
 
     return user_historical_data
 
-class LearningSystem:
-    def feedback(self):
-        pass
-
-    def save_to_historical_data(self, user_data:dict):
-        pass
+class LearningSystem(DatabaseManager):
+    def __init__(self, user_name:str, image:bytes, feedback:json):
+        self.user_name = user_name
+        self.image = image
+        self.feedback = feedback
+        self._save = self.update_historical_data(self.user_name, self.image, self.feedback)
 
     def fine_tune_classifier(self):
         pass
