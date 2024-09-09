@@ -11,10 +11,7 @@ from model import DatabaseManager
 
 IMG_SIZE = (224, 224, 3)
 
-class Verification:
-    def __init__(self):
-        self.mysql_connector = DatabaseManager()
-
+class Verification(DatabaseManager):
     def login_verify(self, user_data:dict) -> str:
         """
         Verify user data from login interface.
@@ -25,7 +22,7 @@ class Verification:
             String of 'user not exists', 'wrong password', or 'yes'.
         """
         # get member information
-        member_info = self.mysql_connector.get_member_info(user_data)
+        member_info = self.get_member_info(user_data)
 
         # check information
         if not member_info:
@@ -51,12 +48,12 @@ class Verification:
             String of 'success', or 'fail'.
         """
         # get member information
-        member_info = self.mysql_connector.get_member_info(user_data)
+        member_info = self.get_member_info(user_data)
 
         # check information
         if not member_info:
-            user_name, user_password  = self.mysql_connector.get_user_info(user_data)
-            self.mysql_connector.add_member(user_name, user_password)
+            user_name, user_password  = self.get_user_info(user_data)
+            self.add_member(user_name, user_password)
             response = 'success'
         else: response = 'fail' 
 
@@ -80,9 +77,6 @@ class Classification:
         self.classifier_loaded = load_model('./cats_classifier.h5') \
                                  if self.species == 'cats' \
                                  else load_model('./dogs_classifier.h5')
-
-        # Database manager object
-        self.mysql_connector = DatabaseManager() 
 
     def decode_base64_image(self) -> np.array:
         """Decode the base64 string and return the image as a PIL object"""
@@ -127,7 +121,8 @@ class Classification:
         return results
 
 class CheckHistoricalData:
-    def collect_historical_data(self):
+    def collect_historical_data(self, user_name:str):
+
         pass
 
 class LearningSystem:
