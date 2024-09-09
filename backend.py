@@ -120,10 +120,21 @@ class Classification:
 
         return results
 
-class CheckHistoricalData:
-    def collect_historical_data(self, user_name:str):
+def collect_historical_data(user_data:str) -> str:
+    """
+    Get historical data of user from front-end interface.
 
-        pass
+    Args:
+        user_name: Member's user name
+    Returns:
+        JSON format of user historical data with list data type originally
+    """
+    data_manager = DatabaseManager() # initialize DatabaseManager
+    user_name = json.loads(user_data)['user_name']
+    historical_data = data_manager.get_historical_data(user_name) # return a list
+    user_historical_data = json.dumps(historical_data)
+
+    return user_historical_data
 
 class LearningSystem:
     def feedback(self):
