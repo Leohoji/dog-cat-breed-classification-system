@@ -6,7 +6,7 @@ from model_utils import DataTransformer, DataAugmentation, AnimalClassifier
 from tensorflow.keras.applications.efficientnet import EfficientNetB0
 from tensorflow.keras.applications.efficientnet import preprocess_input as EFNetPreProcessInput
 
-DATASET_DIR = 'C:\\Users\\User\\Desktop\\(cat-dog)_model_training'
+DATASET_DIR = 'C:\\Users\\User\\Desktop\\cat_dog_dataset'
 DATA_PATH = Path(DATASET_DIR).joinpath('Cats_and_Dogs_Breeds_Classification_Oxford_Dataset\\images\\images')
 ANNOTATION_PATH = Path(DATASET_DIR).joinpath('Cats_and_Dogs_Breeds_Classification_Oxford_Dataset\\annotations\\annotations\\list.txt')
 TEST_PATH = Path(DATASET_DIR).joinpath('test_images')
