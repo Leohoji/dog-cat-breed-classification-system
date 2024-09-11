@@ -27,6 +27,7 @@ BATCH_SIZE = 32
 
 class LearningSystem(DatabaseManager):
     def __init__(self, user_name:str, feedback:json, DATA_PATH:str, ANNOTATION_DATA_PATH:str, fine_tune_ratio:float=0.05):
+        """LearningSystem class object will fine-tune a pre-train model dependent on feedback from front-end interface."""
         self.user_name = user_name
         self.feedback = json.loads(feedback)
         self.fine_tune_ratio = fine_tune_ratio
@@ -90,7 +91,7 @@ class LearningSystem(DatabaseManager):
             layer.trainable = False
         
     def fine_tune_classifier(self):
-        
+        """Fine-tune animal breed classifier"""
         # Set random seed and clear session
         seed = 42
         np.random.seed(seed)
@@ -162,6 +163,12 @@ def compress_image_to_base64(input_image_path:str,
     4. Use BytesIO to store the compressed image in memory
     5. Compress the image and save it to the memory's BytesIO object instead of disk
     6. Convert the compressed image data in BytesIO to base64
+
+    Args:
+        input_image_path: Path for image excepted to be compressed
+        quality: Image quality for image compression
+    Returns:
+        Compressed image in base64 byte format
     """
     img = cv2.imread(input_image_path)
     img_rgb = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
