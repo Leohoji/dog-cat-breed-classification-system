@@ -135,13 +135,3 @@ def collect_historical_data(user_data:json) -> json:
     user_historical_data = json.dumps(historical_data)
 
     return user_historical_data
-
-class LearningSystem(DatabaseManager):
-    def __init__(self, user_name:str, image:bytes, feedback:json):
-        self.user_name = user_name
-        self.image = image
-        self.feedback = feedback
-        self._save = self.update_historical_data(self.user_name, self.image, self.feedback)
-
-    def fine_tune_classifier(self):
-        pass
