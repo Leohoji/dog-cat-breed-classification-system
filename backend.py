@@ -4,6 +4,7 @@ import base64
 import numpy as np
 from io import BytesIO
 from PIL import Image
+from pathlib import Path
 from tensorflow.keras.models import load_model
 from tensorflow.keras.applications.efficientnet import preprocess_input as EFNetPreProcessInput
 
@@ -70,13 +71,18 @@ class Classification:
         # Extract base64 image string and species 
         self.species, self.base64_image_string = self.data['species'], self.data['image']
 
-        # Load real classes and classifier
-        self.real_classes = np.load('cats_classes.npy') \
+        # Load real classes and classifiers
+        self.cat_classes_path = Path('model_data').joinpath('cats_classes.npy')
+        self.dog_classes_path = Path('model_data').joinpath('dogs_classes.npy')
+        self.real_classes = np.load(self.cat_classes_path) \
                             if self.species == 'cats' \
-                            else np.load('dogs_classes.npy')
-        self.classifier_loaded = load_model('./cats_classifier.h5') \
+                            else np.load(self.dog_classes_path)
+        
+        self.cats_classifier_path = Path('model_data').joinpath('cats_classifier.h5')
+        self.dogs_classifier_path = Path('model_data').joinpath('dogs_classifier.h5')
+        self.classifier_loaded = load_model(self.cats_classifier_path) \
                                  if self.species == 'cats' \
-                                 else load_model('./dogs_classifier.h5')
+                                 else load_model(self.dogs_classifier_path)
 
     def decode_base64_image(self) -> np.array:
         """Decode the base64 string and return the image as a PIL object"""

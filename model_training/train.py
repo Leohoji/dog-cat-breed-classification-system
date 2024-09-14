@@ -133,7 +133,7 @@ def train_classifier(species:str='', save_model=False) -> AnimalClassifier:
     breed_classifier.train(train_data_gen, valid_data_gen)
 
     # Model saving
-    if save_model: breed_classifier.model.save(Path.cwd().joinpath('%s_classifier.h5'%(species)))
+    if save_model: breed_classifier.model.save(Path('model_data').joinpath('%s_classifier.h5'%(species)))
 
     # Model evaluation
     species_path = Path(TEST_PATH).joinpath(species)
