@@ -1,0 +1,83 @@
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f0f0f0;
+}
+
+.container {
+  max-width: 600px;
+  margin: 20px auto;
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.header {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 20px;
+}
+
+.logout {
+  cursor: pointer;
+  color: #666;
+}
+
+.results-box {
+  background-color: #e6f3ff;
+  padding: 20px;
+  text-align: center;
+  font-size: 24px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.description {
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.image-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.image-box {
+  background-color: #e6f3ff;
+  width: 30%;
+  aspect-ratio: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 8px;
+}
+
+.question {
+  margin-bottom: 20px;
+}
+
+.options {
+  display: flex;
+  align-items: center;
+}
+
+.options label {
+  margin-right: 20px;
+}
+
+.breed-input {
+  margin-left: 10px;
+  padding: 5px;
+}
+
+.check-data {
+  background-color: #f0f0f0;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+  color: #666;
+  border-radius: 5px;
+}

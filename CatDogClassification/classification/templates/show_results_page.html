@@ -1,0 +1,44 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Results Page</title>
+    <link rel="stylesheet" href="{% static 'show_results_stylesheet.css' %}" />
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <div class="logout">Logout</div>
+      </div>
+      <div class="results-box">Results</div>
+      <p class="description">
+        Lorem Ipsum is simply dummy text of the printing and typesetting
+        industry. Lorem Ipsum has been the industry's standard dummy text ever
+        since ...
+      </p>
+      <div class="image-row">
+        <div class="image-box">ex img</div>
+        <div class="image-box">ex img</div>
+        <div class="image-box">ex img</div>
+      </div>
+      <div class="question">
+        <p>Is it the correct breed ?</p>
+        <div class="options">
+          <label>
+            <input type="radio" name="breed" value="yes" />
+            Yes
+          </label>
+          <label>
+            <input type="radio" name="breed" value="no" />
+            No
+          </label>
+          <input type="text" placeholder="Breed name" class="breed-input" />
+        </div>
+      </div>
+      <button class="check-data">check historical data</button>
+    </div>
+  </body>
+</html>

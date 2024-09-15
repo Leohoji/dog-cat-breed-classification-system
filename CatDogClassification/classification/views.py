@@ -9,3 +9,6 @@ def show_sign_up_page(request):
 
 def show_upload_img_page(request):
     return render(request, 'upload_img_page.html')
+
+def show_results_page(request):
+    return render(request, 'show_results_page.html')
