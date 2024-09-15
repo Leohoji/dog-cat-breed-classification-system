@@ -1,0 +1,31 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sign-up</title>
+    <link rel="stylesheet" href="{% static 'sign_up_stylesheet.css' %}" />
+  </head>
+  <body>
+    <div class="signup-container">
+      <h2>Sign-up</h2>
+      <div class="input-container">
+        <input type="text" id="username" placeholder="Username" />
+      </div>
+      <div class="input-container">
+        <input type="password" id="password" placeholder="Password" />
+      </div>
+      <div class="input-container">
+        <input
+          type="password"
+          id="confirm-password"
+          placeholder="Password again"
+        />
+      </div>
+      <button type="button" class="signup-btn">Sign-up</button>
+      <div class="signin">Is a member? <a href="#">Sign in</a></div>
+    </div>
+  </body>
+</html>
