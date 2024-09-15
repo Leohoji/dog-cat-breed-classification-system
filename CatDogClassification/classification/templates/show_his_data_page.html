@@ -1,0 +1,41 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Historical Data</title>
+    <link rel="stylesheet" href="{% static 'show_his_data_stylesheet.css' %}" />
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <div class="user-info">User name: *******</div>
+        <div class="logout">Logout</div>
+      </div>
+      <hr />
+      <div class="data-table">
+        <div class="table-header">
+          <div class="column">Datetime</div>
+          <div class="column">Results</div>
+        </div>
+        <div class="table-row">
+          <div class="column">DD/MM/YY H:m:S</div>
+          <div class="column">Yes</div>
+        </div>
+        <div class="table-row">
+          <div class="column">DD/MM/YY H:m:S</div>
+          <div class="column">No, *********</div>
+        </div>
+        <div class="table-row">
+          <div class="column">...</div>
+          <div class="column"></div>
+        </div>
+      </div>
+      <div class="footer">
+        <button class="back-button">Back</button>
+      </div>
+    </div>
+  </body>
+</html>

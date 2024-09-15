@@ -17,6 +17,7 @@ from django.contrib import admin
 from django.urls import path
 from classification.views import show_login_page, show_sign_up_page
 from classification.views import show_upload_img_page, show_results_page
+from classification.views import show_historical_data_page
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -24,4 +25,5 @@ urlpatterns = [
     path('signup/', show_sign_up_page),
     path('upload/', show_upload_img_page),
     path('results/', show_results_page),
+    path('historical_data/', show_historical_data_page),
 ]

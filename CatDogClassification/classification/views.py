@@ -12,3 +12,6 @@ def show_upload_img_page(request):
 
 def show_results_page(request):
     return render(request, 'show_results_page.html')
+
+def show_historical_data_page(request):
+    return render(request, 'show_his_data_page.html')
