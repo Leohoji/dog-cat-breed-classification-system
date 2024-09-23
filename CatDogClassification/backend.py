@@ -8,7 +8,7 @@ from pathlib import Path
 from tensorflow.keras.models import load_model
 from tensorflow.keras.applications.efficientnet import preprocess_input as EFNetPreProcessInput
 
-from model import DatabaseManager
+from mysql_manager import DatabaseManager
 
 IMG_SIZE = (224, 224, 3)
 
@@ -32,7 +32,7 @@ class Verification(DatabaseManager):
             _, UserName, UserPassword, _ = member_info # (id, user_name, user_password, timestamp)
             result = (UserName, UserPassword)
             print(f"output: {result}")
-            if member_info != UserPassword:
+            if user_data.get('password') != UserPassword:
                 result = 'wrong password' # password is incorrect
             else:
                 result = 'yes'

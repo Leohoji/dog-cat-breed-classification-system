@@ -41,7 +41,7 @@ class DatabaseManager:
             List of member information.
         """
         self.connect() # login database
-        user_name = user_data['user_name'] # get user data
+        user_name = user_data.get('user_name') # get user data
         query = f"SELECT * FROM `member_info` WHERE user_name = %(user_name)s;"
         self.cursor.execute(query, {'user_name': user_name})
         mem_info = self.cursor.fetchone()

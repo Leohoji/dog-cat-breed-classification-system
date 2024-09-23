@@ -41,7 +41,6 @@
       document
         .querySelector(".login-btn")
         .addEventListener("click", function (event) {
-
           // Prevent the list send automatically
           event.preventDefault();
 
@@ -50,21 +49,22 @@
           const password = document.querySelector("#password").value;
 
           // Apply AJAX technique to sen data to backend
-          fetch('/login', {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({
-              username: username,
-              password: password
+          fetch("/verify/", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ user_name: username, password: password }),
+          })
+            .then((response) => {
+              if (response.redirected) { // response successfully from backend using POST method
+                window.location.href = response.url;
+              } else { 
+                console.log("Success:", response.body);
+                return response.json();
+              }
             })
-          })
-          .then(response => response.json())
-          .then(data => {
-            console.log('Success:', data);
-          })
-          .catch((error) => {
-            console.error('Error:', error);
-          });
+            .catch((error) => {
+              console.error("Error:", error);
+            });
         });
     </script>
   </body>
