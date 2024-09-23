@@ -15,15 +15,14 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from classification.views import show_login_page, show_sign_up_page
-from classification.views import show_upload_img_page, show_results_page
-from classification.views import show_historical_data_page
+from functools import partial
+from classification.views import show_page
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('login/', show_login_page),
-    path('signup/', show_sign_up_page),
-    path('upload/', show_upload_img_page),
-    path('results/', show_results_page),
-    path('historical_data/', show_historical_data_page),
+    path('login/', partial(show_page, page_name='login')),
+    path('signup/', partial(show_page, page_name='sign_up')),
+    path('upload/', partial(show_page, page_name='upload')),
+    path('results/', partial(show_page, page_name='results')),
+    path('historical_data/', partial(show_page, page_name='his_data')),
 ]

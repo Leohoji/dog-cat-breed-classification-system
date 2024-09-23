@@ -49,31 +49,22 @@
           const username = document.querySelector("#username").value;
           const password = document.querySelector("#password").value;
 
-          // 將 username 和 password 顯示在控制台中
-          console.log("Username: " + username);
-          console.log("Password: " + password);
-
-          // 可以將資料送到後端或其他處理
-          // 例如: 使用 AJAX 發送到伺服器
-          /*
-        fetch('/login', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            username: username,
-            password: password
+          // Apply AJAX technique to sen data to backend
+          fetch('/login', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+              username: username,
+              password: password
+            })
           })
-        })
-        .then(response => response.json())
-        .then(data => {
-          console.log('Success:', data);
-        })
-        .catch((error) => {
-          console.error('Error:', error);
-        });
-        */
+          .then(response => response.json())
+          .then(data => {
+            console.log('Success:', data);
+          })
+          .catch((error) => {
+            console.error('Error:', error);
+          });
         });
     </script>
   </body>
