@@ -21,10 +21,19 @@ document
           window.location.href = response.url;
         } else {
           return response.json();
-          
         }
       })
-      .then((data) => {console.log("Success:", data);})
+      .then((data) => {
+        console.log("Success:", data);
+        let input_username = document.querySelector("#username");
+        document.querySelector("#password").value = "";
+
+        if (data.message == "user not exists") {
+          input_username.value = "user not exists";
+        } else if (data.message == "wrong password") {
+          input_username.value = "wrong password";
+        }
+      })
       .catch((error) => {
         console.error("Error:", error);
       });
