@@ -53,8 +53,8 @@ class Verification(DatabaseManager):
 
         # check information
         if not member_info:
-            user_name, user_password  = self.get_user_info(user_data)
-            self.add_member(user_name, user_password)
+            # user_name, user_password  = self.get_user_info(user_data)
+            # self.add_member(user_name, user_password)
             response = 'success'
         else: response = 'fail' 
 

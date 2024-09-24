@@ -16,7 +16,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from functools import partial
-from classification.views import show_page, login_verification
+from classification.views import show_page, login_verification, sign_up_verification
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -26,6 +26,7 @@ urlpatterns = [
     path('results/', partial(show_page, page_name='results'), name='results'),
     path('historical_data/', partial(show_page, page_name='his_data'), name='his_data'),
 
-    # verification
-    path('verify/', login_verification, name='verification'),
+    path('login_verify/', login_verification, name='verification'), # login verification
+    path('signUp_verify/', sign_up_verification, name='verification'), # sign up verification
+
 ]

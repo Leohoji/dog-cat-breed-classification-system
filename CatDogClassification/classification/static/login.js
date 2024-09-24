@@ -10,7 +10,7 @@ document
     const password = document.querySelector("#password").value;
 
     // Apply AJAX technique to sen data to backend
-    fetch("/verify/", {
+    fetch("/login_verify/", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ user_name: username, password: password }),
@@ -27,7 +27,7 @@ document
         console.log("Success:", data);
         let input_username = document.querySelector("#username");
         document.querySelector("#password").value = "";
-        
+
         // response fail from backend using POST method
         if (data.message == "user not exists") {
           input_username.value = "user not exists";

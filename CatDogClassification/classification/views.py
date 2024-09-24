@@ -39,3 +39,21 @@ def login_verification(request):
             return JsonResponse({'status': 'error', 'message': str(e)})
 
     return JsonResponse({'status': 'error', 'message': 'Invalid request method'})
+
+def sign_up_verification(request): 
+    if request.method == 'POST':
+        try:
+            # Read data from request.body
+            user_data = json.loads(request.body)
+            print(user_data, type(user_data))
+
+            sign_up_result = verifier.sign_up_verify(user_data)
+            if sign_up_result == 'success': 
+                return redirect('/login/') # Response the successful JSON data
+            else: 
+                return JsonResponse({'status': 'error', 'message': sign_up_result})
+
+        except Exception as e:
+            return JsonResponse({'status': 'error', 'message': str(e)})
+
+    return JsonResponse({'status': 'error', 'message': 'Invalid request method'})
