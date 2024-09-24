@@ -1,4 +1,4 @@
-// Collect the user data
+// Listener for collecting the user data
 document
   .querySelector(".login-btn")
   .addEventListener("click", function (event) {
@@ -27,7 +27,8 @@ document
         console.log("Success:", data);
         let input_username = document.querySelector("#username");
         document.querySelector("#password").value = "";
-
+        
+        // response fail from backend using POST method
         if (data.message == "user not exists") {
           input_username.value = "user not exists";
         } else if (data.message == "wrong password") {
@@ -37,4 +38,15 @@ document
       .catch((error) => {
         console.error("Error:", error);
       });
+  });
+
+// Listener for Signing up
+document
+  .querySelector(".signup a")
+  .addEventListener("click", function (event) {
+    // Prevent the list send automatically
+    event.preventDefault();
+
+    // Redirect to sign_up page
+    window.location.href = "/signup/";
   });
