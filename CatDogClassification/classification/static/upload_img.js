@@ -2,22 +2,16 @@
 // Listener for login
 // -------------------------------
 document.querySelector(".logout a").addEventListener("click", function (event) {
-  // Prevent the list send automatically
-  event.preventDefault();
-
-  // Redirect to login page
-  window.location.href = "/login/";
+  event.preventDefault(); // Prevent the list send automatically
+  window.location.href = "/login/"; // Redirect to login page
 });
 
 // -------------------------------
 // Listener for historical data checking
 // -------------------------------
 document.querySelector(".footer a").addEventListener("click", function (event) {
-  // Prevent the list send automatically
-  event.preventDefault();
-
-  // Redirect to historical_data page
-  window.location.href = "/historical_data/";
+  event.preventDefault(); // Prevent the list send automatically
+  window.location.href = "/historical_data/"; // Redirect to historical_data page
 });
 
 function removeEleIfExists(idTag) {
@@ -31,25 +25,48 @@ function removeEleIfExists(idTag) {
   }
 }
 
-function createButtonEle(
-  id,
-  textContent,
-  backgroundColor,
-  color,
-  border,
-  padding,
-  cursor
-) {
+function createButtonEle(id, textContent, backgroundColor) {
+  /*
+  Create button element for HTML generation.
+  @param {id}: Id attribute for button HTML tag
+  @param {textContent}: Text Content for button HTML tag
+  @param {backgroundColor}: BackgroundColor for button HTML tag
+  @return {button element}
+  */
   const buttonElement = document.createElement("button");
-  deleteButton.id = id;
-  deleteButton.textContent = textContent;
-  deleteButton.style.backgroundColor = backgroundColor;
-  deleteButton.style.color = color;
-  deleteButton.style.border = border;
-  deleteButton.style.padding = padding;
-  deleteButton.style.cursor = cursor;
+  buttonElement.id = id;
+  buttonElement.textContent = textContent;
+  buttonElement.style.backgroundColor = backgroundColor;
+  buttonElement.style.color = "white";
+  buttonElement.style.border = "none";
+  buttonElement.style.padding = "5px 10px";
+  buttonElement.style.cursor = "pointer";
 
   return buttonElement;
+}
+
+function createDeleteClassifyButton() {
+  const buttonContainer = document.createElement("div");
+  buttonContainer.style.display = "flex";
+  buttonContainer.style.justifyContent = "center";
+  buttonContainer.style.margin = "10px 0";
+  const deleteButton = createButtonEle(
+    "delete-button",
+    "Delete Photo",
+    "#f44336"
+  );
+  deleteButton.style.marginRight = "10px"; // right margin
+  const classifyButton = createButtonEle(
+    "classify-button",
+    "Classify",
+    "#4CAF50"
+  );
+
+  // Append buttons to div container
+  buttonContainer.appendChild(deleteButton);
+  buttonContainer.appendChild(classifyButton);
+
+  return { buttonContainer, deleteButton, classifyButton };
 }
 
 // -------------------------------
@@ -58,17 +75,14 @@ function createButtonEle(
 document
   .querySelector("#file-upload")
   .addEventListener("change", function (event) {
-    // Collect the chosen file
-    const file = event.target.files[0];
-    console.log(file);
+    const file = event.target.files[0]; // collect the chosen file
+    // const fileInput = document.querySelector("#file-upload");
+    // console.log(file);
     if (file) {
       const reader = new FileReader();
 
       // Actions after image reading
       reader.onload = function (e) {
-        const imagePath = fileInput.value;
-        console.log("Image path:", imagePath);
-
         // If image already exists, remove it
         removeEleIfExists("uploaded-image");
         removeEleIfExists("delete-button");
@@ -87,40 +101,21 @@ document
         // Create a div element to collect
         // delete and classify button
         // -------------------------------
-        const buttonContainer = document.createElement("div");
-        buttonContainer.style.display = "flex";
-        buttonContainer.style.justifyContent = "center";
-        buttonContainer.style.margin = "10px 0";
-
-        // Create delete button
-        const deleteButton = createButtonEle(
-          (id = "delete-button"),
-          (textContent = "Delete Photo"),
-          (backgroundColor = "#f44336"),
-          (color = "white"),
-          (border = "none"),
-          (padding = "5px 10px"),
-          (cursor = "pointer")
-        );
-        deleteButton.style.marginRight = "10px"; // right margin
-
-        // Create classify button
-        const classifyButton = createButtonEle(
-          (id = "classify-button"),
-          (textContent = "Classify"),
-          (backgroundColor = "#4CAF50"),
-          (color = "white"),
-          (border = "none"),
-          (padding = "5px 10px"),
-          (cursor = "pointer")
-        );
-
-        // Append buttons to div container
-        buttonContainer.appendChild(deleteButton);
-        buttonContainer.appendChild(classifyButton);
+        const { buttonContainer, deleteButton, classifyButton } =
+          createDeleteClassifyButton();
 
         // 在這裡添加 classify 按鈕的功能
         classifyButton.addEventListener("click", function () {
+          const base64Data = reader.result;
+          const imageObject = {
+            name: file.name,
+            type: file.type,
+            size: file.size,
+            lastModified: file.lastModified,
+            base64: base64Data,
+          };
+          const jsonData = JSON.stringify(imageObject);
+          console.log(jsonData);
           alert("Classifying the image..."); // 這裡可以加入分類的邏輯
         });
 
@@ -136,8 +131,6 @@ document
         uploadContainer.insertBefore(img, uploadContainer.firstChild);
         uploadContainer.insertBefore(buttonContainer, img.nextSibling);
       };
-
-      // Read image as data URL
-      reader.readAsDataURL(file);
+      reader.readAsDataURL(file); // Read image as data URL
     }
   });
