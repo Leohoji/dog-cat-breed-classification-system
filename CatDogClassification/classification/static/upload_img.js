@@ -1,4 +1,6 @@
+// -------------------------------
 // Listener for login
+// -------------------------------
 document.querySelector(".logout a").addEventListener("click", function (event) {
   // Prevent the list send automatically
   event.preventDefault();
@@ -7,7 +9,9 @@ document.querySelector(".logout a").addEventListener("click", function (event) {
   window.location.href = "/login/";
 });
 
+// -------------------------------
 // Listener for historical data checking
+// -------------------------------
 document.querySelector(".footer a").addEventListener("click", function (event) {
   // Prevent the list send automatically
   event.preventDefault();
@@ -16,7 +20,41 @@ document.querySelector(".footer a").addEventListener("click", function (event) {
   window.location.href = "/historical_data/";
 });
 
+function removeEleIfExists(idTag) {
+  /* 
+  Remove element if it exists. 
+  @param {idTag}: Attribute of HTML element tag, it must be id
+  */
+  let existingElement = document.querySelector(`#${idTag}`);
+  if (existingElement) {
+    existingElement.remove();
+  }
+}
+
+function createButtonEle(
+  id,
+  textContent,
+  backgroundColor,
+  color,
+  border,
+  padding,
+  cursor
+) {
+  const buttonElement = document.createElement("button");
+  deleteButton.id = id;
+  deleteButton.textContent = textContent;
+  deleteButton.style.backgroundColor = backgroundColor;
+  deleteButton.style.color = color;
+  deleteButton.style.border = border;
+  deleteButton.style.padding = padding;
+  deleteButton.style.cursor = cursor;
+
+  return buttonElement;
+}
+
+// -------------------------------
 // Listener for image uploading
+// -------------------------------
 document
   .querySelector("#file-upload")
   .addEventListener("change", function (event) {
@@ -26,21 +64,15 @@ document
     if (file) {
       const reader = new FileReader();
 
-      // 當讀取完成後執行的操作
+      // Actions after image reading
       reader.onload = function (e) {
+        const imagePath = fileInput.value;
+        console.log("Image path:", imagePath);
+
         // If image already exists, remove it
-        let existingImage = document.querySelector("#uploaded-image");
-        let existingDeleteButton = document.querySelector("#delete-button");
-        let existingClassifyButton = document.getElementById("classify-button");
-        if (existingImage) {
-          existingImage.remove();
-        }
-        if (existingDeleteButton) {
-          existingDeleteButton.remove();
-        }
-        if (existingClassifyButton) {
-          existingClassifyButton.remove();
-        }
+        removeEleIfExists("uploaded-image");
+        removeEleIfExists("delete-button");
+        removeEleIfExists("classify-button");
 
         // Create img element to show image
         const img = document.createElement("img");
@@ -51,34 +83,39 @@ document
         img.style.display = "block"; // Set as block element
         img.style.margin = "5px auto 10px auto"; // auto center
 
-        // 創建一個容器來放置按鈕
+        // -------------------------------
+        // Create a div element to collect
+        // delete and classify button
+        // -------------------------------
         const buttonContainer = document.createElement("div");
         buttonContainer.style.display = "flex";
         buttonContainer.style.justifyContent = "center";
         buttonContainer.style.margin = "10px 0";
 
-        // 創建刪除按鈕
-        const deleteButton = document.createElement("button");
-        deleteButton.id = "delete-button";
-        deleteButton.textContent = "Delete Photo";
-        deleteButton.style.backgroundColor = "#f44336";
-        deleteButton.style.color = "white";
-        deleteButton.style.border = "none";
-        deleteButton.style.padding = "5px 10px";
-        deleteButton.style.cursor = "pointer";
-        deleteButton.style.marginRight = "10px"; // 添加右邊距
+        // Create delete button
+        const deleteButton = createButtonEle(
+          (id = "delete-button"),
+          (textContent = "Delete Photo"),
+          (backgroundColor = "#f44336"),
+          (color = "white"),
+          (border = "none"),
+          (padding = "5px 10px"),
+          (cursor = "pointer")
+        );
+        deleteButton.style.marginRight = "10px"; // right margin
 
-        // 創建 classify 按鈕
-        const classifyButton = document.createElement("button");
-        classifyButton.id = "classify-button";
-        classifyButton.textContent = "Classify";
-        classifyButton.style.backgroundColor = "#4CAF50";
-        classifyButton.style.color = "white";
-        classifyButton.style.border = "none";
-        classifyButton.style.padding = "5px 10px";
-        classifyButton.style.cursor = "pointer";
+        // Create classify button
+        const classifyButton = createButtonEle(
+          (id = "classify-button"),
+          (textContent = "Classify"),
+          (backgroundColor = "#4CAF50"),
+          (color = "white"),
+          (border = "none"),
+          (padding = "5px 10px"),
+          (cursor = "pointer")
+        );
 
-        // 將按鈕添加到容器中
+        // Append buttons to div container
         buttonContainer.appendChild(deleteButton);
         buttonContainer.appendChild(classifyButton);
 
@@ -87,20 +124,20 @@ document
           alert("Classifying the image..."); // 這裡可以加入分類的邏輯
         });
 
-        // 刪除按鈕的事件監聽器
+        // Delete listener for delete event
         deleteButton.addEventListener("click", function () {
           img.remove();
           buttonContainer.remove();
           document.querySelector("#file-upload").value = "";
         });
 
-        // 插入元素
+        // Insert elements created before
         const uploadContainer = document.querySelector(".upload-box");
         uploadContainer.insertBefore(img, uploadContainer.firstChild);
         uploadContainer.insertBefore(buttonContainer, img.nextSibling);
       };
 
-      //   讀取圖片檔案為 Data URL
+      // Read image as data URL
       reader.readAsDataURL(file);
     }
   });
