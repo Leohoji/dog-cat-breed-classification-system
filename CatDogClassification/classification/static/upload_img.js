@@ -69,6 +69,11 @@ function createDeleteClassifyButton() {
   return { buttonContainer, deleteButton, classifyButton };
 }
 
+function toggleButtonState(button, isEnabled) {
+  button.disabled = !isEnabled;
+  button.style.opacity = isEnabled ? "1" : "0.5";
+}
+
 // -------------------------------
 // Listener for image uploading
 // -------------------------------
@@ -83,6 +88,11 @@ document
 
       // Actions after image reading
       reader.onload = function (e) {
+        const base64Data = reader.result;
+        const name = file.name;
+        const type = file.type;
+        const size = file.size;
+
         // If image already exists, remove it
         removeEleIfExists("uploaded-image");
         removeEleIfExists("delete-button");
@@ -106,17 +116,12 @@ document
 
         // 在這裡添加 classify 按鈕的功能
         classifyButton.addEventListener("click", function () {
-          const base64Data = reader.result;
-          const imageObject = {
-            name: file.name,
-            type: file.type,
-            size: file.size,
-            lastModified: file.lastModified,
-            base64: base64Data,
-          };
+          const imageObject = { name, type, size, base64Data };
           const jsonData = JSON.stringify(imageObject);
           console.log(jsonData);
-          alert("Classifying the image..."); // 這裡可以加入分類的邏輯
+          toggleButtonState(classifyButton, false); // 禁用分類按鈕
+          classifyButton.textContent = "Predicting...";
+          // alert("Classifying the image..."); // 這裡可以加入分類的邏輯
         });
 
         // Delete listener for delete event
