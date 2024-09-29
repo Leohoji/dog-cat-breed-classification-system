@@ -7,6 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Sign-up</title>
     <link rel="stylesheet" href="{% static 'sign_up_stylesheet.css' %}" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
   </head>
   <body>
     <div class="signup-container">
@@ -14,7 +15,7 @@
       <div class="input-container" id="username-container">
         <input type="text" id="username" placeholder="Username" />
         <p class="username-rule">
-          Rule: 8 characters long including at least a letter and a number.
+          Rule: 8-12 characters long including at least a letter and a number.
         </p>
       </div>
       <div class="input-container">

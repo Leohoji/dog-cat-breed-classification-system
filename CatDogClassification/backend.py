@@ -50,13 +50,15 @@ class Verification(DatabaseManager):
         """
         # get member information
         member_info = self.get_member_info(user_data)
+        print(member_info)
 
         # check information
         if not member_info:
             # user_name, user_password  = self.get_user_info(user_data)
             # self.add_member(user_name, user_password)
-            response = 'success'
-        else: response = 'fail' 
+            response = {'result':'success', 'msg': 'Sing up successfully !'}
+        else: 
+            response = {'result':'fail', 'msg': 'This username has been exists.'}
 
         return response
 

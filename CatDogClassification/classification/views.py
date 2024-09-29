@@ -48,10 +48,10 @@ def sign_up_verification(request):
             print(user_data, type(user_data))
 
             sign_up_result = verifier.sign_up_verify(user_data)
-            if sign_up_result == 'success': 
+            if sign_up_result.get('result')  == 'success': 
                 return redirect('/login/') # Response the successful JSON data
             else: 
-                return JsonResponse({'status': 'error', 'message': sign_up_result})
+                return JsonResponse({'status': sign_up_result.get('result'), 'message': sign_up_result.get('msg')})
 
         except Exception as e:
             return JsonResponse({'status': 'error', 'message': str(e)})

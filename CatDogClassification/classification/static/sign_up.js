@@ -33,42 +33,69 @@ document.querySelector("#username").addEventListener("input", () => {
   }
 });
 
+function resetPasswordValue(passwordHTML) {
+  passwordHTML.addEventListener("click", () => {
+    if (passwordHTML.type != "password") {
+      passwordHTML.value = "";
+      passwordHTML.type = "password";
+    }
+  });
+}
+
 // Listen the sign-up button
 document.querySelector(".signup-btn").addEventListener("click", (event) => {
   // Prevent the list send automatically
   event.preventDefault();
-  const username = document.querySelector("#username").value;
-  const passwordValue = document.querySelector("#password").value;
-  const confirmPasswordValue =
-    document.querySelector("#confirm-password").value;
+  let username = document.querySelector("#username");
+  let passwordValue = document.querySelector("#password");
+  let confirmPasswordValue = document.querySelector("#confirm-password");
+
+  if (!validateUsername(username.value).valid) {
+    username.value = "Invalid User Format !";
+    usernameInput.classList.add("invalid");
+  }
+  resetPasswordValue(passwordValue);
+  resetPasswordValue(confirmPasswordValue);
+
   // Check password and confirm password
-  if (!passwordValue) {
-    passwordValue = "Please enter password";
-  } else if (!confirmPasswordValue) {
-    confirmPasswordValue = "Please enter confirm password";
-  } else if (passwordValue !== confirmPasswordValue) {
-    passwordValue = confirmPasswordValue =
-      "Password and confirm password are different !";
+  if (!passwordValue.value) {
+    passwordValue.type = "text";
+    passwordValue.value = "Please enter password";
+    return;
+  } else if (!confirmPasswordValue.value) {
+    confirmPasswordValue.type = "text";
+    confirmPasswordValue.value = "Please enter confirm password";
+    return;
+  } else if (passwordValue.value !== confirmPasswordValue.value) {
+    passwordValue.type = "text";
+    confirmPasswordValue.type = "text";
+    passwordValue.value = confirmPasswordValue.value = "Different Password !";
+    return;
   }
 
   // Apply AJAX technique to sen data to backend
+  const userValue = username.value;
+  const userPassword = passwordValue.value;
   fetch("/signUp_verify/", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ user_name: username, password: password }),
+    body: JSON.stringify({ user_name: userValue, password: userPassword }),
   })
     .then((response) => {
       if (response.redirected) {
+        console.log("Redirect...");
         // response successfully from backend using POST method
         window.location.href = response.url;
       } else {
-        return response.json();
+        console.log(response);
+        const fail_info = response.json();
+        username.value = `${fail_info.status}: ${fail_info.message}`;
+        return;
       }
     })
     .then((data) => {
       console.log("Success:", data);
-      let input_username = document.querySelector("#username");
-      document.querySelector("#password").value = "";
+      return;
     })
     .catch((error) => {
       console.error("Error:", error);
