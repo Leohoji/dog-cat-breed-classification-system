@@ -69,6 +69,24 @@ h2 {
   background-color: #f0d3d3;
 }
 
+#password-container input.invalid {
+  width: 100%;
+  padding: 10px;
+  border: none;
+  border-bottom: 2px solid #000;
+  font-size: 16px;
+  background-color: #f0d3d3;
+}
+
+#confirm-password-container input.invalid {
+  width: 100%;
+  padding: 10px;
+  border: none;
+  border-bottom: 2px solid #000;
+  font-size: 16px;
+  background-color: #f0d3d3;
+}
+
 .username-rule {
   text-align: left;
   margin-top: 5px;
@@ -76,8 +94,15 @@ h2 {
   color: #666666;
 }
 
+.password-rule {
+  text-align: left;
+  margin-top: 5px;
+  font-size: 10px;
+  color: #666666;
+}
+
 .signup-btn {
-  margin-top: 50px;
+  margin-top: 45px;
   width: 100%;
   padding: 10px;
   background-color: #d9e7ff;

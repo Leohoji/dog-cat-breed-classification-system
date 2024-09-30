@@ -18,17 +18,20 @@
           Rule: 8-12 characters long including at least a letter and a number.
         </p>
       </div>
-      <div class="input-container">
+      <div class="input-container" id="password-container">
         <input type="password" id="password" placeholder="Password" />
       </div>
-      <div class="input-container">
+      <div class="input-container" id="confirm-username-container">
         <input
           type="password"
           id="confirm-password"
           placeholder="Password again"
         />
+        <p class="password-rule">Rule: 8-12 characters long.</p>
       </div>
-      <button type="button" class="signup-btn">Sign-up</button>
+      <button type="button" class="signup-btn" id="signup-btn" disabled>
+        Sign-up
+      </button>
       <div class="signin">Is a member? <a href="#">Sign in</a></div>
     </div>
 
