@@ -50,6 +50,7 @@ def show_page(request, page_name):
         return HttpResponse('Error')
     
 def login_verification(request): 
+    """Verify user information while login"""
     if request.method == 'POST':
         try:
             # Read data from request.body
@@ -68,6 +69,7 @@ def login_verification(request):
     return JsonResponse({'status': 'error', 'message': 'Invalid request method'})
 
 def sign_up_verification(request): 
+    """Verify user information while sign up"""
     if request.method == 'POST':
         try:
             # Read data from request.body
@@ -86,8 +88,37 @@ def sign_up_verification(request):
     return JsonResponse({'status': 'error', 'message': 'Invalid request method'})
 
 def upload_image_classification(request):
+    """Receive image data from user and return the results of species classification"""
     global classifier
     
+    if request.method == 'POST':
+        try:
+            # Read data from request.body
+            img_uploaded = json.loads(request.body).get('image')
+            print(img_uploaded, type(img_uploaded))
+
+            # 這邊會先進行 cats dog detection....
+            
+            # Model prediction
+            pred_results = classifier.send_results(img_uploaded)
+            print(pred_results, type(pred_results))
+            status = pred_results.get('status')
+            if status  == 'ok': 
+                model_pred =  pred_results.get('model_pred')
+                return JsonResponse({'status': status, 'species': species, 'model_pred': model_pred, 
+                                     'redirect_url': '/results/', 'message': None})
+            else: 
+                msg = pred_results.get('msg')
+                return JsonResponse({'status': status, 'species': None, 'model_pred': None, 
+                                     'redirect_url': None, 'message': msg})
+
+        except Exception as e:
+            return JsonResponse({'status': 'error', 'message': str(e)})
+
+    return JsonResponse({'status': 'error', 'message': 'Invalid request method'})
+
+def show_classification_results(request):
+    """SHow results of species classification on the '/results/' page"""
     if request.method == 'POST':
         try:
             # Read data from request.body

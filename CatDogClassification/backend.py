@@ -10,6 +10,7 @@ from tensorflow.keras.applications.efficientnet import preprocess_input as EFNet
 
 from mysql_manager import DatabaseManager
 
+data_manager = DatabaseManager() # initialize DatabaseManager
 IMG_SIZE = (224, 224)
 
 class Verification(DatabaseManager):
@@ -125,7 +126,7 @@ def collect_historical_data(user_data:json) -> json:
     Returns:
         JSON format of user historical data with list data type originally
     """
-    data_manager = DatabaseManager() # initialize DatabaseManager
+    global data_manager
     user_name = json.loads(user_data)['user_name']
     historical_data = data_manager.get_historical_data(user_name) # return a list
     user_historical_data = json.dumps(historical_data)
