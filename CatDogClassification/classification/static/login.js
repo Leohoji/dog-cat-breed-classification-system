@@ -1,3 +1,14 @@
+// -------------------------------
+// Listener for Signing up
+// -------------------------------
+document.querySelector(".signup a").addEventListener("click", function (event) {
+  // Prevent the list send automatically
+  event.preventDefault();
+
+  // Redirect to sign_up page
+  window.location.href = "/signup/";
+});
+
 // Listener for collecting the user data
 document
   .querySelector(".login-btn")
@@ -38,15 +49,4 @@ document
       .catch((error) => {
         console.error("Error:", error);
       });
-  });
-
-// Listener for Signing up
-document
-  .querySelector(".signup a")
-  .addEventListener("click", function (event) {
-    // Prevent the list send automatically
-    event.preventDefault();
-
-    // Redirect to sign_up page
-    window.location.href = "/signup/";
   });

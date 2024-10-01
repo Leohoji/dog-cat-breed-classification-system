@@ -17,7 +17,7 @@ from django.contrib import admin
 from django.urls import path
 from functools import partial
 from classification.views import show_page, login_verification, sign_up_verification
-from classification.views import upload_image_classification
+from classification.views import upload_image_classification, show_classification_results
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -30,4 +30,5 @@ urlpatterns = [
     path('login_verify/', login_verification, name='verification'), # login verification
     path('signUp_verify/', sign_up_verification, name='verification'), # sign up verification
     path('imgCls/', upload_image_classification, name='classification'), # image classification
+    path('show_results/<str:cls_species>&<str:model_pred>', show_classification_results, name='show_results'), # show results
 ]

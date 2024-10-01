@@ -11,18 +11,15 @@
   <body>
     <div class="container">
       <div class="header">
-        <div class="logout">Logout</div>
+        <!-- <div class="logout">Logout</div> -->
+        <a href="{% url 'login' %}" class="logout">Logout</a>
       </div>
-      <div class="results-box">Results</div>
-      <p class="description">
-        Lorem Ipsum is simply dummy text of the printing and typesetting
-        industry. Lorem Ipsum has been the industry's standard dummy text ever
-        since ...
-      </p>
+      <div class="results-box">{{ Results }}</div>
+      <p class="description">{{ Description }}</p>
       <div class="image-row">
-        <div class="image-box">ex img</div>
-        <div class="image-box">ex img</div>
-        <div class="image-box">ex img</div>
+        {% for img_num in image_nums %}
+        <div class="image-box">{{ img_num }}</div>
+        {% endfor %}
       </div>
       <div class="question">
         <p>Is it the correct breed ?</p>
@@ -40,5 +37,7 @@
       </div>
       <button class="check-data">check historical data</button>
     </div>
+
+    <script src="{% static 'show_results.js' %}"></script>
   </body>
 </html>

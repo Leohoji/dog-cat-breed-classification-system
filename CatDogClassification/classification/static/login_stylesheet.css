@@ -30,7 +30,7 @@ h2 {
 }
 
 .input-container {
-  margin-bottom: 15px;
+  margin-bottom: 5px;
 }
 
 input[type="text"],
@@ -75,6 +75,7 @@ input[type="password"]::placeholder {
 
 .signup {
   margin-top: 20px;
+  font-size: 14px;
 }
 
 .signup a {

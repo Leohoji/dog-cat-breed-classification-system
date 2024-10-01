@@ -14,17 +14,6 @@ document.querySelector(".footer a").addEventListener("click", function (event) {
   window.location.href = "/historical_data/"; // Redirect to historical_data page
 });
 
-function removeEleIfExists(idTag) {
-  /* 
-  Remove element if it exists. 
-  @param {idTag}: Attribute of HTML element tag, it must be id
-  */
-  let existingElement = document.querySelector(`#${idTag}`);
-  if (existingElement) {
-    existingElement.remove();
-  }
-}
-
 function createButtonEle(id, textContent, backgroundColor) {
   /*
   Create button element for HTML generation.
@@ -124,13 +113,6 @@ document
       reader.onload = function (e) {
         const fileName = file.name;
         const base64Data = reader.result;
-
-        // If image already exists, remove it
-        removeEleIfExists("upload-file-name");
-        removeEleIfExists("uploaded-image");
-        removeEleIfExists("delete-button");
-        removeEleIfExists("classify-button");
-
         const img = createImgDisplay(e.target.result); // Create img element to show image
         const fileNameDisplay = createFileNameDisplay(fileName); // Create element for fine name display
         const { buttonContainer, deleteButton, classifyButton } =
@@ -162,7 +144,11 @@ document
           // image classification
           // --------------------
           axios
-            .post("/imgCls/", { image: base64Data })
+            .post(
+              "/imgCls/",
+              { image: base64Data },
+              { headers: { "Content-Type": "application/json" } }
+            )
             .then(function (response) {
               const data = response.data;
               console.log(data);
@@ -170,15 +156,12 @@ document
               if (status === "ok") {
                 const species = data.species;
                 const modelPred = data.model_pred;
-                const redirect_url = data.redirect_url;
 
-                // 到時候刪掉
-                swal(
-                  `${species} !`,
-                  `${modelPred} ===> go to ${redirect_url}`,
-                  "success"
-                );
-                // window.location.href = "/results/";
+                // URL redirection --> to show_results
+                window.location.href =
+                  `/show_results/` +
+                  `${encodeURIComponent(species)}&` +
+                  `${encodeURIComponent(modelPred)}`;
               } else {
                 const errorInfo = data.message;
                 swal("Error!", `${errorInfo}`, "error");

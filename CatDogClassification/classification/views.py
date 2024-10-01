@@ -43,7 +43,13 @@ def show_page(request, page_name):
     elif page_name == 'upload':
         return render(request, 'upload_img_page.html')
     elif page_name == 'results':
-        return render(request, 'show_results_page.html')
+        Results = 'Some results here'
+        # Image_Nums = ['First', 'Second', 'Third']
+        Image_Nums = range(3)
+        Description = '''Lorem Ipsum is simply dummy text of the printing and typesetting
+        industry. Lorem Ipsum has been the industry's standard dummy text ever
+        since ...'''
+        return render(request, 'show_results_page.html', { 'Results': Results, 'image_nums': Image_Nums, 'Description': Description })
     elif page_name == 'his_data':
         return render(request, 'show_his_data_page.html')
     else:
@@ -105,40 +111,34 @@ def upload_image_classification(request):
             status = pred_results.get('status')
             if status  == 'ok': 
                 model_pred =  pred_results.get('model_pred')
-                return JsonResponse({'status': status, 'species': species, 'model_pred': model_pred, 
-                                     'redirect_url': '/results/', 'message': None})
+                return JsonResponse({'status': status, 'species': species, 'model_pred': model_pred, 'message': None})
             else: 
                 msg = pred_results.get('msg')
-                return JsonResponse({'status': status, 'species': None, 'model_pred': None, 
-                                     'redirect_url': None, 'message': msg})
+                return JsonResponse({'status': status, 'species': None, 'model_pred': None, 'message': msg})
 
         except Exception as e:
             return JsonResponse({'status': 'error', 'message': str(e)})
 
     return JsonResponse({'status': 'error', 'message': 'Invalid request method'})
 
-def show_classification_results(request):
-    """SHow results of species classification on the '/results/' page"""
-    if request.method == 'POST':
+def show_classification_results(request, cls_species, model_pred):
+    """SHow results of species classification on the '/show_results/' page"""
+    if request.method == 'GET':
         try:
-            # Read data from request.body
-            img_uploaded = json.loads(request.body).get('image')
-            print(img_uploaded, type(img_uploaded))
+            # 這裡獲取 animal species 的 information (MySQL database)
 
-            # 這邊會先進行 cats dog detection....
+            # redirect to results page
+            result_title = '[%s] %s' % (cls_species, model_pred)
+            image_nums = ['First', 'Second', 'Third']
+            context = {
+                'Results': result_title,
+                'image_nums': image_nums,
+                'Description': '''Lorem Ipsum is simply dummy text of the printing and typesetting
+                               industry. Lorem Ipsum has been the industry's standard dummy text ever
+                               since ...'''
+            }
             
-            # Model prediction
-            pred_results = classifier.send_results(img_uploaded)
-            print(pred_results, type(pred_results))
-            status = pred_results.get('status')
-            if status  == 'ok': 
-                model_pred =  pred_results.get('model_pred')
-                return JsonResponse({'status': status, 'species': species, 'model_pred': model_pred, 
-                                     'redirect_url': '/results/', 'message': None})
-            else: 
-                msg = pred_results.get('msg')
-                return JsonResponse({'status': status, 'species': None, 'model_pred': None, 
-                                     'redirect_url': None, 'message': msg})
+            return render(request, 'show_results_page.html', context)
 
         except Exception as e:
             return JsonResponse({'status': 'error', 'message': str(e)})
