@@ -158,10 +158,7 @@ document
           // image classification
           // --------------------
           axios
-            .post("/imgCls/", {
-              species: "cats",
-              image: base64Data,
-            })
+            .post("/imgCls/", { image: base64Data })
             .then(function (response) {
               console.log(response);
             })

@@ -84,10 +84,10 @@ class Classification:
         
         return self.img_array
 
-    def Model_Predict(self) -> str:
+    def Model_Predict(self, base64_image_string:str) -> str:
         """Predict image after preprocessing and return predicted class"""
         # Image preprocessing
-        image_rgb = self.decode_base64_image()
+        image_rgb = self.decode_base64_image(base64_image_string)
         image_rgb = image_rgb.astype(np.float32)
         resized_image = cv2.resize(image_rgb, IMG_SIZE) # resize image to (224, 224, 3)
         processed_image = EFNetPreProcessInput(resized_image)  # preprocess image
@@ -108,8 +108,7 @@ class Classification:
         3. Convert results data into JSON format.
         """
         final_pred = self.Model_Predict()
-        self.data['model_pred'] = final_pred
-        results = json.dumps(self.data, indent=4)
+        results = json.dumps({ 'model_pred': final_pred }, indent=4)
 
         return results
 

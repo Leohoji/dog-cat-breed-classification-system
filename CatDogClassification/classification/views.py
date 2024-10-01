@@ -19,13 +19,8 @@ verifier = Verification()
 cats_classifier_path = Path('model_data').joinpath('cats_classifier.h5')
 dogs_classifier_path = Path('model_data').joinpath('dogs_classifier.h5')
 
-classifier_loaded = True
-if not classifier_loaded:
-    # Load classifiers
-    cats_classifier_loaded = load_model(cats_classifier_path)
-    dogs_classifier_loaded = load_model(dogs_classifier_path)
-    classifier = Classification()
-    classifier_loaded = True
+species = 'cats' # 這邊先暫定 cats
+classifier_loaded = False
 
 # Create your views here.
 def show_page(request, page_name):
@@ -79,20 +74,31 @@ def sign_up_verification(request):
     return JsonResponse({'status': 'error', 'message': 'Invalid request method'})
 
 def upload_image_classification(request):
+    global classifier_loaded
+    
     if request.method == 'POST':
         try:
             # Read data from request.body
             img_uploaded = json.loads(request.body)
             print(img_uploaded, type(img_uploaded))
 
-            # species, bytes_image = img_uploaded # 先暫設定 cats
+            # 這邊會先進行 cats dog detection....
+
+            # Load classifiers
+            if not classifier_loaded: 
+                model_loaded = load_model(cats_classifier_path) \
+                               if species == 'cats' \
+                               else load_model(dogs_classifier_path)
+                classifier = Classification(species=species, classifier=model_loaded)
+                classifier_loaded = True
+            model_pred = classifier.Model_Predict(img_uploaded)
 
             # sign_up_result = verifier.sign_up_verify(user_data)
             # if sign_up_result.get('result')  == 'success': 
             #     return JsonResponse({'status': sign_up_result.get('result'), 'message': sign_up_result.get('msg'), 'redirect_url': '/login/'})
             # else: 
             #     return JsonResponse({'status': sign_up_result.get('result'), 'message': sign_up_result.get('msg'), 'redirect_url': None})
-            return JsonResponse({'status': 'cats_connection', 'message': 'ok'})
+            return JsonResponse({'status': 'cats_connection', 'model_pred': model_pred})
 
         except Exception as e:
             return JsonResponse({'status': 'error', 'message': str(e)})
