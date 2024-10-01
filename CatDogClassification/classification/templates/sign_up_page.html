@@ -7,25 +7,36 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Sign-up</title>
     <link rel="stylesheet" href="{% static 'sign_up_stylesheet.css' %}" />
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
   </head>
   <body>
     <div class="signup-container">
       <h2>Sign-up</h2>
       <div class="input-container" id="username-container">
-        <input type="text" id="username" placeholder="Username" />
+        <input
+          type="text"
+          id="username"
+          placeholder="Username"
+          maxlength="12"
+        />
         <p class="username-rule">
           Rule: 8-12 characters long including at least a letter and a number.
         </p>
       </div>
       <div class="input-container" id="password-container">
-        <input type="password" id="password" placeholder="Password" />
+        <input
+          type="password"
+          id="password"
+          placeholder="Password"
+          maxlength="12"
+        />
       </div>
-      <div class="input-container" id="confirm-username-container">
+      <div class="input-container" id="confirm-password-container">
         <input
           type="password"
           id="confirm-password"
           placeholder="Password again"
+          maxlength="12"
         />
         <p class="password-rule">Rule: 8-12 characters long.</p>
       </div>

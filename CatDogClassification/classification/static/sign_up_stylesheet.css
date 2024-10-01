@@ -61,29 +61,14 @@ h2 {
 
 /* Red border for invalid input */
 #username-container input.invalid {
-  width: 100%;
-  padding: 10px;
-  border: none;
-  border-bottom: 2px solid #000;
-  font-size: 16px;
   background-color: #f0d3d3;
 }
 
 #password-container input.invalid {
-  width: 100%;
-  padding: 10px;
-  border: none;
-  border-bottom: 2px solid #000;
-  font-size: 16px;
   background-color: #f0d3d3;
 }
 
 #confirm-password-container input.invalid {
-  width: 100%;
-  padding: 10px;
-  border: none;
-  border-bottom: 2px solid #000;
-  font-size: 16px;
   background-color: #f0d3d3;
 }
 
@@ -102,7 +87,7 @@ h2 {
 }
 
 .signup-btn {
-  margin-top: 45px;
+  margin-top: 35px;
   width: 100%;
   padding: 10px;
   background-color: #d9e7ff;

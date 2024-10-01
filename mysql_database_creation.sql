@@ -2,6 +2,7 @@
 -- CREATE DATABASE `cat_dog_system`;
 USE `cat_dog_system`;
 SET SQL_SAFE_UPDATES = 0;
+SHOW TABLES;
 
 -- create memeber table
 CREATE TABLE `member_info` (
@@ -16,6 +17,7 @@ SELECT * FROM `member_info`;
 -- insert some default data
 INSERT INTO `member_info` (user_name, user_password) VALUES ('12345qwer@gmail.com', 'sdlkjfg455');
 INSERT INTO `member_info` (user_name, user_password) VALUES ('56789qwer@gmail.com', 'sdf485885');
+INSERT INTO `member_info` (user_name, user_password) VALUES ('LoHoLeo2', 'ssssssss');
 
 -- create table user_history
 CREATE TABLE user_history (
