@@ -9,7 +9,7 @@ body {
   max-width: 600px;
   margin: 20px auto;
   background-color: white;
-  padding: 20px;
+  padding: 20px 20px 10px 20px;
   border-radius: 8px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
@@ -80,4 +80,29 @@ body {
   cursor: pointer;
   color: #666;
   border-radius: 5px;
+  font-size: 12px;
+}
+
+.check-data:hover {
+  background-color: #e6f3ff;
+}
+
+.footer {
+  display: flex; /* Apply Flexbox */
+  justify-content: space-between;
+}
+
+.back-button {
+  background-color: #f0f0f0;
+  color: #666;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 12px;
+  transition: background-color 0.3s; /* 漸變效果 */
+}
+
+.back-button:hover {
+  background-color: #e6f3ff;
 }
