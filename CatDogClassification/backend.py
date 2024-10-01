@@ -1,6 +1,7 @@
 import cv2
 import json
 import base64
+import traceback
 import numpy as np
 from io import BytesIO
 from PIL import Image
@@ -9,7 +10,7 @@ from tensorflow.keras.applications.efficientnet import preprocess_input as EFNet
 
 from mysql_manager import DatabaseManager
 
-IMG_SIZE = (224, 224, 3)
+IMG_SIZE = (224, 224)
 
 class Verification(DatabaseManager):
     def login_verify(self, user_data:dict) -> str:
@@ -81,7 +82,6 @@ class Classification:
         img_data = base64.b64decode(self.base64_image_string) # Decode the base64 string back to bytes
         img = Image.open(BytesIO(img_data)) # Use BytesIO to convert the decoded bytes to an image
         self.img_array = np.array(img) # Convert the PIL image to a NumPy array
-        
         return self.img_array
 
     def Model_Predict(self, base64_image_string:str) -> str:
@@ -100,15 +100,19 @@ class Classification:
         
         return final_class
 
-    def send_results(self) -> json:
+    def send_results(self, base64_image_string:str) -> dict:
         """
         Send model prediction results to front-end in JSON data type.
         1. Model predicts the breed of image.
         2. Add prediction result to data.
         3. Convert results data into JSON format.
         """
-        final_pred = self.Model_Predict()
-        results = json.dumps({ 'model_pred': final_pred }, indent=4)
+        try:
+            final_pred = self.Model_Predict(base64_image_string)
+            results = { 'status': 'ok', 'model_pred': final_pred }
+        except Exception as E:
+            traceback.print_exc()
+            results = { 'status': 'error', 'msg': E.__class__.__name__ }
 
         return results
 

@@ -38,9 +38,11 @@ function createButtonEle(id, textContent, backgroundColor) {
   buttonElement.textContent = textContent;
   buttonElement.style.backgroundColor = backgroundColor;
   buttonElement.style.color = "white";
-  buttonElement.style.border = "none";
-  buttonElement.style.padding = "5px 10px";
+  buttonElement.style.border = "2px solid transparent"; // 預設邊框透明
+  buttonElement.style.borderRadius = "5px"; // 邊角圓潤
+  buttonElement.style.padding = "5px 10px"; // 調整按鈕大小
   buttonElement.style.cursor = "pointer";
+  buttonElement.style.boxShadow = "0 2px 3px rgba(0, 0, 0, 0.1)"; // 添加陰影
 
   return buttonElement;
 }
@@ -56,7 +58,7 @@ function createDeleteClassifyButton() {
     "Delete Photo",
     "#f44336"
   );
-  deleteButton.style.marginRight = "10px"; // right margin
+  deleteButton.style.marginRight = "20px"; // right margin
   const classifyButton = createButtonEle(
     "classify-button",
     "Classify",
@@ -74,7 +76,7 @@ function createImgDisplay(src) {
   const img = document.createElement("img");
   img.id = "uploaded-image";
   img.src = src;
-  img.style.maxWidth = "224px"; // control th width of image
+  img.style.maxWidth = "224"; // control th width of image
   img.style.maxHeight = "224px";
   img.style.display = "block"; // Set as block element
   img.style.margin = "5px auto 10px auto"; // auto center
@@ -85,15 +87,15 @@ function createImgDisplay(src) {
 function createFileNameDisplay(fileName) {
   // Create element for fine name display
   const fileNameDisplay = document.createElement("div");
-  fileNameDisplay.textContent = `Uploaded File: ${fileName}`;
+  fileNameDisplay.textContent = `File: ${fileName}`;
   fileNameDisplay.id = "upload-file-name";
-  fileNameDisplay.style.marginBottom = "5px"; // margin bottom
+  fileNameDisplay.style.marginBottom = "10px"; // margin bottom
   fileNameDisplay.style.padding = "2px"; // padding
   fileNameDisplay.style.border = "1px solid #4CAF50"; // border
   fileNameDisplay.style.borderRadius = "5px"; // radius
   fileNameDisplay.style.backgroundColor = "#f9f9f9"; // background color
   fileNameDisplay.style.boxShadow = "0 2px 5px rgba(0, 0, 0, 0.2)"; // box shadow
-  fileNameDisplay.style.maxWidth = "224px"; // same width as img element
+  fileNameDisplay.style.maxWidth = "240px"; // same width as img element
   fileNameDisplay.style.margin = "0 auto"; // margin automatically
 
   return fileNameDisplay;
@@ -143,14 +145,15 @@ document
         deleteButton.addEventListener("click", function () {
           img.remove();
           buttonContainer.remove();
+          fileNameDisplay.remove();
           document.querySelector("#file-upload").value = "";
         });
 
         // classify listener for image classification
         classifyButton.addEventListener("click", function () {
-          const imageObject = { species: "cats", base64Data };
-          const jsonData = JSON.stringify(imageObject);
-          console.log(jsonData);
+          // const imageObject = { species: "cats", base64Data };
+          // const jsonData = JSON.stringify(imageObject);
+          // console.log(jsonData);
           toggleButtonState(classifyButton, false); // 禁用分類按鈕
           classifyButton.textContent = "Predicting...";
 
@@ -160,7 +163,17 @@ document
           axios
             .post("/imgCls/", { image: base64Data })
             .then(function (response) {
-              console.log(response);
+              const data = response.data;
+              console.log(data);
+              const status = data.status;
+              if (status === "ok") {
+                const species = data.species
+                const modelPred = data.model_pred
+                const redirect_url = data.redirect_url
+                
+                alert(`${species} || ${modelPred} || ${redirect_url}`);
+                // 重新導向....
+              }
             })
             .catch(function (error) {
               console.log("Error: ", error);

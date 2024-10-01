@@ -19,8 +19,20 @@ verifier = Verification()
 cats_classifier_path = Path('model_data').joinpath('cats_classifier.h5')
 dogs_classifier_path = Path('model_data').joinpath('dogs_classifier.h5')
 
+def load_classifier(species):
+    if species == 'cats':
+        model_path = cats_classifier_path
+    else:
+        model_path = dogs_classifier_path
+
+    model = load_model(model_path)
+    return model
+
 species = 'cats' # 這邊先暫定 cats
-classifier_loaded = False
+model_loaded = load_classifier(species=species)
+
+# Load classifiers
+classifier = Classification(species=species, classifier=model_loaded)
 
 # Create your views here.
 def show_page(request, page_name):
@@ -74,31 +86,28 @@ def sign_up_verification(request):
     return JsonResponse({'status': 'error', 'message': 'Invalid request method'})
 
 def upload_image_classification(request):
-    global classifier_loaded
+    global classifier
     
     if request.method == 'POST':
         try:
             # Read data from request.body
-            img_uploaded = json.loads(request.body)
+            img_uploaded = json.loads(request.body).get('image')
             print(img_uploaded, type(img_uploaded))
 
             # 這邊會先進行 cats dog detection....
-
-            # Load classifiers
-            if not classifier_loaded: 
-                model_loaded = load_model(cats_classifier_path) \
-                               if species == 'cats' \
-                               else load_model(dogs_classifier_path)
-                classifier = Classification(species=species, classifier=model_loaded)
-                classifier_loaded = True
-            model_pred = classifier.Model_Predict(img_uploaded)
-
-            # sign_up_result = verifier.sign_up_verify(user_data)
-            # if sign_up_result.get('result')  == 'success': 
-            #     return JsonResponse({'status': sign_up_result.get('result'), 'message': sign_up_result.get('msg'), 'redirect_url': '/login/'})
-            # else: 
-            #     return JsonResponse({'status': sign_up_result.get('result'), 'message': sign_up_result.get('msg'), 'redirect_url': None})
-            return JsonResponse({'status': 'cats_connection', 'model_pred': model_pred})
+            
+            # Model prediction
+            pred_results = classifier.send_results(img_uploaded)
+            print(pred_results, type(pred_results))
+            status = pred_results.get('status')
+            if status  == 'ok': 
+                model_pred =  pred_results.get('model_pred')
+                return JsonResponse({'status': status, 'species': species, 'model_pred': model_pred, 
+                                     'redirect_url': '/results/', 'message': None})
+            else: 
+                msg = pred_results.get('msg')
+                return JsonResponse({'status': status, 'species': None, 'model_pred': None, 
+                                     'redirect_url': None, 'message': msg})
 
         except Exception as e:
             return JsonResponse({'status': 'error', 'message': str(e)})
