@@ -153,7 +153,21 @@ document
           console.log(jsonData);
           toggleButtonState(classifyButton, false); // 禁用分類按鈕
           classifyButton.textContent = "Predicting...";
-          // alert("Classifying the image..."); // 這裡可以加入分類的邏輯
+
+          // --------------------
+          // image classification
+          // --------------------
+          axios
+            .post("/imgCls/", {
+              species: "cats",
+              image: base64Data,
+            })
+            .then(function (response) {
+              console.log(response);
+            })
+            .catch(function (error) {
+              console.log("Error: ", error);
+            });
         });
       };
       reader.readAsDataURL(file); // Read image as data URL

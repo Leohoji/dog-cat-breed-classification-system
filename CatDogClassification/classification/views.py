@@ -1,11 +1,31 @@
 from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import redirect
+
 import json
+from pathlib import Path
+from tensorflow.keras.models import load_model
 
 from backend import Verification, Classification
 
+# -----------------------
+# Verifier loading
+# -----------------------
 verifier = Verification()
+
+# -----------------------
+# Model loading
+# -----------------------
+cats_classifier_path = Path('model_data').joinpath('cats_classifier.h5')
+dogs_classifier_path = Path('model_data').joinpath('dogs_classifier.h5')
+
+classifier_loaded = True
+if not classifier_loaded:
+    # Load classifiers
+    cats_classifier_loaded = load_model(cats_classifier_path)
+    dogs_classifier_loaded = load_model(dogs_classifier_path)
+    classifier = Classification()
+    classifier_loaded = True
 
 # Create your views here.
 def show_page(request, page_name):
@@ -65,11 +85,14 @@ def upload_image_classification(request):
             img_uploaded = json.loads(request.body)
             print(img_uploaded, type(img_uploaded))
 
+            # species, bytes_image = img_uploaded # 先暫設定 cats
+
             # sign_up_result = verifier.sign_up_verify(user_data)
             # if sign_up_result.get('result')  == 'success': 
             #     return JsonResponse({'status': sign_up_result.get('result'), 'message': sign_up_result.get('msg'), 'redirect_url': '/login/'})
             # else: 
             #     return JsonResponse({'status': sign_up_result.get('result'), 'message': sign_up_result.get('msg'), 'redirect_url': None})
+            return JsonResponse({'status': 'cats_connection', 'message': 'ok'})
 
         except Exception as e:
             return JsonResponse({'status': 'error', 'message': str(e)})

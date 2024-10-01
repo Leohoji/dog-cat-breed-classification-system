@@ -5,7 +5,6 @@ import numpy as np
 from io import BytesIO
 from PIL import Image
 from pathlib import Path
-from tensorflow.keras.models import load_model
 from tensorflow.keras.applications.efficientnet import preprocess_input as EFNetPreProcessInput
 
 from mysql_manager import DatabaseManager
@@ -64,38 +63,24 @@ class Verification(DatabaseManager):
 
 # data = { 'species': ##, 'image': ## }
 class Classification:
-    def __init__(self, json_payload:json):
-        self.json_payload = json_payload
+    def __init__(self, species, classifier):
+        self.species = species
+        self.classifier_loaded = classifier
 
-        # Parse the JSON payload
-        self.data = json.loads(self.json_payload)
-
-        # Extract base64 image string and species 
-        self.species, self.base64_image_string = self.data['species'], self.data['image']
-
-        # Load real classes and classifiers
-        self.cat_classes_path = Path('model_data').joinpath('cats_classes.npy')
-        self.dog_classes_path = Path('model_data').joinpath('dogs_classes.npy')
-        self.real_classes = np.load(self.cat_classes_path) \
+        # Load real classes
+        self.real_classes = np.load(Path('label_data').joinpath('cats_classes.npy')) \
                             if self.species == 'cats' \
-                            else np.load(self.dog_classes_path)
-        
-        self.cats_classifier_path = Path('model_data').joinpath('cats_classifier.h5')
-        self.dogs_classifier_path = Path('model_data').joinpath('dogs_classifier.h5')
-        self.classifier_loaded = load_model(self.cats_classifier_path) \
-                                 if self.species == 'cats' \
-                                 else load_model(self.dogs_classifier_path)
+                            else np.load(Path('label_data').joinpath('dogs_classes.npy'))
 
-    def decode_base64_image(self) -> np.array:
+    def decode_base64_image(self, base64_image_string:str) -> np.array:
         """Decode the base64 string and return the image as a PIL object"""
-        # Decode the base64 string back to bytes
-        img_data = base64.b64decode(self.base64_image_string)
-        
-        # Use BytesIO to convert the decoded bytes to an image
-        img = Image.open(BytesIO(img_data))
-        
-        # Convert the PIL image to a NumPy array
-        self.img_array = np.array(img)
+        try:
+            self.base64_image_string = base64_image_string.split(",")[-1]
+        except:
+            self.base64_image_string = base64_image_string
+        img_data = base64.b64decode(self.base64_image_string) # Decode the base64 string back to bytes
+        img = Image.open(BytesIO(img_data)) # Use BytesIO to convert the decoded bytes to an image
+        self.img_array = np.array(img) # Convert the PIL image to a NumPy array
         
         return self.img_array
 
