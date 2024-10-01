@@ -38,11 +38,11 @@ function createButtonEle(id, textContent, backgroundColor) {
   buttonElement.textContent = textContent;
   buttonElement.style.backgroundColor = backgroundColor;
   buttonElement.style.color = "white";
-  buttonElement.style.border = "2px solid transparent"; // 預設邊框透明
-  buttonElement.style.borderRadius = "5px"; // 邊角圓潤
-  buttonElement.style.padding = "5px 10px"; // 調整按鈕大小
+  buttonElement.style.border = "2px solid transparent"; // default border transparent
+  buttonElement.style.borderRadius = "5px"; // rounded corners
+  buttonElement.style.padding = "5px 10px";
   buttonElement.style.cursor = "pointer";
-  buttonElement.style.boxShadow = "0 2px 3px rgba(0, 0, 0, 0.1)"; // 添加陰影
+  buttonElement.style.boxShadow = "0 2px 3px rgba(0, 0, 0, 0.1)"; // add shadow
 
   return buttonElement;
 }
@@ -73,6 +73,10 @@ function createDeleteClassifyButton() {
 }
 
 function createImgDisplay(src) {
+  /* 
+  Create element for image display. 
+  @param {src}: Image source
+  */
   const img = document.createElement("img");
   img.id = "uploaded-image";
   img.src = src;
@@ -151,10 +155,7 @@ document
 
         // classify listener for image classification
         classifyButton.addEventListener("click", function () {
-          // const imageObject = { species: "cats", base64Data };
-          // const jsonData = JSON.stringify(imageObject);
-          // console.log(jsonData);
-          toggleButtonState(classifyButton, false); // 禁用分類按鈕
+          toggleButtonState(classifyButton, false); // disabled button
           classifyButton.textContent = "Predicting...";
 
           // --------------------
@@ -167,12 +168,20 @@ document
               console.log(data);
               const status = data.status;
               if (status === "ok") {
-                const species = data.species
-                const modelPred = data.model_pred
-                const redirect_url = data.redirect_url
-                
-                alert(`${species} || ${modelPred} || ${redirect_url}`);
-                // 重新導向....
+                const species = data.species;
+                const modelPred = data.model_pred;
+                const redirect_url = data.redirect_url;
+
+                // 到時候刪掉
+                swal(
+                  `${species} !`,
+                  `${modelPred} ===> go to ${redirect_url}`,
+                  "success"
+                );
+                // window.location.href = "/results/";
+              } else {
+                const errorInfo = data.message;
+                swal("Error!", `${errorInfo}`, "error");
               }
             })
             .catch(function (error) {
