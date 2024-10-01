@@ -3,7 +3,7 @@ from django.http import HttpResponse, JsonResponse
 from django.shortcuts import redirect
 import json
 
-from backend import Verification
+from backend import Verification, Classification
 
 verifier = Verification()
 
@@ -52,6 +52,24 @@ def sign_up_verification(request):
                 return JsonResponse({'status': sign_up_result.get('result'), 'message': sign_up_result.get('msg'), 'redirect_url': '/login/'})
             else: 
                 return JsonResponse({'status': sign_up_result.get('result'), 'message': sign_up_result.get('msg'), 'redirect_url': None})
+
+        except Exception as e:
+            return JsonResponse({'status': 'error', 'message': str(e)})
+
+    return JsonResponse({'status': 'error', 'message': 'Invalid request method'})
+
+def upload_image_classification(request):
+    if request.method == 'POST':
+        try:
+            # Read data from request.body
+            img_uploaded = json.loads(request.body)
+            print(img_uploaded, type(img_uploaded))
+
+            # sign_up_result = verifier.sign_up_verify(user_data)
+            # if sign_up_result.get('result')  == 'success': 
+            #     return JsonResponse({'status': sign_up_result.get('result'), 'message': sign_up_result.get('msg'), 'redirect_url': '/login/'})
+            # else: 
+            #     return JsonResponse({'status': sign_up_result.get('result'), 'message': sign_up_result.get('msg'), 'redirect_url': None})
 
         except Exception as e:
             return JsonResponse({'status': 'error', 'message': str(e)})

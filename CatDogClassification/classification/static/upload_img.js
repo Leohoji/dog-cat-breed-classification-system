@@ -47,6 +47,7 @@ function createButtonEle(id, textContent, backgroundColor) {
 
 function createDeleteClassifyButton() {
   const buttonContainer = document.createElement("div");
+  buttonContainer.id = "button-container";
   buttonContainer.style.display = "flex";
   buttonContainer.style.justifyContent = "center";
   buttonContainer.style.margin = "10px 0";
@@ -69,6 +70,35 @@ function createDeleteClassifyButton() {
   return { buttonContainer, deleteButton, classifyButton };
 }
 
+function createImgDisplay(src) {
+  const img = document.createElement("img");
+  img.id = "uploaded-image";
+  img.src = src;
+  img.style.maxWidth = "224px"; // control th width of image
+  img.style.maxHeight = "224px";
+  img.style.display = "block"; // Set as block element
+  img.style.margin = "5px auto 10px auto"; // auto center
+
+  return img;
+}
+
+function createFileNameDisplay(fileName) {
+  // Create element for fine name display
+  const fileNameDisplay = document.createElement("div");
+  fileNameDisplay.textContent = `Uploaded File: ${fileName}`;
+  fileNameDisplay.id = "upload-file-name";
+  fileNameDisplay.style.marginBottom = "5px"; // margin bottom
+  fileNameDisplay.style.padding = "2px"; // padding
+  fileNameDisplay.style.border = "1px solid #4CAF50"; // border
+  fileNameDisplay.style.borderRadius = "5px"; // radius
+  fileNameDisplay.style.backgroundColor = "#f9f9f9"; // background color
+  fileNameDisplay.style.boxShadow = "0 2px 5px rgba(0, 0, 0, 0.2)"; // box shadow
+  fileNameDisplay.style.maxWidth = "224px"; // same width as img element
+  fileNameDisplay.style.margin = "0 auto"; // margin automatically
+
+  return fileNameDisplay;
+}
+
 function toggleButtonState(button, isEnabled) {
   button.disabled = !isEnabled;
   button.style.opacity = isEnabled ? "1" : "0.5";
@@ -81,48 +111,33 @@ document
   .querySelector("#file-upload")
   .addEventListener("change", function (event) {
     const file = event.target.files[0]; // collect the chosen file
-    // const fileInput = document.querySelector("#file-upload");
-    // console.log(file);
     if (file) {
       const reader = new FileReader();
 
       // Actions after image reading
       reader.onload = function (e) {
+        const fileName = file.name;
         const base64Data = reader.result;
-        const name = file.name;
-        const type = file.type;
-        const size = file.size;
 
         // If image already exists, remove it
+        removeEleIfExists("upload-file-name");
         removeEleIfExists("uploaded-image");
         removeEleIfExists("delete-button");
         removeEleIfExists("classify-button");
 
-        // Create img element to show image
-        const img = document.createElement("img");
-        img.id = "uploaded-image";
-        img.src = e.target.result;
-        img.style.maxWidth = "224px"; // control th width of image
-        img.style.maxHeight = "224px";
-        img.style.display = "block"; // Set as block element
-        img.style.margin = "5px auto 10px auto"; // auto center
-
-        // -------------------------------
-        // Create a div element to collect
-        // delete and classify button
-        // -------------------------------
+        const img = createImgDisplay(e.target.result); // Create img element to show image
+        const fileNameDisplay = createFileNameDisplay(fileName); // Create element for fine name display
         const { buttonContainer, deleteButton, classifyButton } =
-          createDeleteClassifyButton();
+          createDeleteClassifyButton(); // Create a delete and classify button
 
-        // 在這裡添加 classify 按鈕的功能
-        classifyButton.addEventListener("click", function () {
-          const imageObject = { name, type, size, base64Data };
-          const jsonData = JSON.stringify(imageObject);
-          console.log(jsonData);
-          toggleButtonState(classifyButton, false); // 禁用分類按鈕
-          classifyButton.textContent = "Predicting...";
-          // alert("Classifying the image..."); // 這裡可以加入分類的邏輯
-        });
+        // Insert elements created before
+        const uploadContainer = document.querySelector(".upload-box");
+        uploadContainer.insertBefore(img, uploadContainer.firstChild);
+        uploadContainer.insertBefore(buttonContainer, img.nextSibling);
+        uploadContainer.insertBefore(
+          fileNameDisplay,
+          uploadContainer.firstChild
+        );
 
         // Delete listener for delete event
         deleteButton.addEventListener("click", function () {
@@ -131,10 +146,15 @@ document
           document.querySelector("#file-upload").value = "";
         });
 
-        // Insert elements created before
-        const uploadContainer = document.querySelector(".upload-box");
-        uploadContainer.insertBefore(img, uploadContainer.firstChild);
-        uploadContainer.insertBefore(buttonContainer, img.nextSibling);
+        // classify listener for image classification
+        classifyButton.addEventListener("click", function () {
+          const imageObject = { species: "cats", base64Data };
+          const jsonData = JSON.stringify(imageObject);
+          console.log(jsonData);
+          toggleButtonState(classifyButton, false); // 禁用分類按鈕
+          classifyButton.textContent = "Predicting...";
+          // alert("Classifying the image..."); // 這裡可以加入分類的邏輯
+        });
       };
       reader.readAsDataURL(file); // Read image as data URL
     }
