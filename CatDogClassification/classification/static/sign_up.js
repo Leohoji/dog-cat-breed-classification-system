@@ -116,7 +116,7 @@ document.querySelector("#signup-btn").addEventListener("click", (event) => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           user_name: userValue,
-          password: userPassword,
+          user_password: userPassword,
         }),
       })
         .then((response) => {
