@@ -44,12 +44,13 @@ def show_page(request, page_name):
         return render(request, 'upload_img_page.html')
     elif page_name == 'results':
         Results = 'Some results here'
-        # Image_Nums = ['First', 'Second', 'Third']
         Image_Nums = range(3)
         Description = '''Lorem Ipsum is simply dummy text of the printing and typesetting
         industry. Lorem Ipsum has been the industry's standard dummy text ever
         since ...'''
-        return render(request, 'show_results_page.html', { 'Results': Results, 'image_nums': Image_Nums, 'Description': Description })
+        Original_Breed = "None"
+        context = { 'Results': Results, 'image_nums': Image_Nums, 'Description': Description, 'Original_Breed': Original_Breed }
+        return render(request, 'show_results_page.html', context)
     elif page_name == 'his_data':
         return render(request, 'show_his_data_page.html')
     else:
@@ -128,14 +129,15 @@ def show_classification_results(request, cls_species, model_pred):
             # 這裡獲取 animal species 的 information (MySQL database)
 
             # redirect to results page
-            result_title = '[%s] %s' % (cls_species, model_pred)
+            result_title = '%s || %s' % (cls_species.capitalize(), model_pred)
             image_nums = ['First', 'Second', 'Third']
             context = {
                 'Results': result_title,
                 'image_nums': image_nums,
                 'Description': '''Lorem Ipsum is simply dummy text of the printing and typesetting
                                industry. Lorem Ipsum has been the industry's standard dummy text ever
-                               since ...'''
+                               since ...''',
+                'Original_Breed': model_pred
             }
             
             return render(request, 'show_results_page.html', context)

@@ -1,8 +1,95 @@
 // -------------------------------
 // Listener for historical data checking
 // -------------------------------
-document
-  .querySelector(".check-data")
-  .addEventListener("click", function (event) {
-    window.location.href = "/historical_data/"; // Redirect to historical_data page
+// document.querySelector(".save-data").addEventListener("click", () => {
+//   window.location.href = "/historical_data/"; // Redirect to historical_data page
+// });
+
+// -------------------------------
+// Listener for back upload image
+// -------------------------------
+document.querySelector(".back-button").addEventListener("click", () => {
+  window.location.href = "/upload/"; // Redirect to upload page
+});
+
+function validationSelection(breedCheck, breedSelect) {
+  /*
+  Check classification feedback (yes or no) and breed selection (if selection is no)
+  @param {breedCheck}: button for classification feedback
+  @param {breedSelect}: dropdown menu value for breed selection
+  @return {boolean: true or false}
+  */
+  if (breedCheck.value === "no" && !breedSelect.value) {
+    optionsContainer.style.border = "2px solid red"; // set border as red
+    errorMessage.style.display = "block"; // display error message
+    return false;
+  }
+  return true;
+}
+
+// -------------------------------
+// Listener for selection display
+// -------------------------------
+const breedRadioButtons = document.querySelectorAll('input[name="breed"]');
+const breedSelect = document.querySelector(".breed-select");
+const optionsContainer = document.querySelector(".options"); // option container
+const errorMessage = document.querySelector(".error-message"); // error message
+
+// Clear all the error style before submitting selection
+breedRadioButtons.forEach((radio) => {
+  radio.addEventListener("change", function () {
+    if (this.value === "no") {
+      breedSelect.style.display = "block";
+      optionsContainer.style.border = "none";
+      errorMessage.style.display = "none";
+    } else {
+      breedSelect.style.display = "none";
+      breedSelect.value = "";
+      optionsContainer.style.border = "none";
+      errorMessage.style.display = "none";
+    }
   });
+});
+
+breedSelect.addEventListener("change", function () {
+  if (this.value) {
+    optionsContainer.style.border = "none";
+    errorMessage.style.display = "none";
+  }
+});
+
+// -------------------------------
+// Listener for data checking
+// -------------------------------
+
+
+
+document.querySelector(".save-data").addEventListener("click", function () {
+  const breedSelect = document.querySelector(".breed-select");
+  const breedCheck = document.querySelector('input[name="breed"]:checked');
+  checkValidated = validationSelection(breedCheck, breedSelect); // validation and error display
+
+  // Get values of radio
+  if (checkValidated) {
+    const originalBreed = document.querySelector("#original-class");
+    const breedRadioButtons = document.querySelectorAll('input[name="breed"]');
+    let selectedBreed;
+    let breedChoice;
+    breedRadioButtons.forEach((radio) => {
+      if (radio.checked) {
+        breedChoice = radio.value;
+        if (breedChoice === "no") {
+          selectedBreed = breedSelect.value; // Get value of dropdown menu
+        } else {
+          selectedBreed = originalBreed.innerText;
+        }
+      }
+    });
+
+    // 在控制台顯示選擇的值
+    console.log("Breed Choice (Yes/No):", breedChoice);
+    console.log("Selected Breed:", selectedBreed);
+  }
+
+  //   window.location.href = "/historical_data/"; // Redirect to historical_data page
+});

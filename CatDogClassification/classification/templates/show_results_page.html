@@ -22,7 +22,17 @@
         {% endfor %}
       </div>
       <div class="question">
-        <p>Is it the correct breed ?</p>
+        <!-- question block css display here -->
+        <div
+          class="question-breed-block"
+          style="display: flex; align-items: center"
+        >
+          <p id="question-sent" style="margin-right: 10px">
+            Is it the correct breed?
+          </p>
+          <p id="original-class">{{ Original_Breed }}</p>
+        </div>
+        <!-- question block css display here -->
         <div class="options">
           <label>
             <input type="radio" name="breed" value="yes" />
@@ -32,20 +42,25 @@
             <input type="radio" name="breed" value="no" />
             No
           </label>
-          <input type="text" placeholder="Breed name" class="breed-input" />
+          <select class="breed-select" style="display: none">
+            <option value="">Select breed</option>
+            <option value="Sphynx">Sphynx</option>
+            <option value="Persian">Persian</option>
+            <option value="Bulldog">Bulldog</option>
+            <option value="Labrador">staffordshire bull terrier</option>
+            <option value="Golden Retriever">Golden Retriever</option>
+          </select>
+          <!-- <div class="original-class">{{ Original_Breed }}</div> -->
+        </div>
+        <div class="error-message" style="display: none; color: red">
+          Please select a breed.
         </div>
       </div>
-      <!-- <button class="check-data">check historical data</button> -->
       <div class="footer">
-        <button class="check-data">check historical data</button>
+        <button class="save-data">Save Data</button>
         <button class="back-button">Back</button>
       </div>
     </div>
-
-    <!-- <div class="footer"> 
-      <button class="check-data">check historical data</button>
-      <button class="back-button">Back</button>
-    </div> -->
 
     <script src="{% static 'show_results.js' %}"></script>
   </body>

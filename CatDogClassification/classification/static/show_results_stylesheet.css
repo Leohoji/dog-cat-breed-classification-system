@@ -68,12 +68,37 @@ body {
   margin-right: 20px;
 }
 
-.breed-input {
-  margin-left: 10px;
-  padding: 5px;
+/* Set the width and border of the drop-down menu */
+.breed-select {
+  width: 180px;
+  padding: 2px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+  background-color: #fff;
+  cursor: pointer;
+  transition: border-color 0.3s;
 }
 
-.check-data {
+/* Change border color when dropdown menu gets focus */
+.breed-select:focus {
+  border-color: #007bff; /* The border color when focus is obtained */
+  outline: none; /* Remove default outline */
+}
+
+/* Style options of dropdown menu */
+.breed-select option {
+  padding: 10px;
+  background-color: #fff;
+  color: #333; /* Font color */
+}
+
+/* Can add hover effects to options */
+.breed-select option:hover {
+  background-color: #f1f1f1;
+}
+
+.save-data {
   background-color: #f0f0f0;
   border: none;
   padding: 10px 20px;
@@ -83,7 +108,7 @@ body {
   font-size: 12px;
 }
 
-.check-data:hover {
+.save-data:hover {
   background-color: #e6f3ff;
 }
 
