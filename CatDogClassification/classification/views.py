@@ -111,7 +111,6 @@ def show_user_upload_page(request, username):
 
     return JsonResponse({'status': 'error', 'message': 'Invalid request method'})
 
-
 def upload_image_classification(request):
     """Receive image data from user and return the results of species classification"""
     global classifier
@@ -140,7 +139,7 @@ def upload_image_classification(request):
 
     return JsonResponse({'status': 'error', 'message': 'Invalid request method'})
 
-def show_classification_results(request, cls_species, model_pred):
+def show_classification_results(request, cls_species, model_pred, username):
     """Show results of species classification on the '/show_results/' page"""
     if request.method == 'GET':
         try:
@@ -155,7 +154,8 @@ def show_classification_results(request, cls_species, model_pred):
                 'Description': '''Lorem Ipsum is simply dummy text of the printing and typesetting
                                industry. Lorem Ipsum has been the industry's standard dummy text ever
                                since ...''',
-                'Original_Breed': model_pred
+                'Original_Breed': model_pred,
+                'USERNAME': username
             }
             
             return render(request, 'show_results_page.html', context)

@@ -7,6 +7,11 @@ document.querySelector(".logout a").addEventListener("click", function (event) {
 });
 
 // -------------------------------
+// For user account verification
+// -------------------------------
+const username = document.querySelector("#user-account").innerText;
+
+// -------------------------------
 // Listener for historical data checking
 // -------------------------------
 document.querySelector(".footer a").addEventListener("click", function (event) {
@@ -161,7 +166,8 @@ document
                 window.location.href =
                   `/show_results/` +
                   `${encodeURIComponent(species)}&` +
-                  `${encodeURIComponent(modelPred)}`;
+                  `${encodeURIComponent(modelPred)}&` +
+                  `${encodeURIComponent(username)}`;
               } else {
                 const errorInfo = data.message;
                 swal("Error!", `${errorInfo}`, "error");

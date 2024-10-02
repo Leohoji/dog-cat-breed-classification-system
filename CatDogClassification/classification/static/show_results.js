@@ -61,9 +61,6 @@ breedSelect.addEventListener("change", function () {
 // -------------------------------
 // Listener for data checking
 // -------------------------------
-
-
-
 document.querySelector(".save-data").addEventListener("click", function () {
   const breedSelect = document.querySelector(".breed-select");
   const breedCheck = document.querySelector('input[name="breed"]:checked');
