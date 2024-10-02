@@ -16,8 +16,8 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from functools import partial
-from classification.views import show_page, login_verification, sign_up_verification
-from classification.views import upload_image_classification, show_classification_results
+from classification.views import show_page, show_user_upload_page, show_classification_results
+from classification.views import login_verification, sign_up_verification, upload_image_classification
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -29,6 +29,7 @@ urlpatterns = [
 
     path('login_verify/', login_verification, name='verification'), # login verification
     path('signUp_verify/', sign_up_verification, name='verification'), # sign up verification
+    path('upload/<str:username>', show_user_upload_page, name='image_uploading'), # user upload image
     path('imgCls/', upload_image_classification, name='classification'), # image classification
     path('show_results/<str:cls_species>&<str:model_pred>', show_classification_results, name='show_results'), # show results
 ]

@@ -77,3 +77,13 @@ input[type="file"] {
 .footer a:hover {
   text-decoration: underline;
 }
+
+#user-account {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  background-color: rgba(255, 255, 255, 0.8);
+  color: rgba(0, 0, 0, 0.5);
+  padding: 10px;
+  border-radius: 5px;
+}

@@ -5,8 +5,12 @@ from django.shortcuts import redirect
 import json
 from pathlib import Path
 from tensorflow.keras.models import load_model
-
 from backend import Verification, Classification
+
+# -----------------------
+# User name saving
+# -----------------------
+USERNAME = 'LoHoLeo2' # default user
 
 # -----------------------
 # Verifier loading
@@ -41,7 +45,7 @@ def show_page(request, page_name):
     elif page_name == 'sign_up':
         return render(request, 'sign_up_page.html')
     elif page_name == 'upload':
-        return render(request, 'upload_img_page.html')
+        return render(request, 'upload_img_page.html', { 'USERNAME': USERNAME })
     elif page_name == 'results':
         Results = 'Some results here'
         Image_Nums = range(3)
@@ -66,7 +70,9 @@ def login_verification(request):
 
             login_result = verifier.login_verify(user_data)
             if login_result == 'yes': 
-                return redirect('/upload/') # Response the successful JSON data
+                username = user_data.get('user_name')
+                print(username)
+                return JsonResponse({'status': login_result, 'USERNAME': username})
             else: 
                 return JsonResponse({'status': 'error', 'message': login_result})
 
@@ -93,6 +99,18 @@ def sign_up_verification(request):
             return JsonResponse({'status': 'error', 'message': str(e)})
 
     return JsonResponse({'status': 'error', 'message': 'Invalid request method'})
+
+def show_user_upload_page(request, username):
+    """Show image uploading page based on username"""
+    if request.method == 'GET':
+        try:
+            return render(request, 'upload_img_page.html', { 'USERNAME': username })
+
+        except Exception as e:
+            return JsonResponse({'status': 'error', 'message': str(e)})
+
+    return JsonResponse({'status': 'error', 'message': 'Invalid request method'})
+
 
 def upload_image_classification(request):
     """Receive image data from user and return the results of species classification"""
@@ -123,7 +141,7 @@ def upload_image_classification(request):
     return JsonResponse({'status': 'error', 'message': 'Invalid request method'})
 
 def show_classification_results(request, cls_species, model_pred):
-    """SHow results of species classification on the '/show_results/' page"""
+    """Show results of species classification on the '/show_results/' page"""
     if request.method == 'GET':
         try:
             # 這裡獲取 animal species 的 information (MySQL database)
