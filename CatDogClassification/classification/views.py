@@ -1,21 +1,27 @@
 from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse
-from django.shortcuts import redirect
 
 import json
+import numpy as np
 from pathlib import Path
 from tensorflow.keras.models import load_model
 from backend import Verification, Classification
 
 # -----------------------
-# User name saving
+# Default variables
 # -----------------------
-USERNAME = 'LoHoLeo2' # default user
+USERNAME = 'LoHoLeo2'
+species = 'cats' # 這邊先暫定 cats
 
 # -----------------------
 # Verifier loading
 # -----------------------
 verifier = Verification()
+
+# Load real classes
+real_classes = np.load(Path('label_data').joinpath('cats_classes.npy')) \
+                       if species == 'cats' \
+                       else np.load(Path('label_data').joinpath('dogs_classes.npy'))
 
 # -----------------------
 # Model loading
@@ -32,11 +38,10 @@ def load_classifier(species):
     model = load_model(model_path)
     return model
 
-species = 'cats' # 這邊先暫定 cats
 model_loaded = load_classifier(species=species)
 
 # Load classifiers
-classifier = Classification(species=species, classifier=model_loaded)
+classifier = Classification(species=species, classifier=model_loaded, real_classes=real_classes)
 
 # Create your views here.
 def show_page(request, page_name):

@@ -63,16 +63,11 @@ class Verification(DatabaseManager):
 
         return response
 
-# data = { 'species': ##, 'image': ## }
 class Classification:
-    def __init__(self, species, classifier):
+    def __init__(self, species, classifier, real_classes):
         self.species = species
         self.classifier_loaded = classifier
-
-        # Load real classes
-        self.real_classes = np.load(Path('label_data').joinpath('cats_classes.npy')) \
-                            if self.species == 'cats' \
-                            else np.load(Path('label_data').joinpath('dogs_classes.npy'))
+        self.real_classes = real_classes
 
     def decode_base64_image(self, base64_image_string:str) -> np.array:
         """Decode the base64 string and return the image as a PIL object"""
