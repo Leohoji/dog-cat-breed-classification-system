@@ -61,7 +61,9 @@ def show_page(request, page_name):
         Link = 'https://en.wikipedia.org/wiki/Cat'
         Original_Breed = "None"
         Data = {'description': Description, 'link': Link}
-        context = { 'Results': Results, 'image_nums': Image_Nums, 'Data': Data, 'Original_Breed': Original_Breed, 'USERNAME': USERNAME }
+        context = { 'Results': Results, 'image_nums': Image_Nums, 
+                   'Data': Data, 'Original_Breed': Original_Breed, 
+                   'USERNAME': USERNAME, 'breeds': [str(i) for i in range(10)] }
         return render(request, 'show_results_page.html', context)
     elif page_name == 'his_data':
         return render(request, 'show_his_data_page.html')
@@ -175,7 +177,8 @@ def show_classification_results(request, cls_species, model_pred, username):
                 'image_nums': image_nums,
                 'Data': Data,
                 'Original_Breed': model_pred,
-                'USERNAME': username
+                'USERNAME': username,
+                'breeds': real_classes
             }
             
             return render(request, 'show_results_page.html', context)

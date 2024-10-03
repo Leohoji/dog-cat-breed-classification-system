@@ -11,7 +11,6 @@
   <body>
     <div class="container">
       <div class="header">
-        <!-- <div class="logout">Logout</div> -->
         <a href="{% url 'login' %}" class="logout">Logout</a>
       </div>
       <div class="results-box">{{ Results }}</div>
@@ -53,13 +52,14 @@
           </label>
           <select class="breed-select" style="display: none">
             <option value="">Select breed</option>
-            <option value="Sphynx">Sphynx</option>
-            <option value="Persian">Persian</option>
+            {% for breed in breeds %}
+            <option value="{{ breed }}">{{ breed }}</option>
+            {% endfor %}
+            <!-- <option value="Persian">Persian</option>
             <option value="Bulldog">Bulldog</option>
             <option value="Labrador">staffordshire bull terrier</option>
-            <option value="Golden Retriever">Golden Retriever</option>
+            <option value="Golden Retriever">Golden Retriever</option> -->
           </select>
-          <!-- <div class="original-class">{{ Original_Breed }}</div> -->
         </div>
         <div class="error-message" style="display: none; color: red">
           Please select a breed.
