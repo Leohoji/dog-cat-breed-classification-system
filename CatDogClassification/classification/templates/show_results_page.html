@@ -22,7 +22,11 @@
       <div class="image-row">
         {% for idx, image in image_nums %}
         <div class="image-box">
-          <img src="data:image/jpeg;base64,{{ image }}" alt="Image {{ idx }}" />
+          <img
+            src="data:image/jpeg;base64, {{ image }}"
+            alt="Image {{ idx }}"
+            style="width: 200px; height: 224px"
+          />
         </div>
         {% endfor %}
       </div>

@@ -157,13 +157,23 @@ def show_classification_results(request, cls_species, model_pred, username):
 
             # redirect to results page
             result_title = '%s || %s' % (cls_species.capitalize(), model_pred)
-            image_nums = ['First', 'Second', 'Third']
+            
+            # images need to be decoded after MySQL querying
+            image_1 = animal_data['image_1'].decode('utf-8')
+            image_2 = animal_data['image_2'].decode('utf-8')
+            image_3 = animal_data['image_3'].decode('utf-8')
+            image_nums = enumerate([image_1, image_2, image_3], start=1)
+
+            # animal description and link
+            Description = animal_data['animal_description'] 
+            Link = animal_data['animal_link']
+            Data = {'description': Description, 'link': Link}
+
+            # full context
             context = {
                 'Results': result_title,
                 'image_nums': image_nums,
-                'Description': '''Lorem Ipsum is simply dummy text of the printing and typesetting
-                               industry. Lorem Ipsum has been the industry's standard dummy text ever
-                               since ...''',
+                'Data': Data,
                 'Original_Breed': model_pred,
                 'USERNAME': username
             }
