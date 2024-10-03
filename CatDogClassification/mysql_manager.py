@@ -115,12 +115,16 @@ class DatabaseManager:
         Returns:
             True for success or False for failure.
         """
-        self.connect() # login database
-        results = feedback if feedback else 'yes'
-        query = f"INSERT INTO `user_history` (user_name, image, results) VALUES (%s, %s, %s);"
-        self.cursor.execute(query, (user_name, image, results))
-        self.disconnect() # disconnect database
-        return True
+        try:
+            self.connect() # login database
+            query = f"INSERT INTO `user_history` (user_name, image, results) VALUES (%s, %s, %s);"
+            self.cursor.execute(query, (user_name, image, feedback))
+            self.disconnect() # disconnect database
+            return True
+        except Exception as e:
+            print(e.__class__.__name__)
+            traceback.print_exc()
+            return False
 
 if __name__ == '__main__':
     import string

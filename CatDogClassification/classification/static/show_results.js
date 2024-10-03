@@ -8,8 +8,9 @@
 // -------------------------------
 // Listener for back upload image
 // -------------------------------
+const username = document.querySelector("#user-account").innerText;
 document.querySelector(".back-button").addEventListener("click", () => {
-  window.location.href = "/upload/"; // Redirect to upload page
+  window.location.href = `/upload/${encodeURIComponent(username)}`; // Redirect to upload page
 });
 
 function validationSelection(breedCheck, breedSelect) {
@@ -66,8 +67,9 @@ document.querySelector(".save-data").addEventListener("click", function () {
   const breedCheck = document.querySelector('input[name="breed"]:checked');
   checkValidated = validationSelection(breedCheck, breedSelect); // validation and error display
 
-  // Get values of radio
+  // Get values of radio if checked and dropout
   if (checkValidated) {
+    // Save yes or no choice and real breed
     const originalBreed = document.querySelector("#original-class");
     const breedRadioButtons = document.querySelectorAll('input[name="breed"]');
     let selectedBreed;
@@ -83,10 +85,27 @@ document.querySelector(".save-data").addEventListener("click", function () {
       }
     });
 
-    // 在控制台顯示選擇的值
-    console.log("Breed Choice (Yes/No):", breedChoice);
-    console.log("Selected Breed:", selectedBreed);
+    swal(
+      "Thanks For Your Feedback!",
+      "Go back to upload page!",
+      "success"
+    ).then(() => {
+      // Save classification results to database ...
+      const feedback = { breedChoice, selectedBreed };
+      axios
+        .post(
+          "/save_data/",
+          { username, feedback },
+          { headers: { "Content-Type": "application/json" } }
+        )
+        .then(
+          () => {
+            window.location.href = `/upload/${encodeURIComponent(username)}`;
+          } // Redirect to upload page});
+        );
+      console.log(
+        `Breed Choice (Yes/No): ${breedChoice} | Selected Breed: ${selectedBreed}`
+      );
+    });
   }
-
-  //   window.location.href = "/historical_data/"; // Redirect to historical_data page
 });

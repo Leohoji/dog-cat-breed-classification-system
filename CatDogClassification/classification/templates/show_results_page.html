@@ -7,6 +7,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Results Page</title>
     <link rel="stylesheet" href="{% static 'show_results_stylesheet.css' %}" />
+    <script src="https://cdn.jsdelivr.net/npm/axios@1.6.7/dist/axios.min.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
   </head>
   <body>
     <div class="container">
@@ -52,10 +54,6 @@
             {% for breed in breeds %}
             <option value="{{ breed }}">{{ breed }}</option>
             {% endfor %}
-            <!-- <option value="Persian">Persian</option>
-            <option value="Bulldog">Bulldog</option>
-            <option value="Labrador">staffordshire bull terrier</option>
-            <option value="Golden Retriever">Golden Retriever</option> -->
           </select>
         </div>
         <div class="error-message" style="display: none; color: red">

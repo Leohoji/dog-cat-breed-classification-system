@@ -6,7 +6,7 @@ import numpy as np
 from pathlib import Path
 from tensorflow.keras.models import load_model
 from backend import Verification, Classification
-from backend import collect_animal_info
+from backend import collect_animal_info, save_results_to_database
 
 # -----------------------
 # Default variables
@@ -189,6 +189,31 @@ def show_classification_results(request, cls_species, model_pred, username):
                        'Original_Breed': model_pred, 'USERNAME': username, 'breeds': real_classes}
             
             return render(request, 'show_results_page.html', context)
+
+        except Exception as e:
+            return JsonResponse({'status': 'error', 'message': str(e)})
+
+    return JsonResponse({'status': 'error', 'message': 'Invalid request method'})
+
+def save_data(request):
+    """Save user's feedback and classification result to database"""
+    if request.method == 'POST':
+        try:
+            # collect user's classification result
+            user_data = json.loads(request.body)
+            print(user_data, type(user_data))
+
+            # get username, user's image, user's feedback
+            username = user_data.get('username')
+            user_img = read_base64_from_file()
+            cls_result = user_data.get('feedback')
+            feedback = "%s,%s" %(cls_result['breedChoice'], cls_result['selectedBreed'])\
+            
+            # save to database
+            saved = save_results_to_database(username=username, image=user_img, feedback=feedback)
+
+            if saved: print("Successfully save feedback to MySQL database!")
+            else: print("Fail, please check the function!")
 
         except Exception as e:
             return JsonResponse({'status': 'error', 'message': str(e)})

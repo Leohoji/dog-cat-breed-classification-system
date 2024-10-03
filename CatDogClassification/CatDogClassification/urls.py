@@ -17,7 +17,8 @@ from django.contrib import admin
 from django.urls import path
 from functools import partial
 from classification.views import show_page, show_user_upload_page, show_classification_results
-from classification.views import login_verification, sign_up_verification, upload_image_classification
+from classification.views import login_verification, sign_up_verification
+from classification.views import upload_image_classification, save_data
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -32,4 +33,5 @@ urlpatterns = [
     path('upload/<str:username>', show_user_upload_page, name='image_uploading'), # user upload image
     path('imgCls/', upload_image_classification, name='classification'), # image classification
     path('show_results/<str:cls_species>&<str:model_pred>&<str:username>', show_classification_results, name='show_results'), # show results
+    path('save_data/', save_data, name='save_results'), # save classification result
 ]

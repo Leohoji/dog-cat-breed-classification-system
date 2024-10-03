@@ -126,6 +126,12 @@ def collect_animal_info(animal_breed:str):
     
     return animal_data
 
+def save_results_to_database(username:str, image:str, feedback:json): 
+    global data_manager
+    saved = data_manager.update_historical_data(user_name=username, image=image, feedback=feedback)
+    
+    return saved
+
 def collect_historical_data(user_data:json) -> json:
     """
     Get historical data of user from front-end interface.
