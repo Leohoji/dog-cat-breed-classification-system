@@ -21,6 +21,11 @@ body {
   margin-bottom: 10px;
 }
 
+.logout-back {
+  display: flex;
+  justify-content: space-between;
+}
+
 .user-info {
   font-weight: bold;
 }
@@ -37,15 +42,18 @@ hr {
 }
 
 .data-table {
-  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  width: 100%; /* Adjust width as needed */
 }
 
 .table-header,
 .table-row {
   display: flex;
-  justify-content: space-between;
-  padding: 10px 0;
-  border-bottom: 1px solid #eee;
+  justify-content: space-between; /* Distribute space evenly */
+  align-items: center; /* Vertically align items */
+  padding: 10px;
+  border-bottom: 1px solid #ccc; /* Optional: add bottom border */
 }
 
 .table-header {
@@ -53,19 +61,23 @@ hr {
 }
 
 .column {
-  flex: 1;
+  flex: 1; /* Make each column take equal space */
+  text-align: center; /* Center-align text */
+  min-width: 0; /* Prevent overflow */
 }
 
-.footer {
-  display: flex;
-  justify-content: flex-end;
+.cls-img {
+  max-width: 100px; /* Adjust maximum width of the image */
+  max-height: 100px; /* Adjust maximum height of the image */
+  object-fit: cover; /* Maintain aspect ratio, crop overflow */
 }
 
-.back-button {
-  padding: 10px 20px;
-  background-color: #f0f0f0;
+button {
+  padding: 5px 10px;
+  font-size: 16px;
+  background-color: #ffffff;
   border: none;
   border-radius: 5px;
   cursor: pointer;
-  color: #333;
+  color: #9d3434;
 }

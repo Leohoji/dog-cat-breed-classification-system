@@ -5,7 +5,6 @@ import traceback
 import numpy as np
 from io import BytesIO
 from PIL import Image
-from pathlib import Path
 from tensorflow.keras.applications.efficientnet import preprocess_input as EFNetPreProcessInput
 
 from mysql_manager import DatabaseManager
@@ -127,22 +126,32 @@ def collect_animal_info(animal_breed:str):
     return animal_data
 
 def save_results_to_database(username:str, image:str, feedback:json): 
+    """
+    Save user's classification results to MySQL database
+    
+    Args:
+        username: User's name from front-end interface
+        image: Image object in base64 data type
+        feedback: Classification results from user's feedback
+    Returns:
+        Boolean, whether to save successfully
+    """
     global data_manager
     saved = data_manager.update_historical_data(user_name=username, image=image, feedback=feedback)
     
     return saved
 
-def collect_historical_data(user_name:str) -> json:
+def collect_historical_data(user_name:str) -> list:
     """
-    Get historical data of user from front-end interface.
+    Get historical data of via username passed from front-end interface.
 
     Args:
         user_name: Member's user name
     Returns:
-        JSON format of user historical data with list data type originally
+        List format of user historical data
     """
     global data_manager
     historical_data = data_manager.get_historical_data(user_name) # return a list
-    user_historical_data = json.dumps(historical_data)
+    user_historical_data = [(data[2].decode('utf-8'), data[3], data[4].strftime("%Y/%m/%d %H:%M:%S")) for data in historical_data]
 
     return user_historical_data

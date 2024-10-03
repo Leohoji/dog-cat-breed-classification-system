@@ -11,32 +11,34 @@
   <body>
     <div class="container">
       <div class="header">
-        <div class="user-info" id="user-name">User name: *******</div>
-        <div class="logout">Logout</div>
+        <div class="user-info" id="user-name">User name: {{USERNAME}}</div>
+        <div class="logout-back">
+          <button class="back-button">Back</button><p class="logout">Logout</p>
+        </div>
       </div>
       <hr />
       <div class="data-table">
         <div class="table-header">
           <div class="column">Datetime</div>
           <div class="column">Results</div>
+          <div class="column">Photos</div>
         </div>
+        {% for Image, Feedback, DateTime in Historical_Data %}
         <div class="table-row">
-          <div class="column">DD/MM/YY H:m:S</div>
-          <div class="column">Yes</div>
-        </div>
-        <div class="table-row">
-          <div class="column">DD/MM/YY H:m:S</div>
-          <div class="column">No, *********</div>
-        </div>
-        <div class="table-row">
-          <div class="column">...</div>
-          <div class="column"></div>
+          <div class="column">{{ DateTime }}</div>
+          <div class="column">{{ Feedback }}</div>
+          <div class="column">
+            <img
+              class="cls-img"
+              src="data:image/jpeg;base64, {{ Image }}"
+              alt="Image"
+            />
+          </div>
         </div>
       </div>
-      <div class="footer">
-        <button class="back-button">Back</button>
-      </div>
+      {% endfor %}
     </div>
+    <!-- <div class="footer">這裡想放頁碼.....</div> -->
 
     <script src="{% static 'show_his_data.js' %}"></script>
   </body>

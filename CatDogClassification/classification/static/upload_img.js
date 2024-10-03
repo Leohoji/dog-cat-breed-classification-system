@@ -16,7 +16,7 @@ const username = document.querySelector("#user-account").innerText;
 // -------------------------------
 document.querySelector(".footer a").addEventListener("click", function (event) {
   event.preventDefault(); // Prevent the list send automatically
-  window.location.href = "/historical_data/"; // Redirect to historical_data page
+  window.location.href = `/historical_data/${encodeURIComponent(username)}`; // Redirect to historical_data page
 });
 
 function createButtonEle(id, textContent, backgroundColor) {

@@ -6,7 +6,7 @@ import numpy as np
 from pathlib import Path
 from tensorflow.keras.models import load_model
 from backend import Verification, Classification
-from backend import collect_animal_info, save_results_to_database
+from backend import collect_animal_info, save_results_to_database, collect_historical_data
 
 # -----------------------
 # Default variables
@@ -20,16 +20,6 @@ species = 'cats' # 這邊先暫定 cats
 # -----------------------
 verifier = Verification()
 
-def save_base64_to_file(base64_string):
-    """Save Base64 string to txt file"""
-    with open(USER_IMG_FILE_NAME, 'w') as file:
-        file.write(base64_string)
-
-def read_base64_from_file():
-    """Read Base64 string from txt file"""
-    with open(USER_IMG_FILE_NAME, 'r') as file:
-        return file.read()
-
 # Load real classes
 real_classes = np.load(Path('label_data').joinpath('cats_classes.npy')) \
                        if species == 'cats' \
@@ -41,21 +31,24 @@ real_classes = np.load(Path('label_data').joinpath('cats_classes.npy')) \
 cats_classifier_path = Path('model_data').joinpath('cats_classifier.h5')
 dogs_classifier_path = Path('model_data').joinpath('dogs_classifier.h5')
 
-def load_classifier(species):
-    if species == 'cats':
-        model_path = cats_classifier_path
-    else:
-        model_path = dogs_classifier_path
-
-    model = load_model(model_path)
-    return model
-
-model_loaded = load_classifier(species=species)
+model_loaded = load_model(cats_classifier_path) \
+               if species == 'cats' \
+               else load_model(dogs_classifier_path)
 
 # Load classifiers
 classifier = Classification(species=species, classifier=model_loaded, real_classes=real_classes)
 
 # Create your views here.
+def save_base64_to_file(base64_string):
+    """Save Base64 string to txt file"""
+    with open(USER_IMG_FILE_NAME, 'w') as file:
+        file.write(base64_string)
+
+def read_base64_from_file():
+    """Read Base64 string from txt file"""
+    with open(USER_IMG_FILE_NAME, 'r') as file:
+        return file.read()
+
 def show_page(request, page_name):
     if page_name == 'login':
         return render(request, 'login_page.html')
@@ -72,12 +65,13 @@ def show_page(request, page_name):
         Link = 'https://en.wikipedia.org/wiki/Cat'
         Original_Breed = "None"
         Data = {'description': Description, 'link': Link}
-        context = { 'Results': Results, 'image_nums': Image_Nums, 
+        context = {'Results': Results, 'image_nums': Image_Nums, 
                    'Data': Data, 'Original_Breed': Original_Breed, 
                    'USERNAME': USERNAME, 'breeds': [str(i) for i in range(10)] }
         return render(request, 'show_results_page.html', context)
     elif page_name == 'his_data':
-        return render(request, 'show_his_data_page.html')
+        context = {'USERNAME': USERNAME, 'Historical_Data': [('DD/MM/YY H:m:S', 'No, *********', 'None')]}
+        return render(request, 'show_his_data_page.html', context)
     else:
         return HttpResponse('Error')
     
@@ -214,6 +208,21 @@ def save_data(request):
 
             if saved: print("Successfully save feedback to MySQL database!")
             else: print("Fail, please check the function!")
+
+        except Exception as e:
+            return JsonResponse({'status': 'error', 'message': str(e)})
+
+    return JsonResponse({'status': 'error', 'message': 'Invalid request method'})
+
+def collect_user_historical_data(request, username):
+    """ Get historical data via username passed from front-end interface."""
+    if request.method == 'GET':
+        try:
+            # collect user's data
+            user_historical_data = collect_historical_data(user_name=username)
+            context = {'USERNAME': username, 'Historical_Data': user_historical_data}
+
+            return render(request, 'show_his_data_page.html', context)
 
         except Exception as e:
             return JsonResponse({'status': 'error', 'message': str(e)})
