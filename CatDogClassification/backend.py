@@ -132,7 +132,7 @@ def save_results_to_database(username:str, image:str, feedback:json):
     
     return saved
 
-def collect_historical_data(user_data:json) -> json:
+def collect_historical_data(user_name:str) -> json:
     """
     Get historical data of user from front-end interface.
 
@@ -142,7 +142,6 @@ def collect_historical_data(user_data:json) -> json:
         JSON format of user historical data with list data type originally
     """
     global data_manager
-    user_name = json.loads(user_data)['user_name']
     historical_data = data_manager.get_historical_data(user_name) # return a list
     user_historical_data = json.dumps(historical_data)
 

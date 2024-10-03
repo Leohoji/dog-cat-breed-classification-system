@@ -1,11 +1,4 @@
 // -------------------------------
-// Listener for historical data checking
-// -------------------------------
-// document.querySelector(".save-data").addEventListener("click", () => {
-//   window.location.href = "/historical_data/"; // Redirect to historical_data page
-// });
-
-// -------------------------------
 // Listener for back upload image
 // -------------------------------
 const username = document.querySelector("#user-account").innerText;
