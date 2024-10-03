@@ -80,10 +80,10 @@ input[type="file"] {
 
 #user-account {
   position: fixed;
-  bottom: 20px;
-  left: 20px;
+  bottom: 10px;
+  left: 10px;
   background-color: rgba(255, 255, 255, 0.8);
   color: rgba(0, 0, 0, 0.5);
   padding: 10px;
-  border-radius: 5px;
+  border-radius: 20px;
 }

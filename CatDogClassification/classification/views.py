@@ -12,12 +12,23 @@ from backend import collect_animal_info
 # Default variables
 # -----------------------
 USERNAME = 'LoHoLeo2'
+USER_IMG_FILE_NAME = 'user_img.txt' # user's image
 species = 'cats' # 這邊先暫定 cats
 
 # -----------------------
 # Verifier loading
 # -----------------------
 verifier = Verification()
+
+def save_base64_to_file(base64_string):
+    """Save Base64 string to txt file"""
+    with open(USER_IMG_FILE_NAME, 'w') as file:
+        file.write(base64_string)
+
+def read_base64_from_file():
+    """Read Base64 string from txt file"""
+    with open(USER_IMG_FILE_NAME, 'r') as file:
+        return file.read()
 
 # Load real classes
 real_classes = np.load(Path('label_data').joinpath('cats_classes.npy')) \
@@ -128,13 +139,15 @@ def upload_image_classification(request):
     if request.method == 'POST':
         try:
             # Read data from request.body
-            img_uploaded = json.loads(request.body).get('image')
-            print(img_uploaded, type(img_uploaded))
+            user_img_uploaded = json.loads(request.body).get('image')
+            # print(user_img_uploaded)
+            print(type(user_img_uploaded))
+            save_base64_to_file(user_img_uploaded.replace('data:image/jpeg;base64,', ''))
 
             # 這邊會先進行 cats dog detection....
             
             # Model prediction
-            pred_results = classifier.send_results(img_uploaded)
+            pred_results = classifier.send_results(user_img_uploaded)
             print(pred_results, type(pred_results))
             status = pred_results.get('status')
             if status  == 'ok': 
@@ -153,18 +166,18 @@ def show_classification_results(request, cls_species, model_pred, username):
     """Show results of species classification on the '/show_results/' page"""
     if request.method == 'GET':
         try:
-            # 這裡獲取 animal species 的 information (MySQL database)
+            # collect animal information from MySQL database
             animal_data = collect_animal_info(model_pred)
-            print(animal_data)
 
             # redirect to results page
-            result_title = '%s || %s' % (cls_species.capitalize(), model_pred)
+            result_title = 'SPECIES: %s || BREED: %s' % (cls_species.capitalize(), model_pred)
             
             # images need to be decoded after MySQL querying
+            user_img = read_base64_from_file()
             image_1 = animal_data['image_1'].decode('utf-8')
             image_2 = animal_data['image_2'].decode('utf-8')
-            image_3 = animal_data['image_3'].decode('utf-8')
-            image_nums = enumerate([image_1, image_2, image_3], start=1)
+            image_nums = zip(["Your Image", f"{model_pred} Image1", f"{model_pred} Image2"], 
+                             [user_img, image_1, image_2])
 
             # animal description and link
             Description = animal_data['animal_description'] 
@@ -172,14 +185,8 @@ def show_classification_results(request, cls_species, model_pred, username):
             Data = {'description': Description, 'link': Link}
 
             # full context
-            context = {
-                'Results': result_title,
-                'image_nums': image_nums,
-                'Data': Data,
-                'Original_Breed': model_pred,
-                'USERNAME': username,
-                'breeds': real_classes
-            }
+            context = {'Results': result_title,'image_nums': image_nums, 'Data': Data,
+                       'Original_Breed': model_pred, 'USERNAME': username, 'breeds': real_classes}
             
             return render(request, 'show_results_page.html', context)
 

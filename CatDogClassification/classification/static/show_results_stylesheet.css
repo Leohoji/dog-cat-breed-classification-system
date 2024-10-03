@@ -46,13 +46,31 @@ body {
 }
 
 .image-box {
-  background-color: #e6f3ff;
   width: 30%;
   aspect-ratio: 1;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   border-radius: 8px;
+}
+
+.image-box img {
+  width: 200px;
+  height: 224px;
+  background-color: #e6fffd;
+}
+
+.image-title {
+  width: 200px;
+  text-align: center; /* Center the title */
+  margin-top: 5px; /* Add space between the title and the image */
+  font-weight: bold; /* Make it bold */
+  background-color: #f0f8ff; /* Set background color */
+  border: 1px solid #0e0e0f; /* Set border color */
+  border-radius: 5px; /* Set border radius */
+  padding: 1px 2px; /* Add padding for a better appearance */
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3); /* Add shadow for a 3D effect */
 }
 
 .question {
@@ -134,10 +152,10 @@ body {
 
 #user-account {
   position: fixed;
-  bottom: 20px;
-  left: 20px;
+  bottom: 10px;
+  left: 10px;
   background-color: rgba(255, 255, 255, 0.8);
   color: rgba(0, 0, 0, 0.5);
   padding: 10px;
-  border-radius: 5px;
+  border-radius: 20px;
 }
