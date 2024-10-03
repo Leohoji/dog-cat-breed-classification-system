@@ -79,7 +79,7 @@ class DatabaseManager:
         animal_info = self.cursor.fetchone()
         
         # create animal data
-        keys = ('animal_id', 'animal_breed', 'image_1', 'image_2', 'image_3', 'animal_description')
+        keys = ('animal_id', 'animal_breed', 'image_1', 'image_2', 'image_3', 'animal_description', 'animal_link')
         animal_data = {}
         for key, value in zip(keys, animal_info):
             animal_data[key] = value

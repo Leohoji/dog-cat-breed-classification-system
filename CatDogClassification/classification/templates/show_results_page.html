@@ -15,10 +15,15 @@
         <a href="{% url 'login' %}" class="logout">Logout</a>
       </div>
       <div class="results-box">{{ Results }}</div>
-      <p class="description">{{ Description }}</p>
+      <p class="description">
+        {{ Data.description }}...
+        <a href="{{ Data.link }}" target="_blank">Learn More</a>
+      </p>
       <div class="image-row">
-        {% for img_num in image_nums %}
-        <div class="image-box">{{ img_num }}</div>
+        {% for idx, image in image_nums %}
+        <div class="image-box">
+          <img src="data:image/jpeg;base64,{{ image }}" alt="Image {{ idx }}" />
+        </div>
         {% endfor %}
       </div>
       <div class="question">

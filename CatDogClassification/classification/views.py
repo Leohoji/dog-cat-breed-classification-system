@@ -6,6 +6,7 @@ import numpy as np
 from pathlib import Path
 from tensorflow.keras.models import load_model
 from backend import Verification, Classification
+from backend import collect_animal_info
 
 # -----------------------
 # Default variables
@@ -53,12 +54,14 @@ def show_page(request, page_name):
         return render(request, 'upload_img_page.html', { 'USERNAME': USERNAME })
     elif page_name == 'results':
         Results = 'Some results here'
-        Image_Nums = range(3)
+        Image_Nums = enumerate([1, 2, 3], start=1)
         Description = '''Lorem Ipsum is simply dummy text of the printing and typesetting
         industry. Lorem Ipsum has been the industry's standard dummy text ever
         since ...'''
+        Link = 'https://en.wikipedia.org/wiki/Cat'
         Original_Breed = "None"
-        context = { 'Results': Results, 'image_nums': Image_Nums, 'Description': Description, 'Original_Breed': Original_Breed }
+        Data = {'description': Description, 'link': Link}
+        context = { 'Results': Results, 'image_nums': Image_Nums, 'Data': Data, 'Original_Breed': Original_Breed, 'USERNAME': USERNAME }
         return render(request, 'show_results_page.html', context)
     elif page_name == 'his_data':
         return render(request, 'show_his_data_page.html')
@@ -149,6 +152,8 @@ def show_classification_results(request, cls_species, model_pred, username):
     if request.method == 'GET':
         try:
             # 這裡獲取 animal species 的 information (MySQL database)
+            animal_data = collect_animal_info(model_pred)
+            print(animal_data)
 
             # redirect to results page
             result_title = '%s || %s' % (cls_species.capitalize(), model_pred)

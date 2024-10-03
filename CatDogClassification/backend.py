@@ -112,6 +112,20 @@ class Classification:
 
         return results
 
+def collect_animal_info(animal_breed:str):
+    """
+    Get animal information of animal breed from front-end interface.
+
+    Args:
+        animal_breed: Animal's breed name from model prediction
+    Returns:
+        Animal information (breed_name, images, description, link) in dictionary data type
+    """
+    global data_manager
+    animal_data = data_manager.get_animal_info(animal_breed)
+    
+    return animal_data
+
 def collect_historical_data(user_data:json) -> json:
     """
     Get historical data of user from front-end interface.
