@@ -18,21 +18,18 @@ from django.urls import path
 from functools import partial
 from classification.views import show_page, show_user_upload_page, show_classification_results
 from classification.views import login_verification, sign_up_verification
-from classification.views import upload_image_classification, save_data, collect_user_historical_data
+from classification.views import upload_image_classification, save_data, update_user_historical_data
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('login/', partial(show_page, page_name='login'), name='login'),
-    path('signup/', partial(show_page, page_name='sign_up'), name='sign_up'),
-    path('upload/', partial(show_page, page_name='upload'), name='upload'),
-    path('results/', partial(show_page, page_name='results'), name='results'),
-    # path('historical_data/', partial(show_page, page_name='his_data'), name='his_data'),
-
+    path('login/', partial(show_page, page_name='login'), name='login'), # user login
+    path('signup/', partial(show_page, page_name='sign_up'), name='sign_up'), # user sign up
+    path('upload/', partial(show_page, page_name='upload'), name='upload'), # upload image for classification
     path('login_verify/', login_verification, name='verification'), # login verification
     path('signUp_verify/', sign_up_verification, name='verification'), # sign up verification
     path('upload/<str:username>', show_user_upload_page, name='image_uploading'), # user upload image
     path('imgCls/', upload_image_classification, name='classification'), # image classification
     path('show_results/<str:cls_species>&<str:model_pred>&<str:username>', show_classification_results, name='show_results'), # show results
     path('save_data/', save_data, name='save_results'), # save classification result
-    path('historical_data/<str:username>&page=<str:page>', collect_user_historical_data, name='user_historical_data'), # user's historical data
+    path('historical_data/<str:username>&cur_page=<str:cur_page>', update_user_historical_data, name='user_historical_data'), # user's data
 ]

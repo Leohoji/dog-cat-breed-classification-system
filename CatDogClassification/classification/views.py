@@ -57,22 +57,6 @@ def show_page(request, page_name):
         return render(request, 'sign_up_page.html')
     elif page_name == 'upload':
         return render(request, 'upload_img_page.html', { 'USERNAME': USERNAME })
-    elif page_name == 'results':
-        Results = 'Some results here'
-        Image_Nums = enumerate([1, 2, 3], start=1)
-        Description = '''Lorem Ipsum is simply dummy text of the printing and typesetting
-        industry. Lorem Ipsum has been the industry's standard dummy text ever
-        since ...'''
-        Link = 'https://en.wikipedia.org/wiki/Cat'
-        Original_Breed = "None"
-        Data = {'description': Description, 'link': Link}
-        context = {'Results': Results, 'image_nums': Image_Nums, 
-                   'Data': Data, 'Original_Breed': Original_Breed, 
-                   'USERNAME': USERNAME, 'breeds': [str(i) for i in range(10)] }
-        return render(request, 'show_results_page.html', context)
-    # elif page_name == 'his_data':
-    #     context = {'USERNAME': USERNAME, 'Historical_Data': [('DD/MM/YY H:m:S', 'No, *********', 'None')]}
-    #     return render(request, 'show_his_data_page.html', context)
     else:
         return HttpResponse('Error')
     
@@ -215,22 +199,47 @@ def save_data(request):
 
     return JsonResponse({'status': 'error', 'message': 'Invalid request method'})
 
-def collect_user_historical_data(request, username, page):
+def update_user_historical_data(request, username, cur_page):
     """ Get historical data via username passed from front-end interface."""
     if request.method == 'GET':
         try:
             # collect user's data
             user_historical_data = collect_historical_data(user_name=username)
-            paginator = Paginator(user_historical_data, 1)
-            print(f"historical_data_count: {len(user_historical_data)} | paginator's count (幾個，幾頁，頁碼): {paginator.count, paginator.num_pages, paginator.page_range}")
 
-            cur_page = paginator.page(page)
-            print(cur_page.has_next())  # 是否有下一页
-            # print(cur_page.next_page_number())  # 写一页的页码
-            print(cur_page.has_previous())  # 是否有上一页
-            # print(cur_page.previous_page_number())  # 上一页的页码
-      
-            context = {'USERNAME': username, 'Historical_Data': user_historical_data}
+            # set paginator for HTML pagination
+            cur_page = int(cur_page)
+            paginator = Paginator(user_historical_data, 5) # pass all historical data and five per page
+            print(f"historical_data_count: {len(user_historical_data)} | paginator's count (幾個，幾頁，頁碼): {paginator.count, paginator.num_pages, paginator.page_range}")
+            page_range = paginator.page_range # rage of all page numbers
+            page = paginator.page(cur_page) # current page object
+
+            # Over than 11 pages
+            if paginator.num_pages > 11:
+                # -----------------------------------------------------------
+                # When the last 5 pages of the current page number exceed 
+                # the maximum page number, the last 10 items will be displayed.
+                # -----------------------------------------------------------
+                if cur_page + 5 > paginator.num_pages:
+                    page_range = range(paginator.num_pages - 10, paginator.num_pages + 1)
+                # -----------------------------------------------------------
+                # When the first 5 pages of the current page number are negative, 
+                # the first 10 items are displayed.
+                # -----------------------------------------------------------
+                elif cur_page - 5 < 1:
+                    page_range = range(1, 12)
+                else:
+                    # Display the page numbers from page 5 on the left to page 5 on the right
+                    page_range = range(cur_page - 5, cur_page + 5 + 1)
+            # Show all page numbers if there are less than 11 pages
+            else:
+                page_range = paginator.page_range
+
+            # create the context for HTML variables delivery
+            context = {'USERNAME': username, 
+                       'Historical_Data': page.object_list, 
+                       'page': page, 
+                       'current_num': cur_page, 
+                       'page_range': page_range}
 
             return render(request, 'show_his_data_page.html', context)
 

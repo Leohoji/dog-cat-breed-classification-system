@@ -20,7 +20,7 @@ document.querySelector(".footer a").addEventListener("click", function (event) {
   window.location.href =
     `/historical_data/` +
     `${encodeURIComponent(username)}&` +
-    `page=${encodeURIComponent(page)}`; // Redirect to historical_data page
+    `cur_page=${encodeURIComponent(page)}`; // Redirect to historical_data page
 });
 
 function createButtonEle(id, textContent, backgroundColor) {
