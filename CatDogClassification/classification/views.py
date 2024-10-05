@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse
+from django.core.paginator import Paginator
 
 import json
 import numpy as np
@@ -69,9 +70,9 @@ def show_page(request, page_name):
                    'Data': Data, 'Original_Breed': Original_Breed, 
                    'USERNAME': USERNAME, 'breeds': [str(i) for i in range(10)] }
         return render(request, 'show_results_page.html', context)
-    elif page_name == 'his_data':
-        context = {'USERNAME': USERNAME, 'Historical_Data': [('DD/MM/YY H:m:S', 'No, *********', 'None')]}
-        return render(request, 'show_his_data_page.html', context)
+    # elif page_name == 'his_data':
+    #     context = {'USERNAME': USERNAME, 'Historical_Data': [('DD/MM/YY H:m:S', 'No, *********', 'None')]}
+    #     return render(request, 'show_his_data_page.html', context)
     else:
         return HttpResponse('Error')
     
@@ -214,12 +215,21 @@ def save_data(request):
 
     return JsonResponse({'status': 'error', 'message': 'Invalid request method'})
 
-def collect_user_historical_data(request, username):
+def collect_user_historical_data(request, username, page):
     """ Get historical data via username passed from front-end interface."""
     if request.method == 'GET':
         try:
             # collect user's data
             user_historical_data = collect_historical_data(user_name=username)
+            paginator = Paginator(user_historical_data, 1)
+            print(f"historical_data_count: {len(user_historical_data)} | paginator's count (幾個，幾頁，頁碼): {paginator.count, paginator.num_pages, paginator.page_range}")
+
+            cur_page = paginator.page(page)
+            print(cur_page.has_next())  # 是否有下一页
+            # print(cur_page.next_page_number())  # 写一页的页码
+            print(cur_page.has_previous())  # 是否有上一页
+            # print(cur_page.previous_page_number())  # 上一页的页码
+      
             context = {'USERNAME': username, 'Historical_Data': user_historical_data}
 
             return render(request, 'show_his_data_page.html', context)

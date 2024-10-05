@@ -23,6 +23,7 @@ body {
 
 .logout-back {
   display: flex;
+  flex-direction: row;
   justify-content: space-between;
 }
 
@@ -31,6 +32,7 @@ body {
 }
 
 .logout {
+  margin-top: 10px;
   cursor: pointer;
   color: #666;
 }
@@ -74,10 +76,16 @@ hr {
 
 button {
   padding: 5px 10px;
+  margin-bottom: 5px;
   font-size: 16px;
   background-color: #ffffff;
   border: none;
   border-radius: 5px;
   cursor: pointer;
   color: #9d3434;
+}
+
+#historical-page {
+  margin-top: 10px;
+  margin-bottom: -25px;
 }

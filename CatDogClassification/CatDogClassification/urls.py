@@ -26,7 +26,7 @@ urlpatterns = [
     path('signup/', partial(show_page, page_name='sign_up'), name='sign_up'),
     path('upload/', partial(show_page, page_name='upload'), name='upload'),
     path('results/', partial(show_page, page_name='results'), name='results'),
-    path('historical_data/', partial(show_page, page_name='his_data'), name='his_data'),
+    # path('historical_data/', partial(show_page, page_name='his_data'), name='his_data'),
 
     path('login_verify/', login_verification, name='verification'), # login verification
     path('signUp_verify/', sign_up_verification, name='verification'), # sign up verification
@@ -34,5 +34,5 @@ urlpatterns = [
     path('imgCls/', upload_image_classification, name='classification'), # image classification
     path('show_results/<str:cls_species>&<str:model_pred>&<str:username>', show_classification_results, name='show_results'), # show results
     path('save_data/', save_data, name='save_results'), # save classification result
-    path('historical_data/<str:username>', collect_user_historical_data, name='user_historical_data'), # user's historical data
+    path('historical_data/<str:username>&page=<str:page>', collect_user_historical_data, name='user_historical_data'), # user's historical data
 ]
