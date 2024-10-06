@@ -9,19 +9,6 @@ document.querySelector(".signup a").addEventListener("click", function (event) {
   window.location.href = "/signup/";
 });
 
-// -------------------------------
-// Listener for gmail verification
-// -------------------------------
-document
-  .querySelector(".forgot-password")
-  .addEventListener("click", function (event) {
-    // Prevent the list send automatically
-    event.preventDefault();
-
-    // Redirect to sign_up page
-    window.location.href = "/gmail_verify/";
-  });
-
 // Listener for collecting the user data
 document
   .querySelector(".login-btn")

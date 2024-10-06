@@ -7,6 +7,11 @@ from io import BytesIO
 from PIL import Image
 from tensorflow.keras.applications.efficientnet import preprocess_input as EFNetPreProcessInput
 
+import random
+import smtplib
+from email.mime.text import MIMEText
+from python_mail import Gmail_Account, Gmail_Password
+
 from mysql_manager import DatabaseManager
 
 data_manager = DatabaseManager() # initialize DatabaseManager
@@ -155,3 +160,42 @@ def collect_historical_data(user_name:str) -> list:
     user_historical_data = [(data[2].decode('utf-8'), data[3], data[4].strftime("%Y/%m/%d %H:%M:%S")) for data in historical_data]
 
     return user_historical_data
+
+def send_verification_code(to_user_gmail:str) -> dict:
+    """
+    Generate a verification code and sed it to user's gmail account
+    
+    Args:
+        to_user_gmail: The user gmail account to send
+    Returns:
+        A dictionary contains sending status and verification code
+    """
+    # Generate 5-digit random number
+    random_number = random.randint(10000, 99999)
+    html = '''
+    <html lang="en">
+    <body style="font-family: Arial, sans-serif; background-color: #f4f4f4; text-align: center; padding: 50px;">
+        <div style="background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+            <h1 style="margin: 0;">Your Verification Code</h1>
+            <p style="margin: 10px 0;">Please use the following code to complete verification:</p>
+            <div style="font-size: 24px; font-weight: bold; color: #007BFF;">{}</div>
+            <p style="margin: 10px 0;">If you did not request this code, please ignore this email.</p>
+        </div>
+    </body>
+    </html>
+    '''.format(random_number)
+
+    mail = MIMEText(html, 'html', 'utf-8') # plain 換成 html，就能寄送 HTML 格式的信件
+    mail['Subject']='html 的信'
+    mail['From']= Gmail_Account
+    mail['To']= to_user_gmail
+
+    smtp = smtplib.SMTP('smtp.gmail.com', 587)
+    smtp.ehlo()
+    smtp.starttls()
+    smtp.login(Gmail_Account, Gmail_Password)
+    status = smtp.send_message(mail)
+    print(status)
+    smtp.quit()
+
+    return {'status': status, 'verification_code': random_number}

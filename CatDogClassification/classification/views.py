@@ -8,6 +8,7 @@ from pathlib import Path
 from tensorflow.keras.models import load_model
 from backend import Verification, Classification
 from backend import collect_animal_info, save_results_to_database, collect_historical_data
+from backend import send_verification_code
 
 # -----------------------
 # Default variables
@@ -246,6 +247,17 @@ def update_user_historical_data(request, username, cur_page):
                        'page_range': page_range}
 
             return render(request, 'show_his_data_page.html', context)
+
+        except Exception as e:
+            return JsonResponse({'status': 'error', 'message': str(e)})
+
+    return JsonResponse({'status': 'error', 'message': 'Invalid request method'})
+
+def user_gmail_verification(request): 
+    """Send verification code to user's gmail account"""
+    if request.method == 'POST':
+        try:
+           pass
 
         except Exception as e:
             return JsonResponse({'status': 'error', 'message': str(e)})

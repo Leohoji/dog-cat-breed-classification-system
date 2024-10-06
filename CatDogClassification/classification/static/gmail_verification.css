@@ -22,7 +22,7 @@ body {
   text-align: center;
 }
 
-h2 {
+h1 {
   font-size: 2rem;
   margin-bottom: 20px;
 }
@@ -32,12 +32,12 @@ h2 {
 }
 
 input[type="text"] {
-  width: 100%;
+  width: 300px;
   padding: 10px;
   margin-bottom: 10px;
   border: 2px solid #000;
   border-radius: 5px;
-  font-size: 1rem;
+  font-size: 16px;
 }
 
 .button-group {
@@ -48,8 +48,8 @@ input[type="text"] {
 .send-btn {
   background-color: #e0e8f9;
   border: 2px solid #b0b0b0;
-  padding: 10px 20px;
-  font-size: 1rem;
+  padding: 5px 10px;
+  font-size: 14px;
   border-radius: 5px;
   cursor: pointer;
 }

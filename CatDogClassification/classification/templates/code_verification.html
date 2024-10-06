@@ -11,7 +11,7 @@
   </head>
   <body>
     <div class="container">
-      <h1>Enter Verification Code</h1>
+      <h1>Verification Code</h1>
       <div class="input-group">
         <input
           type="text"
@@ -20,9 +20,13 @@
           placeholder="Verification Code"
         />
       </div>
-      <p class="resend">
-        Didn’t receive the code? <a href="#" class="resend-link">Send again</a>
-      </p>
+      <div class="button-group">
+        <p class="resend">
+          Didn’t receive the code?
+          <a href="#" class="resend-link">Send again</a>
+        </p>
+        <button class="verify-btn">Verify</button>
+      </div>
     </div>
 
     <script src="{% static 'code_verification.js' %}"></script>
