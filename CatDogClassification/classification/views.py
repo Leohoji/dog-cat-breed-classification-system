@@ -57,6 +57,10 @@ def show_page(request, page_name):
         return render(request, 'sign_up_page.html')
     elif page_name == 'upload':
         return render(request, 'upload_img_page.html', { 'USERNAME': USERNAME })
+    elif page_name == 'gmail_verification':
+        return render(request, 'gmail_verification.html')
+    elif page_name == 'code_verification':
+        return render(request, 'code_verification.html')
     else:
         return HttpResponse('Error')
     

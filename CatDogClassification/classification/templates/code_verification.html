@@ -1,0 +1,30 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Verification Code</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="{% static 'code_verification.css' %}" />
+  </head>
+  <body>
+    <div class="container">
+      <h1>Enter Verification Code</h1>
+      <div class="input-group">
+        <input
+          type="text"
+          id="verification"
+          name="verification"
+          placeholder="Verification Code"
+        />
+      </div>
+      <p class="resend">
+        Didn’t receive the code? <a href="#" class="resend-link">Send again</a>
+      </p>
+    </div>
+
+    <script src="{% static 'code_verification.js' %}"></script>
+  </body>
+</html>

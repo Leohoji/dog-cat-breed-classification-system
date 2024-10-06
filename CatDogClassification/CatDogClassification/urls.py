@@ -25,6 +25,10 @@ urlpatterns = [
     path('login/', partial(show_page, page_name='login'), name='login'), # user login
     path('signup/', partial(show_page, page_name='sign_up'), name='sign_up'), # user sign up
     path('upload/', partial(show_page, page_name='upload'), name='upload'), # upload image for classification
+
+    path('gmail_verify/', partial(show_page, page_name='gmail_verification'), name='gmail_verification'), # gmail verification
+    path('code_verify/', partial(show_page, page_name='code_verification'), name='code_verification'), # code verification
+
     path('login_verify/', login_verification, name='verification'), # login verification
     path('signUp_verify/', sign_up_verification, name='verification'), # sign up verification
     path('upload/<str:username>', show_user_upload_page, name='image_uploading'), # user upload image
