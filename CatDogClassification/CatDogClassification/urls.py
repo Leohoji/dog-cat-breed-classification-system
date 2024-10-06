@@ -29,6 +29,7 @@ urlpatterns = [
 
     path('gmail_verify/', partial(show_page, page_name='gmail_verification'), name='gmail_verification'), # gmail verification
     path('send_code/', user_gmail_verification, name='send_verification_code'), # send verification code
+    path('pasReset/', partial(show_page, page_name='password_reset'), name='password_reset'), # password reset
 
     path('login_verify/', login_verification, name='verification'), # login verification
     path('signUp_verify/', sign_up_verification, name='verification'), # sign up verification

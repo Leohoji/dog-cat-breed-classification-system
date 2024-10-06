@@ -8,6 +8,7 @@ document.querySelector(".send-btn").addEventListener("click", function (event) {
 
   // Collect the values of input
   const gmailInputValue = document.querySelector("#gmail").value;
+  let verifiedData, gmailCode;
 
   if (gmailInputValue) {
     axios
@@ -17,8 +18,8 @@ document.querySelector(".send-btn").addEventListener("click", function (event) {
         { headers: { "Content-Type": "application/json" } }
       )
       .then((response) => {
-        const verifiedData = response.data;
-        const gmailCode = verifiedData.verification_code;
+        verifiedData = response.data;
+        gmailCode = verifiedData.verification_code;
         console.log(gmailCode);
 
         // Simulate sending Gmail and moving to next step
@@ -33,9 +34,9 @@ document.querySelector(".send-btn").addEventListener("click", function (event) {
 
             // Perform verification code check (this is usually done on the server)
             if (Number(verificationCode) === gmailCode) {
-              swal("Good", "Verification successful!", "success").then(
-                () => {}
-              );
+              swal("Good", "Verification successful!", "success").then(() => {
+                window.location.href = "/pasReset/";
+              });
             } else {
               swal("Warning", "Invalid verification code.", "warning");
             }
@@ -49,3 +50,18 @@ document.querySelector(".send-btn").addEventListener("click", function (event) {
     return;
   }
 });
+
+// Logic to resend the code
+// document.getElementById("resend-link").addEventListener("click", function () {
+//   axios
+//     .post(
+//       "/send_code/",
+//       { gmail: gmailInputValue },
+//       { headers: { "Content-Type": "application/json" } }
+//     )
+//     .then((response) => {
+//       verifiedData = response.data;
+//       gmailCode = verifiedData.verification_code;
+//       console.log(gmailCode);
+//     });
+// });

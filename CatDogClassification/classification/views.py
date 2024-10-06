@@ -60,6 +60,8 @@ def show_page(request, page_name):
         return render(request, 'upload_img_page.html', { 'USERNAME': USERNAME })
     elif page_name == 'gmail_verification':
         return render(request, 'gmail_verification.html')
+    elif page_name == 'password_reset':
+        return render(request, 'password_reset.html')
     else:
         return HttpResponse('Error')
     
