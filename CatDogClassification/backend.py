@@ -168,7 +168,7 @@ def send_verification_code(to_user_gmail:str) -> dict:
     Args:
         to_user_gmail: The user gmail account to send
     Returns:
-        A dictionary contains sending status and verification code
+        A dictionary contains sending verification code
     """
     # Generate 5-digit random number
     random_number = random.randint(10000, 99999)
@@ -186,7 +186,7 @@ def send_verification_code(to_user_gmail:str) -> dict:
     '''.format(random_number)
 
     mail = MIMEText(html, 'html', 'utf-8') # plain 換成 html，就能寄送 HTML 格式的信件
-    mail['Subject']='html 的信'
+    mail['Subject']='Cat And Dog System Verification Code'
     mail['From']= Gmail_Account
     mail['To']= to_user_gmail
 
@@ -195,7 +195,6 @@ def send_verification_code(to_user_gmail:str) -> dict:
     smtp.starttls()
     smtp.login(Gmail_Account, Gmail_Password)
     status = smtp.send_message(mail)
-    print(status)
     smtp.quit()
 
-    return {'status': status, 'verification_code': random_number}
+    return {'verification_code': random_number}

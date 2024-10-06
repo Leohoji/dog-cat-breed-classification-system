@@ -40,7 +40,8 @@ input[type="text"] {
   font-size: 16px;
 }
 
-.button-group {
+/* gmail sending */
+.gmail-button-group {
   display: flex;
   justify-content: right;
 }
@@ -55,5 +56,38 @@ input[type="text"] {
 }
 
 .send-btn:hover {
+  background-color: #c0d6f9;
+}
+
+/* code verification */
+.code-button-group {
+  display: flex;
+  justify-content: space-between;
+}
+
+.resend {
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.resend-link {
+  color: red;
+  text-decoration: none;
+}
+
+.resend-link:hover {
+  text-decoration: underline;
+}
+
+.verify-btn {
+  background-color: rgb(211, 227, 247);
+  border: 1px solid #b0b0b0;
+  padding: 5px 10px;
+  font-size: 14px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.verify-btn:hover {
   background-color: #c0d6f9;
 }

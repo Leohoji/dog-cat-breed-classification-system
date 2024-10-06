@@ -19,6 +19,7 @@ from functools import partial
 from classification.views import show_page, show_user_upload_page, show_classification_results
 from classification.views import login_verification, sign_up_verification
 from classification.views import upload_image_classification, save_data, update_user_historical_data
+from classification.views import user_gmail_verification
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -27,7 +28,7 @@ urlpatterns = [
     path('upload/', partial(show_page, page_name='upload'), name='upload'), # upload image for classification
 
     path('gmail_verify/', partial(show_page, page_name='gmail_verification'), name='gmail_verification'), # gmail verification
-    path('code_verify/', partial(show_page, page_name='code_verification'), name='code_verification'), # code verification
+    path('send_code/', user_gmail_verification, name='send_verification_code'), # send verification code
 
     path('login_verify/', login_verification, name='verification'), # login verification
     path('signUp_verify/', sign_up_verification, name='verification'), # sign up verification
