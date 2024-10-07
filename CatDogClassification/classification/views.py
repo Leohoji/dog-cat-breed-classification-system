@@ -60,8 +60,6 @@ def show_page(request, page_name):
         return render(request, 'upload_img_page.html', { 'USERNAME': USERNAME })
     elif page_name == 'gmail_verification':
         return render(request, 'gmail_verification.html')
-    elif page_name == 'password_reset':
-        return render(request, 'password_reset.html')
     else:
         return HttpResponse('Error')
     
@@ -80,6 +78,24 @@ def login_verification(request):
                 return JsonResponse({'status': login_result, 'USERNAME': username})
             else: 
                 return JsonResponse({'status': 'error', 'message': login_result})
+
+        except Exception as e:
+            return JsonResponse({'status': 'error', 'message': str(e)})
+
+    return JsonResponse({'status': 'error', 'message': 'Invalid request method'})
+
+def user_verification(request): 
+    """Verify user information"""
+    if request.method == 'POST':
+        try:
+            # Read data from request.body
+            user_data = json.loads(request.body)
+            print(user_data, type(user_data))
+
+            user_is_exists = verifier.user_exists(user_data.get("user_name"))
+            print(user_is_exists)
+
+            return JsonResponse({'status': user_is_exists})
 
         except Exception as e:
             return JsonResponse({'status': 'error', 'message': str(e)})
@@ -247,6 +263,20 @@ def update_user_historical_data(request, username, cur_page):
                        'page_range': page_range}
 
             return render(request, 'show_his_data_page.html', context)
+
+        except Exception as e:
+            return JsonResponse({'status': 'error', 'message': str(e)})
+
+    return JsonResponse({'status': 'error', 'message': 'Invalid request method'})
+
+def render_password_reset_page(request, username): 
+    """ Render password resetting page with correct user account."""
+    if request.method == 'GET':
+        try:
+           # create the context for HTML variables delivery
+            context = {'USERNAME': username}
+
+            return render(request, 'password_reset.html', context)
 
         except Exception as e:
             return JsonResponse({'status': 'error', 'message': str(e)})

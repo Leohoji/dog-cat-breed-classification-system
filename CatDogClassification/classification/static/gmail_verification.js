@@ -1,70 +1,97 @@
-let VerifiedCode;
-
 // -------------------------------
 // Listener for Gmail verification
 // -------------------------------
-document.querySelector(".send-btn").addEventListener("click", function (event) {
-  // Prevent the list send automatically
-  event.preventDefault();
+let VerifiedCode;
 
-  // Disable the send button to prevent multiple requests
-  const sendButton = document.querySelector("#send-gmail-btn");
-  sendButton.innerText = "Sending...";
-  sendButton.disabled = true; // Disable the button
+document
+  .querySelector("#send-gmail-btn")
+  .addEventListener("click", function (event) {
+    // Prevent the list send automatically
+    event.preventDefault();
 
-  // Collect the values of input
-  const gmailInputValue = document.querySelector("#gmail").value;
-
-  if (gmailInputValue) {
+    // Username verification
+    const username = document.querySelector("#username").value;
     axios
       .post(
-        "/send_code/",
-        { gmail: gmailInputValue },
+        "/user_verify/",
+        { user_name: username },
         { headers: { "Content-Type": "application/json" } }
       )
       .then((response) => {
-        const verifiedData = response.data;
-        VerifiedCode = verifiedData.verification_code;
-        console.log("correct code", VerifiedCode);
+        const status = response.data.status;
+        console.log(status);
+        // Check verification results
+        if (status !== "yes") {
+          swal("Warning", "Invalid User Account", "warning");
+          return;
+        } else {
+          // Disable the send button to prevent multiple requests
+          const sendButton = document.querySelector("#send-gmail-btn");
+          sendButton.innerText = "Sending...";
+          sendButton.disabled = true; // Disable the button
 
-        // Simulate sending Gmail and moving to next step
-        document.getElementById("gmail-section").style.display = "none";
-        document.getElementById("verification-section").style.display = "block";
+          // Collect the values of input
+          const gmailInputValue = document.querySelector("#gmail").value;
 
-        // Logic to resend the code
-        document
-          .getElementById("resend-link")
-          .addEventListener("click", async function () {
-            VerifiedCode = await resendCode(gmailInputValue);
-            console.log("correct code", VerifiedCode);
-          });
+          if (gmailInputValue) {
+            axios
+              .post(
+                "/send_code/",
+                { gmail: gmailInputValue },
+                { headers: { "Content-Type": "application/json" } }
+              )
+              .then((response) => {
+                const verifiedData = response.data;
+                VerifiedCode = verifiedData.verification_code;
+                console.log("correct code", VerifiedCode);
 
-        document
-          .getElementById("verify-btn")
-          .addEventListener("click", function () {
-            const verificationCode =
-              document.getElementById("verification").value;
+                // Simulate sending Gmail and moving to next step
+                document.getElementById("gmail-section").style.display = "none";
+                document.getElementById("verification-section").style.display =
+                  "block";
 
-            console.log("correct code", VerifiedCode);
+                // Logic to resend the code
+                document
+                  .getElementById("resend-link")
+                  .addEventListener("click", async function () {
+                    VerifiedCode = await resendCode(gmailInputValue);
+                    console.log("correct code", VerifiedCode);
+                  });
 
-            // Perform verification code check (this is usually done on the server)
-            if (Number(verificationCode) === VerifiedCode) {
-              swal("Good", "Verification successful!", "success").then(() => {
-                window.location.href = "/pasReset/";
+                document
+                  .getElementById("verify-btn")
+                  .addEventListener("click", function () {
+                    const verificationCode =
+                      document.getElementById("verification").value;
+
+                    console.log("correct code", VerifiedCode);
+
+                    // Perform verification code check (this is usually done on the server)
+                    if (Number(verificationCode) === VerifiedCode) {
+                      swal("Good", "Verification successful!", "success").then(
+                        () => {
+                          window.location.href = `/pasReset/${username}`;
+                        }
+                      );
+                    } else {
+                      swal("Warning", "Invalid verification code.", "warning");
+                    }
+                  });
+              })
+              .catch((error) => {
+                console.error("Error:", error);
               });
-            } else {
-              swal("Warning", "Invalid verification code.", "warning");
-            }
-          });
-      })
-      .catch((error) => {
-        console.error("Error:", error);
+          } else {
+            swal(
+              "Gmail is empty",
+              "Please enter your Gmail account.",
+              "warning"
+            );
+            return;
+          }
+        }
       });
-  } else {
-    swal("Gmail is empty", "Please enter your Gmail account.", "warning");
-    return;
-  }
-});
+  });
 
 // -------------------------------
 // Logic to resend the code

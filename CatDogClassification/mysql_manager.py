@@ -125,6 +125,13 @@ class DatabaseManager:
             print(e.__class__.__name__)
             traceback.print_exc()
             return False
+        
+    def update_user_password(self, user_name:str, new_password:str) -> dict:
+        """
+        UPDATE `member_info`
+        SET user_password = 'Frankfurt'
+        WHERE user_name = '12345qwer@gmail.com';
+        """
 
 if __name__ == '__main__':
     import string

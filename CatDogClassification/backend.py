@@ -18,6 +18,26 @@ data_manager = DatabaseManager() # initialize DatabaseManager
 IMG_SIZE = (224, 224)
 
 class Verification(DatabaseManager):
+    def user_exists(self, username:str):
+        """
+        Verify whether user account exists.
+
+        Args:
+            username: User's account information.
+        Returns:
+            String of 'user not exists' or 'yes'.
+        """
+        # get member information
+        member_info = self.get_member_info({"user_name": username})
+
+        # check information
+        if not member_info:
+            result = 'user not exists'
+        else:
+           result = 'yes'
+
+        return result
+    
     def login_verify(self, user_data:dict) -> str:
         """
         Verify user data from login interface.
@@ -198,3 +218,8 @@ def send_verification_code(to_user_gmail:str) -> dict:
     smtp.quit()
 
     return {'verification_code': random_number}
+
+
+if __name__ == "__main__":
+    verifier = Verification()
+    print(verifier.login_verify({"user_name": "Leo"}))

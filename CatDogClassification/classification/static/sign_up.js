@@ -73,7 +73,7 @@ document.querySelector("#signup-btn").addEventListener("click", (event) => {
   const confirmValid = validatePasswords(confirmPasswordInput.value).valid;
   const passwordsMatch = passwordInput.value === confirmPasswordInput.value;
 
-  btnInfo = { button: "Click Me!" };
+  const btnInfo = { button: "Click Me!" };
 
   // Check validation and show alerts using switch
   switch (true) {
