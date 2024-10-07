@@ -55,6 +55,15 @@ input[type="text"] {
   cursor: pointer;
 }
 
+/* Disabled state styles for the button */
+.send-btn:disabled {
+  background-color: #cccccc;
+  color: #666666;
+  cursor: not-allowed;
+  /* Remove hover effect when disabled */
+  pointer-events: none; /* This cancels all interactions, including hover */
+}
+
 .send-btn:hover {
   background-color: #c0d6f9;
 }
