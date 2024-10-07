@@ -8,7 +8,7 @@ from pathlib import Path
 from tensorflow.keras.models import load_model
 from backend import Verification, Classification
 from backend import collect_animal_info, save_results_to_database, collect_historical_data
-from backend import send_verification_code
+from backend import send_verification_code, update_password
 
 # -----------------------
 # Default variables
@@ -290,6 +290,26 @@ def user_gmail_verification(request):
            user_gmail_account = json.loads(request.body).get('gmail')
            verification_data = send_verification_code(to_user_gmail=user_gmail_account)
            return JsonResponse(verification_data)
+
+        except Exception as e:
+            return JsonResponse({'status': 'error', 'message': str(e)})
+
+    return JsonResponse({'status': 'error', 'message': 'Invalid request method'})
+
+def update_user_password(request):
+    """Update user's password set on the front-end interface"""
+    if request.method == 'POST':
+        try:
+           user_update_account = json.loads(request.body)
+           print(user_update_account)
+           user_name, new_password = user_update_account.get("username"), user_update_account.get("newUserPassword")
+           print(user_name, new_password)
+           user_updated = update_password(user_name=user_name, new_password=new_password) # return a boolean
+           
+           if user_updated:
+               return JsonResponse({'result': 'success'})
+           else:
+               return JsonResponse({'result': 'Something Error'}) 
 
         except Exception as e:
             return JsonResponse({'status': 'error', 'message': str(e)})

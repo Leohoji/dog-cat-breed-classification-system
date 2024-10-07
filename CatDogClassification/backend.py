@@ -219,6 +219,11 @@ def send_verification_code(to_user_gmail:str) -> dict:
 
     return {'verification_code': random_number}
 
+def update_password(user_name:str, new_password:str):
+    global data_manager
+    user_updated = data_manager.update_user_password(user_name=user_name, new_password=new_password) # return a boolean
+    
+    return user_updated
 
 if __name__ == "__main__":
     verifier = Verification()

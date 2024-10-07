@@ -127,39 +127,48 @@ class DatabaseManager:
             return False
         
     def update_user_password(self, user_name:str, new_password:str) -> dict:
-        """
-        UPDATE `member_info`
-        SET user_password = 'Frankfurt'
-        WHERE user_name = '12345qwer@gmail.com';
-        """
+        """Update user's password via user_name"""
+        try:
+            self.connect() # login database
+            query = f"UPDATE `member_info` SET user_password = %s WHERE user_name = %s;"
+            self.cursor.execute(query, (new_password, user_name))
+            self.disconnect() # disconnect database
+            return True
+        except Exception as e:
+            print(e.__class__.__name__)
+            traceback.print_exc()
+            return False
 
 if __name__ == '__main__':
-    import string
-    import random
-    def generate_fake_data(fake_name=''):
-        if not fake_name:
-            fake_name = ''.join(random.choices(string.ascii_letters, k=8)) + '@gmail.com'
-        fake_password = ''.join(random.choices(string.ascii_letters, k=4)) + ''.join(random.choices('0123456789', k=4))
-        
-        return {'user_name': fake_name, 'user_password': fake_password}
-    
-    # test user data, first is all correct, second one's password is incorrect
-    user_data_1 = {'user_name': '12345qwer@gmail.com', 'user_password': 'sdlkjfg455'}
-    user_data_2 = {'user_name': '56789qwer@gmail.com', 'user_password': 'xxxxxxxxx'}
-    user_data_3 = generate_fake_data()
-    print(f"Fake member info: {(user_data_3['user_name'], user_data_3['user_password'])}")
     mysql_manager = DatabaseManager()
-    for data in (user_data_1, user_data_2, user_data_3):
-        result = mysql_manager.get_member_info(data)
-        print(result)
+    user_updated = mysql_manager.update_user_password(user_name="LoHoLeo2", new_password="22222222")
+    print(user_updated)
+    # import string
+    # import random
+    # def generate_fake_data(fake_name=''):
+    #     if not fake_name:
+    #         fake_name = ''.join(random.choices(string.ascii_letters, k=8)) + '@gmail.com'
+    #     fake_password = ''.join(random.choices(string.ascii_letters, k=4)) + ''.join(random.choices('0123456789', k=4))
+        
+    #     return {'user_name': fake_name, 'user_password': fake_password}
     
-    # Test for getting historical data
-    res = mysql_manager.get_historical_data(user_name=user_data_1['user_name'])
-    print(f"historical data \n {res}")
+    # # test user data, first is all correct, second one's password is incorrect
+    # user_data_1 = {'user_name': '12345qwer@gmail.com', 'user_password': 'sdlkjfg455'}
+    # user_data_2 = {'user_name': '56789qwer@gmail.com', 'user_password': 'xxxxxxxxx'}
+    # user_data_3 = generate_fake_data()
+    # print(f"Fake member info: {(user_data_3['user_name'], user_data_3['user_password'])}")
+    # mysql_manager = DatabaseManager()
+    # for data in (user_data_1, user_data_2, user_data_3):
+    #     result = mysql_manager.get_member_info(data)
+    #     print(result)
+    
+    # # Test for getting historical data
+    # res = mysql_manager.get_historical_data(user_name=user_data_1['user_name'])
+    # print(f"historical data \n {res}")
 
-    # Test for getting animal data
-    animal_data = mysql_manager.get_animal_info(animal_breed='Labrador')
-    print(animal_data)
+    # # Test for getting animal data
+    # animal_data = mysql_manager.get_animal_info(animal_breed='Labrador')
+    # print(animal_data)
 
     # Test for updating historical data
     # update_result = mysql_manager.update_historical_data(user_name=user_data_1['user_name'], image=None)

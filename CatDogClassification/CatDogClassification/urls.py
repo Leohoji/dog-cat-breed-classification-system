@@ -19,7 +19,7 @@ from functools import partial
 from classification.views import show_page, show_user_upload_page, show_classification_results
 from classification.views import login_verification, sign_up_verification, user_verification
 from classification.views import upload_image_classification, save_data, update_user_historical_data
-from classification.views import user_gmail_verification, render_password_reset_page
+from classification.views import user_gmail_verification, render_password_reset_page, update_user_password
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -30,6 +30,7 @@ urlpatterns = [
     path('gmail_verify/', partial(show_page, page_name='gmail_verification'), name='gmail_verification'), # gmail verification
     path('send_code/', user_gmail_verification, name='send_verification_code'), # send verification code
     path('pasReset/<str:username>', render_password_reset_page, name='password_reset'), # password reset
+    path('update/', update_user_password, name='password_update'), # password update
 
     path('user_verify/', user_verification, name='user_verification'), # user verification
     path('login_verify/', login_verification, name='login_verification'), # login verification

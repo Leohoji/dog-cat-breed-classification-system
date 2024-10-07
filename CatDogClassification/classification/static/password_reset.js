@@ -37,25 +37,24 @@ document.querySelector("#reset-btn").addEventListener("click", (event) => {
       // -------------------------------------------------
       // Apply AJAX technique to send data to backend
       // -------------------------------------------------
-      const userPassword = newPasswordInput.value;
-      const userConfirmPassword = newConfirmPasswordInput.value;
+      const username = document.querySelector("#user-account").innerText;
+      const newUserPassword = newPasswordInput.value;
 
       return axios
         .post(
-          "/",
-          { userPassword, userConfirmPassword },
+          "/update/",
+          { username, newUserPassword },
           { headers: { "Content-Type": "application/json" } }
         )
         .then((response) => {
-          const result = response.data;
+          const result = response.data.result;
           console.log(result);
-          const { status, message } = result;
-          if (status === "success") {
-            swal("Good! Go To Login!", `${message}`, "success").then(() => {
+          if (result === "success") {
+            swal("Good! Go To Login!", `${result}`, "success").then(() => {
               window.location.href = "/login/";
             });
           } else {
-            swal("Error!", `${message}`, "error");
+            swal("Error!", `${result}`, "error");
           }
         })
         .catch((error) => {
