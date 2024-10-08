@@ -4,7 +4,9 @@ import base64
 import traceback
 import numpy as np
 from io import BytesIO
-from PIL import Image
+import tensorflow as tf
+import tensorflow_hub as hub 
+from PIL import Image, ImageDraw, ImageFont, ImageColor
 from tensorflow.keras.applications.efficientnet import preprocess_input as EFNetPreProcessInput
 
 import random
@@ -87,8 +89,98 @@ class Verification(DatabaseManager):
 
         return response
 
+class AnimalDetector:
+    def __init__(self):
+        # ---------------------------------------------------------------------------------------------------
+        # Object detection model URL
+        # MobileNetV2: "https://tfhub.dev/google/openimages_v4/ssd/mobilenet_v2/1"
+        # Inception_ResNetV2: "https://tfhub.dev/google/faster_rcnn/openimages_v4/inception_resnet_v2/1"
+        # ---------------------------------------------------------------------------------------------------
+        self.module_handle = "https://tfhub.dev/google/openimages_v4/ssd/mobilenet_v2/1" 
+        self.detector = hub.load(self.module_handle).signatures['default']
+        
+    def load_img_from_base64(self, base64_image_string):
+        """Load image from a Base64 string."""
+        # Decode the Base64 string
+        try:
+            base64_image_string = base64_image_string.split(",")[-1]
+        except:
+            base64_image_string = base64_image_string
+        img_data = base64.b64decode(base64_image_string) # Decode the base64 string back to bytes
+
+        # Convert to a NumPy array
+        img = tf.image.decode_jpeg(img_data, channels=3)
+        return img
+
+    def draw_bounding_box_on_image(self, image,
+                                   ymin, xmin, ymax, xmax,
+                                   color, font, thickness=4,
+                                   display_str_list=()):
+        """Adds a bounding box to an image."""
+        draw = ImageDraw.Draw(image)
+        im_width, im_height = image.size
+        (left, right, top, bottom) = (xmin * im_width, xmax * im_width, ymin * im_height, ymax * im_height)
+        draw.line([(left, top), (left, bottom), (right, bottom), (right, top), (left, top)],
+                width=thickness,
+                fill=color)
+
+        display_str_heights = [font.getbbox(ds)[3] for ds in display_str_list]
+        total_display_str_height = (1 + 2 * 0.05) * sum(display_str_heights)
+
+        if top > total_display_str_height:
+            text_bottom = top
+        else:
+            text_bottom = top + total_display_str_height
+
+        for display_str in display_str_list[::-1]:
+            bbox = font.getbbox(display_str)
+            text_width, text_height = bbox[2], bbox[3]
+            margin = np.ceil(0.05 * text_height)
+            draw.rectangle([(left, text_bottom - text_height - 2 * margin), (left + text_width, text_bottom)],
+                        fill=color)
+            draw.text((left + margin, text_bottom - text_height - margin),
+                    display_str,
+                    fill="black",
+                    font=font)
+            text_bottom -= text_height - 2 * margin
+
+    def draw_one_boxes(self, image, boxes, class_names, scores):
+        """Overlay labeled boxes on an image with formatted scores and label names."""
+        colors = list(ImageColor.colormap.values())
+        font = ImageFont.load_default()
+        
+        ymin, xmin, ymax, xmax = tuple(boxes)
+        display_str = "{}: {}%".format(class_names.decode("ascii"), int(100 * scores))
+        color = colors[hash(class_names) % len(colors)]
+        
+        image_pil = Image.fromarray(np.uint8(image)).convert("RGB")
+        
+        self.draw_bounding_box_on_image(image_pil, 
+                                        ymin, xmin, ymax, xmax,
+                                        color, font,
+                                        display_str_list=[display_str])
+        
+        np.copyto(image, np.array(image_pil))
+        return image
+
+    def run_detector_one_img(self, base64_str):
+        img = self.load_img_from_base64(base64_str)
+
+        # Detector inference
+        converted_img  = tf.image.convert_image_dtype(img, tf.float32)[tf.newaxis, ...]
+        result = self.detector(converted_img)
+        result = {key: value.numpy() for key, value in result.items()}
+
+        # Draw result
+        image_with_boxes = self.draw_one_boxes(img.numpy(), result["detection_boxes"][0],
+                                               result["detection_class_entities"][0], result["detection_scores"][0])
+
+        object_class = result["detection_class_entities"][0].decode('utf-8')
+        
+        return (object_class, image_with_boxes)
+
 class Classification:
-    def __init__(self, species, classifier, real_classes):
+    def register_species(self, species, classifier, real_classes):
         self.species = species
         self.classifier_loaded = classifier
         self.real_classes = real_classes

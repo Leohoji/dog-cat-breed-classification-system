@@ -2,11 +2,15 @@ from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse
 from django.core.paginator import Paginator
 
+import io
 import json
+import base64
 import numpy as np
+from PIL import Image
+from io import BytesIO
 from pathlib import Path
 from tensorflow.keras.models import load_model
-from backend import Verification, Classification
+from backend import Verification, Classification, AnimalDetector
 from backend import collect_animal_info, save_results_to_database, collect_historical_data
 from backend import send_verification_code, update_password
 
@@ -15,7 +19,6 @@ from backend import send_verification_code, update_password
 # -----------------------
 USERNAME = 'LoHoLeo2'
 USER_IMG_FILE_NAME = 'user_img.txt' # user's image
-species = 'cats' # 這邊先暫定 cats
 
 # -----------------------
 # Verifier loading
@@ -23,22 +26,22 @@ species = 'cats' # 這邊先暫定 cats
 verifier = Verification()
 
 # Load real classes
-real_classes = np.load(Path('label_data').joinpath('cats_classes.npy')) \
-                       if species == 'cats' \
-                       else np.load(Path('label_data').joinpath('dogs_classes.npy'))
+cat_real_classes = np.load(Path('label_data').joinpath('cats_classes.npy'))
+dog_real_classes = np.load(Path('label_data').joinpath('dogs_classes.npy'))
 
 # -----------------------
 # Model loading
 # -----------------------
 cats_classifier_path = Path('model_data').joinpath('cats_classifier.h5')
 dogs_classifier_path = Path('model_data').joinpath('dogs_classifier.h5')
+cat_classifier_loaded = load_model(cats_classifier_path)
+dog_classifier_loaded = load_model(dogs_classifier_path)
 
-model_loaded = load_model(cats_classifier_path) \
-               if species == 'cats' \
-               else load_model(dogs_classifier_path)
+# Animal detector
+animal_detector = AnimalDetector()
 
 # Load classifiers
-classifier = Classification(species=species, classifier=model_loaded, real_classes=real_classes)
+classifier = Classification()
 
 # Create your views here.
 def save_base64_to_file(base64_string):
@@ -132,6 +135,31 @@ def show_user_upload_page(request, username):
 
     return JsonResponse({'status': 'error', 'message': 'Invalid request method'})
 
+def numpy_array_to_base64_image(array):
+    """
+    Convert a NumPy array to a Base64 encoded image string.
+
+    Parameters:
+    array (numpy.ndarray): The input NumPy array representing the image.
+
+    Returns:
+    str: Base64 encoded image string that can be used in an <img> tag.
+    """
+    # Ensure the array is in the correct format (uint8)
+    if array.dtype != np.uint8:
+        array = array.astype(np.uint8)
+    
+    # Convert NumPy array to a PIL Image
+    image = Image.fromarray(array)
+
+    # Save the image to a BytesIO object
+    buffered = BytesIO()
+    image.save(buffered, format="JPEG")  # You can change the format if needed
+    base64_data = base64.b64encode(buffered.getvalue()).decode('utf-8')
+
+    # Create the HTML <img> tag with Base64 data
+    return base64_data
+
 def upload_image_classification(request):
     """Receive image data from user and return the results of species classification"""
     global classifier
@@ -139,20 +167,28 @@ def upload_image_classification(request):
     if request.method == 'POST':
         try:
             # Read data from request.body
-            user_img_uploaded = json.loads(request.body).get('image')
-            # print(user_img_uploaded)
+            user_img_uploaded = json.loads(request.body).get('image').replace('data:image/jpeg;base64,', '')
             print(type(user_img_uploaded))
-            save_base64_to_file(user_img_uploaded.replace('data:image/jpeg;base64,', ''))
 
             # 這邊會先進行 cats dog detection....
-            
+            object_class, image_with_boxes = animal_detector.run_detector_one_img(user_img_uploaded)
+            print(object_class)
+
+            image_with_boxes_base64 = numpy_array_to_base64_image(image_with_boxes)
+            save_base64_to_file(image_with_boxes_base64)
+
+            if object_class == "Cat":
+                classifier.register_species("Cat", cat_classifier_loaded, cat_real_classes)
+            else:
+                classifier.register_species("Dog", dog_classifier_loaded, dog_real_classes)
+
             # Model prediction
             pred_results = classifier.send_results(user_img_uploaded)
             print(pred_results, type(pred_results))
             status = pred_results.get('status')
             if status  == 'ok': 
                 model_pred =  pred_results.get('model_pred')
-                return JsonResponse({'status': status, 'species': species, 'model_pred': model_pred, 'message': None})
+                return JsonResponse({'status': status, 'species': object_class, 'model_pred': model_pred, 'message': None})
             else: 
                 msg = pred_results.get('msg')
                 return JsonResponse({'status': status, 'species': None, 'model_pred': None, 'message': msg})
@@ -170,7 +206,7 @@ def show_classification_results(request, cls_species, model_pred, username):
             animal_data = collect_animal_info(model_pred)
 
             # redirect to results page
-            result_title = 'SPECIES: %s || BREED: %s' % (cls_species.capitalize(), model_pred)
+            result_title = 'SPECIES: %s || BREED: %s' % (cls_species, model_pred)
             
             # images need to be decoded after MySQL querying
             user_img = read_base64_from_file()
@@ -183,6 +219,7 @@ def show_classification_results(request, cls_species, model_pred, username):
             Description = animal_data['animal_description'] 
             Link = animal_data['animal_link']
             Data = {'description': Description, 'link': Link}
+            real_classes = cat_real_classes if cls_species == "Cat" else dog_real_classes
 
             # full context
             context = {'Results': result_title,'image_nums': image_nums, 'Data': Data,
