@@ -18,7 +18,8 @@ from backend import send_verification_code, update_password
 # Default variables
 # -----------------------
 USERNAME = 'LoHoLeo2'
-USER_IMG_FILE_NAME = 'user_img.txt' # user's image
+USER_IMG_PATH = 'user_img.txt'
+USER_BOX_IMG_PATH = 'user_box_img.txt'
 
 # -----------------------
 # Verifier loading
@@ -44,14 +45,14 @@ animal_detector = AnimalDetector()
 classifier = Classification()
 
 # Create your views here.
-def save_base64_to_file(base64_string):
+def save_base64_to_file(base64_string, fpath):
     """Save Base64 string to txt file"""
-    with open(USER_IMG_FILE_NAME, 'w') as file:
+    with open(fpath, 'w') as file:
         file.write(base64_string)
 
-def read_base64_from_file():
+def read_base64_from_file(fpath):
     """Read Base64 string from txt file"""
-    with open(USER_IMG_FILE_NAME, 'r') as file:
+    with open(fpath, 'r') as file:
         return file.read()
 
 def show_page(request, page_name):
@@ -168,14 +169,16 @@ def upload_image_classification(request):
         try:
             # Read data from request.body
             user_img_uploaded = json.loads(request.body).get('image').replace('data:image/jpeg;base64,', '')
+            save_base64_to_file(user_img_uploaded, fpath=USER_IMG_PATH) # save user's original image
             print(type(user_img_uploaded))
 
-            # 這邊會先進行 cats dog detection....
+            # Cat-Dog Detection....
             object_class, image_with_boxes = animal_detector.run_detector_one_img(user_img_uploaded)
             print(object_class)
 
             image_with_boxes_base64 = numpy_array_to_base64_image(image_with_boxes)
-            save_base64_to_file(image_with_boxes_base64)
+            save_base64_to_file(image_with_boxes_base64, fpath=USER_BOX_IMG_PATH) # save user's boxed image
+
 
             if object_class == "Cat":
                 classifier.register_species("Cat", cat_classifier_loaded, cat_real_classes)
@@ -209,7 +212,7 @@ def show_classification_results(request, cls_species, model_pred, username):
             result_title = 'SPECIES: %s || BREED: %s' % (cls_species, model_pred)
             
             # images need to be decoded after MySQL querying
-            user_img = read_base64_from_file()
+            user_img = read_base64_from_file(fpath=USER_BOX_IMG_PATH) # show the boxed image
             image_1 = animal_data['image_1'].decode('utf-8')
             image_2 = animal_data['image_2'].decode('utf-8')
             image_nums = zip(["Your Image", f"{model_pred} Image1", f"{model_pred} Image2"], 
@@ -242,7 +245,7 @@ def save_data(request):
 
             # get username, user's image, user's feedback
             username = user_data.get('username')
-            user_img = read_base64_from_file()
+            user_img = read_base64_from_file(fpath=USER_IMG_PATH) # save user's original image
             cls_result = user_data.get('feedback')
             feedback = "%s,%s" %(cls_result['breedChoice'], cls_result['selectedBreed'])\
             
