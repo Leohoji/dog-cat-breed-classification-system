@@ -41,7 +41,7 @@ SELECT * FROM `user_history`;
 INSERT INTO user_history (user_name, image, results) 
 VALUES ('12345qwer@gmail.com', NULL, 'Success');
 
-DELETE FROM user_history WHERE user_name = 'LoHoLeo2';
+DELETE FROM user_history WHERE user_name = 'LoHoLeo5';
 DELETE FROM user_history WHERE user_name = '12345qwer@gmail.com' AND results = 'yes';
 
 -- create table animal
@@ -59,8 +59,8 @@ CREATE TABLE animal (
 SELECT * FROM `animal`;
 
 -- insert some fake data into animal table
-INSERT INTO animal (animal_breed, image_1, image_2, image_3, animal_description, animal_link)
-VALUES ('Labrador', NULL, NULL, NULL, 'Friendly and energetic dog breed.', 'https://en.wikipedia.org/wiki/St._Bernard_(dog_breed)');
+INSERT INTO animal (animal_breed, image_1, image_2, animal_description, animal_link)
+VALUES ('Labrador', NULL, NULL, 'Friendly and energetic dog breed.', 'https://en.wikipedia.org/wiki/St._Bernard_(dog_breed)');
 
 -- delete fake data from animal table
 DELETE FROM animal WHERE animal_breed = 'Labrador';
