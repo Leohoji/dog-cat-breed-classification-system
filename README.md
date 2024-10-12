@@ -37,7 +37,22 @@ If you have GPU to accelerate, devices I installed:
 
 ## Features
 
-寫有的功能...
+
+<ins>Password Forgotting?</ins>
+
+User can enter their Gmail account to receive a verification code for password reset
+
+1. Collect user's Gmail
+2. Generate a verification code to user
+3. Verify code and password reset
+
+<div style="display: flex; justify-content: space-around;">
+  <img src="https://github.com/Leohoji/dog-cat-breed-classification-system/blob/main/Images/enter-user-gmail.png?raw=true" alt="Enter User's Gmail" style="width: 30%; height: 250px;"/>
+  <img src="https://github.com/Leohoji/dog-cat-breed-classification-system/blob/main/Images/send-verification-code.png?raw=true" alt="Send Verification Code To User" style="width: 30%; height: 250px;"/>
+  <img src="https://github.com/Leohoji/dog-cat-breed-classification-system/blob/main/Images/reset-user-password.png?raw=true" alt="Rest Password" style="width: 30%; height: 250px;"/>
+
+</div>
+
 
 
 ## Installation and Usage
