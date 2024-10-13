@@ -37,7 +37,7 @@ If you have GPU to accelerate, devices I installed:
 
 ## Features
 
-[<img src="https://github.com/Leohoji/dog-cat-breed-classification-system/blob/main/Images/enter-user-gmail.png?raw=true" width="50%">](https://github.com/Leohoji/dog-cat-breed-classification-system/raw/refs/heads/main/Images/Login%20-%20Google%20Chrome%202024-10-12%2017-00-26.mp4)
+
 
 
 <ins>Password Forgotting?</ins>
