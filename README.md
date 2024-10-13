@@ -41,10 +41,10 @@ User have to login the website first, if you do not have an account, they can re
 
 User can upload their animal image for breed classification, in addition, users can also view the recognition result records of this account through button "Check historical data".
 
-<div style="display: flex; justify-content: space-around; width: 950px">
-  <img src="https://github.com/Leohoji/dog-cat-breed-classification-system/blob/main/Images/upload.png?raw=true" alt="Upload User's Image" style="width: 300px; height: 400px;"/>
-  <img src="https://github.com/Leohoji/dog-cat-breed-classification-system/blob/main/Images/uploaded_image.png?raw=true" alt="Image Uploaded" style="width: 300px; height: 400px;"/>
-  <img src="https://github.com/Leohoji/dog-cat-breed-classification-system/blob/main/Images/Show%20Historical%20Data.jpg?raw=true" alt="Historical Data" style="width: 300px; height: 400px;"/>
+<div style="display: flex; justify-content: space-around; width: 800px">
+  <img src="https://github.com/Leohoji/dog-cat-breed-classification-system/blob/main/Images/upload.png?raw=true" alt="Upload User's Image" style="width: 250px; height: 400px;"/>
+  <img src="https://github.com/Leohoji/dog-cat-breed-classification-system/blob/main/Images/uploaded_image.png?raw=true" alt="Image Uploaded" style="width: 250px; height: 400px;"/>
+  <img src="https://github.com/Leohoji/dog-cat-breed-classification-system/blob/main/Images/Show%20Historical%20Data.jpg?raw=true" alt="Historical Data" style="width: 250px; height: 400px;"/>
 </div>
 
 ### Classification Result
@@ -68,9 +68,9 @@ User can enter their Gmail account to receive a verification code for password r
 3. Verify code and password reset
 
 <div style="display: flex; justify-content: space-around; width: 950px">
-  <img src="https://github.com/Leohoji/dog-cat-breed-classification-system/blob/main/Images/enter-user-gmail.png?raw=true" alt="Enter User's Gmail" style="width: 300px; height: 350px;"/>
-  <img src="https://github.com/Leohoji/dog-cat-breed-classification-system/blob/main/Images/send-verification-code.png?raw=true" alt="Send Verification Code To User" style="width: 300px; height: 350px;"/>
-  <img src="https://github.com/Leohoji/dog-cat-breed-classification-system/blob/main/Images/reset-user-password.png?raw=true" alt="Rest Password" style="width: 300px; height: 350px;"/>
+  <img src="https://github.com/Leohoji/dog-cat-breed-classification-system/blob/main/Images/enter-user-gmail.png?raw=true" alt="Enter User's Gmail" style="width: 250px; height: 350px;"/>
+  <img src="https://github.com/Leohoji/dog-cat-breed-classification-system/blob/main/Images/send-verification-code.png?raw=true" alt="Send Verification Code To User" style="width: 250px; height: 350px;"/>
+  <img src="https://github.com/Leohoji/dog-cat-breed-classification-system/blob/main/Images/reset-user-password.png?raw=true" alt="Rest Password" style="width: 250px; height: 350px;"/>
 </div>
 
 
