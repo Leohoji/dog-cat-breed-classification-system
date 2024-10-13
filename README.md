@@ -31,15 +31,15 @@ If you have GPU to accelerate, devices I installed:
 
 ## Features
 
-**Login and Sign up**
+### Login and Sign up
 
 User have to login the website first, if you do not have an account, they can register first.
 
 <img src="https://github.com/Leohoji/dog-cat-breed-classification-system/blob/main/Images/Login%20and%20Sign-up.jpg?raw=true" alt="User Login" style="width: 500px; height: 400px;"/>
 
-**Upload Image For Classification**
+### Upload Image For Classification
 
-User can upload their animal image to
+User can upload their animal image for breed classification, in addition, users can also view the recognition result records of this account through button "Check historical data".
 
 <div style="display: flex; justify-content: space-around; width: 950px">
   <img src="https://github.com/Leohoji/dog-cat-breed-classification-system/blob/main/Images/upload.png?raw=true" alt="Upload User's Image" style="width: 300px; height: 400px;"/>
@@ -47,9 +47,21 @@ User can upload their animal image to
   <img src="https://github.com/Leohoji/dog-cat-breed-classification-system/blob/main/Images/Show%20Historical%20Data.jpg?raw=true" alt="Historical Data" style="width: 300px; height: 400px;"/>
 </div>
 
+### Classification Result
+
+After image uploading and classifying, the classification result will display to user, the information include:
+
+1. Detect there is an animal present on the image, and what is the animal is (cat or dog)
+2. Recognize the `species` and `breed` to interface
+3. Show the relative information and link to user
+4. Display another two image to let user check the result
+5. Provide a `feedback` area to user for record and further model fine-tune
+
+<img src="https://github.com/Leohoji/dog-cat-breed-classification-system/blob/main/Images/classification_result.png?raw=true" alt="User Login" style="width: 800px; height: 600px;"/>
+
 <ins>Password Forgotting?</ins>
 
-User can enter their Gmail account to receive a verification code for password reset
+User can enter their Gmail account to receive a verification code for password reset:
 
 1. Collect user's Gmail
 2. Generate a verification code to user
@@ -60,7 +72,6 @@ User can enter their Gmail account to receive a verification code for password r
   <img src="https://github.com/Leohoji/dog-cat-breed-classification-system/blob/main/Images/send-verification-code.png?raw=true" alt="Send Verification Code To User" style="width: 300px; height: 350px;"/>
   <img src="https://github.com/Leohoji/dog-cat-breed-classification-system/blob/main/Images/reset-user-password.png?raw=true" alt="Rest Password" style="width: 300px; height: 350px;"/>
 </div>
-
 
 
 ## Installation and Usage
