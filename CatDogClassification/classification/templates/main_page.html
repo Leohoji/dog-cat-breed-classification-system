@@ -21,14 +21,22 @@
   </head>
   <body>
     <!-- Nav Bar -->
-    <nav class="navbar navbar-light bg-light">
+    <nav class="navbar navbar-light bg-light shadow p-3 bg-body rounded">
       <div class="container-fluid">
         <a class="navbar-brand">Cat Dog Recognition System</a>
         <div class="d-fluid justify-content-end">
-          <button class="btn btn-outline-success me-2" type="button">
+          <button
+            class="btn btn-outline-success me-2"
+            id="login-btn"
+            type="button"
+          >
             Login
           </button>
-          <button class="btn btn-sm btn-outline-secondary me-2" type="button">
+          <button
+            class="btn btn-sm btn-outline-secondary me-2"
+            id="sign-up-btn"
+            type="button"
+          >
             Sign Up
           </button>
         </div>
@@ -41,60 +49,50 @@
       class="carousel slide d-block ms-5 me-5 mb-5 pt-1 ps-5 pe-5"
       data-bs-ride="carousel"
     >
-      <!-- <div class="carousel-indicators">
-        <button
-          type="button"
-          data-bs-target="#carouselExampleCaptions"
-          data-bs-slide-to="0"
-          class="active"
-          aria-current="true"
-          aria-label="Slide 1"
-        ></button>
-        <button
-          type="button"
-          data-bs-target="#carouselExampleCaptions"
-          data-bs-slide-to="1"
-          aria-label="Slide 2"
-        ></button>
-        <button
-          type="button"
-          data-bs-target="#carouselExampleCaptions"
-          data-bs-slide-to="2"
-          aria-label="Slide 3"
-        ></button>
-      </div> -->
-      <div class="carousel-inner">
+      <div class="carousel-inner shadow-sm p-3 mb-5 bg-body rounded">
         <div class="carousel-item active">
           <img
             src="https://images.pexels.com/photos/46024/pexels-photo-46024.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
             class="d-block w-100"
             alt="Cat and Dog"
           />
-          <div class="carousel-caption d-none d-md-block">
-            <h5>First slide label</h5>
-            <p>Some representative placeholder content for the first slide.</p>
+          <div class="carousel-caption d-none d-md-block mt-5">
+            <h5>Cat and Dog Harmony</h5>
+            <p>
+              A perfect capture of a cat and dog together, showcasing the
+              natural diversity that the Cat Dog Recognition System aims to
+              classify with precision.
+            </p>
           </div>
         </div>
         <div class="carousel-item">
           <img
-            src="https://images.pexels.com/photos/16440316/pexels-photo-16440316/free-photo-of-cat-drinking-tap-water-from-faucet.jpeg?auto=compress&cs=tinysrgb&w=600"
+            src="https://raw.githubusercontent.com/Leohoji/dog-cat-breed-classification-system/refs/heads/main/Images/pexels-photo-16440316-resize.webp"
             class="d-block w-100"
             alt="Bengal Cat"
           />
-          <div class="carousel-caption d-none d-md-block">
-            <h5>Second slide label</h5>
-            <p>Some representative placeholder content for the second slide.</p>
+          <div class="carousel-caption d-none d-md-block mt-5">
+            <h5>Graceful Dog at Ease</h5>
+            <p>
+              A serene image of a dog in its natural habitat, embodying the kind
+              of variety that the Cat Dog Recognition System classifies with
+              accuracy and efficiency.
+            </p>
           </div>
         </div>
         <div class="carousel-item">
           <img
-            src="https://images.pexels.com/photos/213232/pexels-photo-213232.jpeg?auto=compress&cs=tinysrgb&w=600"
+            src="https://github.com/Leohoji/dog-cat-breed-classification-system/blob/main/Images/pexels-photo-213232-resize.jpeg?raw=true"
             class="d-block w-100"
             alt="Great Pyrenees Dog"
           />
-          <div class="carousel-caption d-none d-md-block">
-            <h5>Third slide label</h5>
-            <p>Some representative placeholder content for the third slide.</p>
+          <div class="carousel-caption d-none d-md-block mt-5">
+            <h5>Curious Cat at the Sink</h5>
+            <p>
+              A playful moment with a cat exploring water, demonstrating the
+              range of unique behaviors that the Cat Dog Recognition System is
+              designed to identify and classify.
+            </p>
           </div>
         </div>
       </div>
@@ -117,17 +115,6 @@
         <span class="visually-hidden">Next</span>
       </button>
     </div>
-
-    <!-- Image Cards -->
-    <!-- <div class="card" style="width: 18rem">
-      <img src="..." class="card-img-top" alt="..." />
-      <div class="card-body">
-        <p class="card-text">
-          Some quick example text to build on the card title and make up the
-          bulk of the card's content.
-        </p>
-      </div>
-    </div> -->
 
     <script src="{% static 'main_page.js' %}"></script>
   </body>
