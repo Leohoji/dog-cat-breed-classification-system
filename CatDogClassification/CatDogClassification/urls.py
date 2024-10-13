@@ -23,6 +23,7 @@ from classification.views import user_gmail_verification, render_password_reset_
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('', partial(show_page, page_name='home')),
     path('login/', partial(show_page, page_name='login'), name='login'), # user login
     path('signup/', partial(show_page, page_name='sign_up'), name='sign_up'), # user sign up
     path('upload/', partial(show_page, page_name='upload'), name='upload'), # upload image for classification
