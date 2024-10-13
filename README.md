@@ -2,12 +2,6 @@
 
 This is a deep learning-based cat and dog recognition system aimed at helping users identify whether an image contains a cat or a dog. The system is developed using Python 3.8 and the Django framework, utilizing TensorFlow for training the deep learning model.
 
-## Table of Contents
-
-- [Features](#features)
-- [Tech Stack](#tech-stack)
-- [Installation and Usage](#installation-and-usage)
-
 # How do I complete this project?
 
 This project follows the [SDLC V-Model](https://www.geeksforgeeks.org/software-engineering-sdlc-v-model/) software development process, which includes:
@@ -37,8 +31,21 @@ If you have GPU to accelerate, devices I installed:
 
 ## Features
 
+**Login and Sign up**
 
+User have to login the website first, if you do not have an account, they can register first.
 
+<img src="https://github.com/Leohoji/dog-cat-breed-classification-system/blob/main/Images/Login%20and%20Sign-up.jpg?raw=true" alt="User Login" style="width: 500px; height: 400px;"/>
+
+**Upload Image For Classification**
+
+User can upload their animal image to
+
+<div style="display: flex; justify-content: space-around; width: 950px">
+  <img src="https://github.com/Leohoji/dog-cat-breed-classification-system/blob/main/Images/upload.png?raw=true" alt="Upload User's Image" style="width: 300px; height: 400px;"/>
+  <img src="https://github.com/Leohoji/dog-cat-breed-classification-system/blob/main/Images/uploaded_image.png?raw=true" alt="Image Uploaded" style="width: 300px; height: 400px;"/>
+  <img src="https://github.com/Leohoji/dog-cat-breed-classification-system/blob/main/Images/Show%20Historical%20Data.jpg?raw=true" alt="Historical Data" style="width: 300px; height: 400px;"/>
+</div>
 
 <ins>Password Forgotting?</ins>
 
@@ -48,11 +55,10 @@ User can enter their Gmail account to receive a verification code for password r
 2. Generate a verification code to user
 3. Verify code and password reset
 
-<div style="display: flex; justify-content: space-around;">
-  <img src="https://github.com/Leohoji/dog-cat-breed-classification-system/blob/main/Images/enter-user-gmail.png?raw=true" alt="Enter User's Gmail" style="width: 30%; height: 350px;"/>
-  <img src="https://github.com/Leohoji/dog-cat-breed-classification-system/blob/main/Images/send-verification-code.png?raw=true" alt="Send Verification Code To User" style="width: 30%; height: 350px;"/>
-  <img src="https://github.com/Leohoji/dog-cat-breed-classification-system/blob/main/Images/reset-user-password.png?raw=true" alt="Rest Password" style="width: 30%; height: 350px;"/>
-
+<div style="display: flex; justify-content: space-around; width: 950px">
+  <img src="https://github.com/Leohoji/dog-cat-breed-classification-system/blob/main/Images/enter-user-gmail.png?raw=true" alt="Enter User's Gmail" style="width: 300px; height: 350px;"/>
+  <img src="https://github.com/Leohoji/dog-cat-breed-classification-system/blob/main/Images/send-verification-code.png?raw=true" alt="Send Verification Code To User" style="width: 300px; height: 350px;"/>
+  <img src="https://github.com/Leohoji/dog-cat-breed-classification-system/blob/main/Images/reset-user-password.png?raw=true" alt="Rest Password" style="width: 300px; height: 350px;"/>
 </div>
 
 
