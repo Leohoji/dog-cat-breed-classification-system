@@ -82,21 +82,17 @@ User can enter their Gmail account to receive a verification code for password r
 
 ## Installation and Usage
 
-1. Create conda environment 
+1. Create and activate conda environment 
    ```bash
    conda create --name CatDogClassification python=3.8
-   ```
-
-2. Activate conda environment
-   ```bash
    conda activate CatDogClassification
    ```
-3. Clone and enter this repository:
+2. Clone and enter this repository:
    ```bash
    git clone https://github.com/Leohoji/dog-cat-breed-classification-system.git
    cd CatDogClassification
    ```
-4. Set MySQL database
+3. Set MySQL database
    Download the [MySQL](https://www.mysql.com/downloads/) data base to your local computer, and create a file named `mysql_info.py ` to save the path to `\CatDogClassification\mysql_info.py`:
    ```python
    HOST = 'localhost'
@@ -105,12 +101,14 @@ User can enter their Gmail account to receive a verification code for password r
    PASSWORD = '' # your password
    DATABASE_NAME = 'cat_dog_system'
    ```
-5. Set Gmail app password
+4. Set Gmail app password
    Set your [Gmail app passwords](https://support.google.com/mail/answer/185833?hl=en) for receiving verification code of **password forgetting** service, and create a file named `python_mail.py` to save the
    path `\CatDogClassification\python_mail.py`:
    ```python
    Gmail_Account = '' # your Gmail account
    Gmail_Password = "" # your Gmail app password
+   ```
+5. 
 6. Install required package
    ```bash
    pip install -r requirements.txt
