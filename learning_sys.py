@@ -179,7 +179,7 @@ class LearningSystem():
                                 metrics=['accuracy'])
         # Train model
         self.classifier.fit(self.train_data_gen, 
-                            epochs=1,
+                            epochs=3,
                             validation_data=self.valid_data_gen)
     
         # Model evaluation
