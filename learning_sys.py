@@ -12,23 +12,18 @@ from tensorflow.keras.applications.efficientnet import preprocess_input as EFNet
 # ================================================================
 # Additional packages for model training and fine-tuning
 # ================================================================
-from mysql_info import DATABASE_NAME, HOST, PORT, USER, PASSWORD
-from model_utils import DataTransformer, DataAugmentation
-from train import evaluate
-from mysql_manager import DatabaseManager
+from CatDogClassification.mysql_info import DATABASE_NAME, HOST, PORT, USER, PASSWORD
+from training_data_info import DATA_PATH, ANNOTATION_PATH, TEST_PATH
+from model_training.model_utils import DataTransformer, DataAugmentation
+from model_training.train import evaluate
 
 time_now = lambda hours=0: dt.now() + relativedelta(hours=hours) # Set local time
 
-DATASET_DIR = 'C:\\Users\\User\\Desktop\\cat_dog_dataset'
-DATA_PATH = Path(DATASET_DIR).joinpath('Cats_and_Dogs_Breeds_Classification_Oxford_Dataset\\images\\images')
-# ANNOTATION_PATH = Path(DATASET_DIR).joinpath('Cats_and_Dogs_Breeds_Classification_Oxford_Dataset\\annotations\\annotations\\list.txt')
-ANNOTATION_PATH = Path("annotations_test_learning_sys\\list.txt")
-TEST_PATH = Path(DATASET_DIR).joinpath('test_images')
 IMG_SIZE = 224
 INPUT_SHAPE = (IMG_SIZE, IMG_SIZE, 3)
 BATCH_SIZE = 32
 
-class LearningSystem(DatabaseManager):
+class LearningSystem():
     def __init__(self, 
                  species_for_train:str='cats',
                  DATA_PATH:str=DATA_PATH, 
@@ -47,11 +42,11 @@ class LearningSystem(DatabaseManager):
         self.DATA_PATH = DATA_PATH
         self.ANNOTATION_DATA_PATH = ANNOTATION_DATA_PATH
         
-        # 這邊label_data path 要處理...
-        self.real_classes = np.load('label_data\\cats_classes.npy') \
-                                if self.species == 'cats' \
-                                else np.load('label_data\\dogs_classes.npy')
-        self.new_model_name = 'new_classifier.h5'
+        # Real classes
+        self.real_classes = np.load('.\\CatDogClassification\\label_data\\cats_classes.npy') \
+                            if self.species == 'cats' \
+                            else np.load('.\\CatDogClassification\\label_data\\dogs_classes.npy')
+        self.new_model_name = '.\\CatDogClassification\\model_data\\new_classifier.h5'
 
     def get_all_historical_data(self):
         connection = mysql.connector.connect(host=HOST, 
@@ -86,7 +81,6 @@ class LearningSystem(DatabaseManager):
                 breed_ID = breed_ID_loc[0][0]+1
             else: continue
             fname = '{}_user{}-{}'.format(breed, idx, time_now().strftime(format='%Y%m%d-%H%M%S'))
-            # species = 1 if (self.species == 'cats') else 2
             class_ID = '999'
             new_lines.append(f'{fname} {class_ID} {self.SPECIES} {breed_ID}')
 
@@ -95,7 +89,6 @@ class LearningSystem(DatabaseManager):
             user_img_data[fPath] = image
         
         return (new_lines, user_img_data)
-
 
     def append_to_file(self, new_lines:list):
         """
@@ -128,8 +121,10 @@ class LearningSystem(DatabaseManager):
         if Path(self.new_model_name).is_file():
             classifier = tf.keras.models.load_model(self.new_model_name)
         else:
-            classifier = tf.keras.models.load_model('model_data\\cats_classifier.h5')
-
+            if self.species == "cats":
+                classifier = tf.keras.models.load_model('.\\CatDogClassification\\model_data\\cats_classifier.h5')
+            else:
+                classifier = tf.keras.models.load_model('.\\CatDogClassification\\model_data\\dogs_classifier.h5')
         return classifier
 
     def unfreeze(self):
@@ -151,8 +146,8 @@ class LearningSystem(DatabaseManager):
         tf.random.set_seed(seed)
         tf.keras.backend.clear_session()
 
+        # create training dataset
         self.new_lines, self.user_img_data = self.create_new_train_dataset()
-        # print(self.new_lines, self.user_img_data)
 
         # Append to txt file  
         self.append_to_file(self.new_lines)
@@ -166,8 +161,6 @@ class LearningSystem(DatabaseManager):
         # Data augmentation
         self.data_df = self.data_transformer.preprocess()
         self.df_species_df = self.data_df[self.data_df['SPECIES']==self.SPECIES]
-
-        # self.data_df.to_csv("hihihi.csv")
         self.data_aug = DataAugmentation(dataframe=self.df_species_df, 
                                          img_data_path=self.DATA_PATH, 
                                          img_size=self.IMG_SIZE, 
@@ -186,16 +179,16 @@ class LearningSystem(DatabaseManager):
                                 metrics=['accuracy'])
         # Train model
         self.classifier.fit(self.train_data_gen, 
-                            epochs=3,
+                            epochs=1,
                             validation_data=self.valid_data_gen)
     
         # Model evaluation
-        species_path = './test_images/%s' % (self.species)
+        species_path = Path(TEST_PATH).joinpath(self.species) # './test_images/%s' % (self.species)
         acc_score = evaluate(self.train_data_gen.class_indices, self.real_classes, species_path, self.classifier)
         print(f"Accuracy score on testing dataset: {acc_score}")
 
         # Save model
-        # self.classifier.save(self.new_model_name)
+        self.classifier.save(self.new_model_name)
         print(f'New classifier has been save at {self.new_model_name}')
     
 

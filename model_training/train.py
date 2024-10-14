@@ -2,7 +2,7 @@ import cv2
 import numpy as np
 import tensorflow as tf
 from pathlib import Path
-from model_utils import DataTransformer, DataAugmentation, AnimalClassifier
+from model_training.model_utils import DataTransformer, DataAugmentation, AnimalClassifier
 from tensorflow.keras.applications.efficientnet import EfficientNetB0
 from tensorflow.keras.applications.efficientnet import preprocess_input as EFNetPreProcessInput
 
