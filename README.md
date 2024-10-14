@@ -108,13 +108,22 @@ User can enter their Gmail account to receive a verification code for password r
    Gmail_Account = '' # your Gmail account
    Gmail_Password = "" # your Gmail app password
    ```
-5. 
-6. Install required package
+5. Prepare dataset for learning system
+   Download the dataset from [Cats and Dogs Breeds Classification Oxford Dataset](https://www.kaggle.com/datasets/zippyz/cats-and-dogs-breeds-classification-oxford-dataset) nad create a `training_data_info.py`
+   at root directory with recording the dataset root dir and `list.txt` of annotation path:
+   ```python
+   from pathlib import Path
+   DATASET_DIR = '' # dataset root directory
+   DATA_PATH = Path(DATASET_DIR).joinpath('') # image data path
+   ANNOTATION_PATH = Path(DATASET_DIR).joinpath('') # list.txt file path of annotation folder
+   TEST_PATH = 'test_images'
+   ```
+7. Install required package
    ```bash
    pip install -r requirements.txt
    conda install jupyter jupyterlab
    ```
-7. Run the django server
+8. Run the django server
    Run the following program instructions and copy the address `http://127.0.0.1:8000/` to your local device.
    ```bash
    python manage.py runserver
