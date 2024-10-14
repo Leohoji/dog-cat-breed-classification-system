@@ -146,14 +146,14 @@ class LearningSystem():
         tf.random.set_seed(seed)
         tf.keras.backend.clear_session()
 
-        # create training dataset
-        self.new_lines, self.user_img_data = self.create_new_train_dataset()
+        # # create training dataset
+        # self.new_lines, self.user_img_data = self.create_new_train_dataset()
 
-        # Append to txt file  
-        self.append_to_file(self.new_lines)
+        # # Append to txt file  
+        # self.append_to_file(self.new_lines)
 
-        # Save image into dataset
-        self.decode_and_save(self.user_img_data)
+        # # Save image into dataset
+        # self.decode_and_save(self.user_img_data)
 
         # Add image into folder and annotation txt
         self.data_transformer = DataTransformer(self.ANNOTATION_DATA_PATH)        
@@ -179,7 +179,7 @@ class LearningSystem():
                                 metrics=['accuracy'])
         # Train model
         self.classifier.fit(self.train_data_gen, 
-                            epochs=3,
+                            epochs=1,
                             validation_data=self.valid_data_gen)
     
         # Model evaluation
@@ -188,7 +188,7 @@ class LearningSystem():
         print(f"Accuracy score on testing dataset: {acc_score}")
 
         # Save model
-        self.classifier.save(self.new_model_name)
+        # self.classifier.save(self.new_model_name)
         print(f'New classifier has been save at {self.new_model_name}')
     
 
@@ -196,4 +196,4 @@ if __name__ == '__main__':
     cat_learning_sys = LearningSystem('cats')
     dog_learning_sys = LearningSystem('dogs')
     cat_learning_sys.fine_tune_classifier()
-    dog_learning_sys.fine_tune_classifier()
+    # dog_learning_sys.fine_tune_classifier()

@@ -1,9 +1,15 @@
+import cv2
 import math
 import pandas as pd
-from functools import partial
+import numpy as np
 import tensorflow as tf
+from functools import partial
+from pathlib import Path
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 from tensorflow.keras.applications.efficientnet import preprocess_input as EFNetPreProcessInput
+
+IMG_SIZE = 224
+BATCH_SIZE = 32
 
 class DataTransformer:
     def __init__(self, data_path:str):
@@ -233,3 +239,69 @@ class AnimalClassifier:
             layer.trainable = False
     
         print(f"Change last {-layer_number} layers of {fine_tune_base_model.name} successfully, please recompile model again.")
+
+
+def preprocess_image(image_path:str, size:tuple=(IMG_SIZE, IMG_SIZE)) -> np.array:
+    """
+    Preprocess images by following steps:
+
+    Args:
+        image_path: Image path for preprocessing
+        size: image size for resizing
+    Returns:
+        Processed images in numpy array data type
+    """
+    image = cv2.imread(image_path) # read image
+    image_rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB) # convert image into RGB channel (OpenCV default BGR)
+    resized_image = cv2.resize(image_rgb, size) # resize image to size+(3,)
+    final_image = EFNetPreProcessInput(resized_image) # preprocess image by efficientNet preprocess input
+    
+    return final_image
+
+def create_dataset(images:np.array, batch_size:int=32) -> tf.data.Dataset:
+    """Create dataset from images."""
+    image_ds = tf.data.Dataset.from_tensor_slices(tf.constant(images)) # generate image dataset
+    image_ds = image_ds.batch(batch_size) # convert image dataset to 32 batch size
+    image_ds = image_ds.prefetch(buffer_size=tf.data.AUTOTUNE)  # prefetch data for higher efficiency
+    
+    return image_ds
+
+def calculate_accuracy(y_true:tf.Tensor, y_pred:tf.Tensor) -> np.float32:
+    """
+    Create accuracy score via true labels and model predictions.
+
+    Args:
+        y_true: True labels from dataset
+        y_pred: Model predictions
+    Returns:
+        Accuracy score
+    """
+    results = tf.equal(tf.argmax(y_pred, axis=1), tf.argmax(y_true, axis=1))
+    results_to_float = tf.cast(results, tf.float32)
+    accuracy_score = tf.reduce_mean(results_to_float).numpy()
+
+    return accuracy_score
+
+def evaluate(class_indices:dict, real_classes:list, species_path:str, model:tf.keras.Model) -> float:
+    """
+    Evaluate model performance from test images collected before.
+
+    Args:
+        class_indices: Dictionary of class names and class indices
+        real_classes: List of real classes
+        species_path: Test images path
+        model: Model for evaluation
+    Returns:
+        Accuracy score in float data type
+    """
+    # Prepare testing images and labels
+    test_image_and_paths = [(img_path, class_indices[cls]) for cls in real_classes \
+                                                           for img_path in Path(species_path).joinpath(cls).glob('*')]
+    image_paths, labels = zip(*test_image_and_paths) # separate images and labels
+    test_images = [preprocess_image(str(img_path), size=(IMG_SIZE, IMG_SIZE)) for img_path in image_paths] # prepare test images
+    test_labels = tf.one_hot(labels, depth=len(np.unique(np.array(labels)))) # prepare test labels with one hot encoding
+    test_dataset = create_dataset(test_images, batch_size=BATCH_SIZE) # create testing dataset by tensorflow
+    y_preds = model.predict(test_dataset)
+    Acc_Score = calculate_accuracy(test_labels, y_preds)
+
+    return Acc_Score
