@@ -140,36 +140,36 @@ class DatabaseManager:
             return False
 
 if __name__ == '__main__':
-    mysql_manager = DatabaseManager()
-    user_updated = mysql_manager.update_user_password(user_name="LoHoLeo2", new_password="22222222")
-    print(user_updated)
-    # import string
-    # import random
-    # def generate_fake_data(fake_name=''):
-    #     if not fake_name:
-    #         fake_name = ''.join(random.choices(string.ascii_letters, k=8)) + '@gmail.com'
-    #     fake_password = ''.join(random.choices(string.ascii_letters, k=4)) + ''.join(random.choices('0123456789', k=4))
+    import string
+    import random
+    def generate_fake_data(fake_name=''):
+        if not fake_name:
+            fake_name = ''.join(random.choices(string.ascii_letters, k=8)) + '@gmail.com'
+        fake_password = ''.join(random.choices(string.ascii_letters, k=4)) + ''.join(random.choices('0123456789', k=4))
         
-    #     return {'user_name': fake_name, 'user_password': fake_password}
+        return {'user_name': fake_name, 'user_password': fake_password}
     
-    # # test user data, first is all correct, second one's password is incorrect
-    # user_data_1 = {'user_name': '12345qwer@gmail.com', 'user_password': 'sdlkjfg455'}
-    # user_data_2 = {'user_name': '56789qwer@gmail.com', 'user_password': 'xxxxxxxxx'}
-    # user_data_3 = generate_fake_data()
-    # print(f"Fake member info: {(user_data_3['user_name'], user_data_3['user_password'])}")
-    # mysql_manager = DatabaseManager()
-    # for data in (user_data_1, user_data_2, user_data_3):
-    #     result = mysql_manager.get_member_info(data)
-    #     print(result)
+    # test user data, first is all correct, second one's password is incorrect
+    user_data_1 = {'user_name': '12345qwer@gmail.com', 'user_password': 'sdlkjfg455'}
+    user_data_2 = {'user_name': '56789qwer@gmail.com', 'user_password': 'xxxxxxxxx'}
+    user_data_3 = generate_fake_data()
+    print(f"Fake member info: {(user_data_3['user_name'], user_data_3['user_password'])}")
+    mysql_manager = DatabaseManager()
+    for data in (user_data_1, user_data_2, user_data_3):
+        result = mysql_manager.get_member_info(data)
+        print(result)
     
-    # # Test for getting historical data
-    # res = mysql_manager.get_historical_data(user_name=user_data_1['user_name'])
-    # print(f"historical data \n {res}")
+    # Test for getting historical data
+    res = mysql_manager.get_historical_data(user_name=user_data_1['user_name'])
+    print(f"historical data \n {res}")
 
-    # # Test for getting animal data
-    # animal_data = mysql_manager.get_animal_info(animal_breed='Labrador')
-    # print(animal_data)
+    # Test for getting animal data
+    animal_data = mysql_manager.get_animal_info(animal_breed='Labrador')
+    print(animal_data)
 
     # Test for updating historical data
-    # update_result = mysql_manager.update_historical_data(user_name=user_data_1['user_name'], image=None)
-    # print(update_result)
+    update_result = mysql_manager.update_historical_data(user_name=user_data_1['user_name'], image=None)
+    print(update_result)
+
+    user_updated = mysql_manager.update_user_password(user_name="LoHoLeo2", new_password="22222222")
+    print(user_updated)
