@@ -8,6 +8,8 @@ This is a deep learning-based cat and dog recognition system aimed at helping us
 
 # How do I complete this project?
 
+✨ Watch This ▶▶▶ Here is my [System Architecture Design Specification](https://beryl-scapula-b22.notion.site/System-Architecture-Design-Specification-4d8a6fc21b8647a88fa45838d516fd20?pvs=4).
+
 This project follows the [SDLC V-Model](https://www.geeksforgeeks.org/software-engineering-sdlc-v-model/) software development process, which includes:
 
 1. **Requirement Analysis**: Define system functionality and performance requirements.
