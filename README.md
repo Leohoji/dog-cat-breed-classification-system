@@ -2,7 +2,13 @@
 
 This is a deep learning-based cat and dog recognition system aimed at helping users identify whether an image contains a cat or a dog. The system is developed using Python 3.8 and the Django framework, utilizing TensorFlow for training the deep learning model.
 
+<div style="display: flex; justify-content: center; margin: 0 auto;">
+  <img src="https://github.com/Leohoji/dog-cat-breed-classification-system/blob/main/Images/home_page.png?raw=true" alt="Home Page" style="width: 630px; height: 375px;"/>
+</div>
+
 # How do I complete this project?
+
+✨ Watch This ▶▶▶ Here is my [System Architecture Design Specification](https://beryl-scapula-b22.notion.site/System-Architecture-Design-Specification-4d8a6fc21b8647a88fa45838d516fd20?pvs=4).
 
 This project follows the [SDLC V-Model](https://www.geeksforgeeks.org/software-engineering-sdlc-v-model/) software development process, which includes:
 
