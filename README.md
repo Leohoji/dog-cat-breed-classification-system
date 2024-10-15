@@ -90,7 +90,7 @@ User can enter their Gmail account to receive a verification code for password r
 2. Clone and enter this repository:
    ```bash
    git clone https://github.com/Leohoji/dog-cat-breed-classification-system.git
-   cd CatDogClassification
+   cd dog-cat-breed-classification-system
    ```
 3. Set MySQL database
    Download the [MySQL](https://www.mysql.com/downloads/) data base to your local computer, and create a file named `mysql_info.py ` to save the path to `\CatDogClassification\mysql_info.py`:
@@ -129,3 +129,17 @@ User can enter their Gmail account to receive a verification code for password r
    python manage.py runserver
    ```
    
+## Learning system
+
+The administrator can fine-tune the pre-train model on all the images including user's photo and training dataset via the following command:
+
+Go to the `user\folder\path\dog-cat-breed-classification-system\`
+```bash
+python learning_sys.py
+```
+
+You will fine-tune the model to get better performance if the user's photo is large enough.
+
+# Project Author
+
+*Ho Lo*
