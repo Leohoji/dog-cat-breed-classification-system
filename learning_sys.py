@@ -15,7 +15,7 @@ from tensorflow.keras.applications.efficientnet import preprocess_input as EFNet
 from CatDogClassification.mysql_info import DATABASE_NAME, HOST, PORT, USER, PASSWORD
 from training_data_info import DATA_PATH, ANNOTATION_PATH, TEST_PATH
 from model_training.model_utils import DataTransformer, DataAugmentation
-from model_training.train import evaluate
+from model_training.model_utils import evaluate
 
 time_now = lambda hours=0: dt.now() + relativedelta(hours=hours) # Set local time
 
@@ -146,14 +146,14 @@ class LearningSystem():
         tf.random.set_seed(seed)
         tf.keras.backend.clear_session()
 
-        # # create training dataset
-        # self.new_lines, self.user_img_data = self.create_new_train_dataset()
+        # create training dataset
+        self.new_lines, self.user_img_data = self.create_new_train_dataset()
 
-        # # Append to txt file  
-        # self.append_to_file(self.new_lines)
+        # Append to txt file  
+        self.append_to_file(self.new_lines)
 
-        # # Save image into dataset
-        # self.decode_and_save(self.user_img_data)
+        # Save image into dataset
+        self.decode_and_save(self.user_img_data)
 
         # Add image into folder and annotation txt
         self.data_transformer = DataTransformer(self.ANNOTATION_DATA_PATH)        
