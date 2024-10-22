@@ -306,7 +306,7 @@ def send_verification_code(to_user_gmail:str) -> dict:
     smtp.ehlo()
     smtp.starttls()
     smtp.login(Gmail_Account, Gmail_Password)
-    status = smtp.send_message(mail)
+    _ = smtp.send_message(mail)
     smtp.quit()
 
     return {'verification_code': random_number}
