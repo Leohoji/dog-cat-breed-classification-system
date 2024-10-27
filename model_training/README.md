@@ -23,7 +23,7 @@ Hyperparameters for dog-breed-classification training:
 
 | Hyperparameters	      | Value                 |
 | --------------------- | --------------------- |
-| Epochs	              | 20                    |
+| Epochs	              | 10                    |
 | Fine-Tune Ratio	      | None                  |
 | Fine-Tune Epochs      |	0                     |
 | Optimizer	            | Adam                  |
