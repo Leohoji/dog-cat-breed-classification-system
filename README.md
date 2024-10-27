@@ -20,7 +20,7 @@ This project follows the [SDLC V-Model](https://www.geeksforgeeks.org/software-e
 6. **Acceptance Testing**: Perform comprehensive testing in the final environment.
 7. **Maintenance**: Continuously improve the system based on user feedback.
 
-<ins>Model Training</ins>: The training of deep neural network for cats or dogs classification is recorded in [HERE](https://github.com/Leohoji/dog-cat-breed-classification-system/tree/main/model_training), and The model import for object detection is based on [tutorial in TensorFlow](https://github.com/tensorflow/docs/blob/master/site/en/hub/tutorials/object_detection.ipynb).
+✨ How Do I Train My Model ▶▶▶ The training of deep neural network for cats or dogs classification is recorded in [HERE](https://github.com/Leohoji/dog-cat-breed-classification-system/tree/main/model_training), and The model import for object detection is based on [tutorial in TensorFlow](https://github.com/tensorflow/docs/blob/master/site/en/hub/tutorials/object_detection.ipynb).
 
 ## Tech Stack
 
