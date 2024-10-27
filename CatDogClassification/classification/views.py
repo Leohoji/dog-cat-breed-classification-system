@@ -80,7 +80,6 @@ def login_verification(request):
             login_result = verifier.login_verify(user_data)
             if login_result == 'yes': 
                 username = user_data.get('user_name')
-                print(username)
                 return JsonResponse({'status': login_result, 'USERNAME': username})
             else: 
                 return JsonResponse({'status': 'error', 'message': login_result})
