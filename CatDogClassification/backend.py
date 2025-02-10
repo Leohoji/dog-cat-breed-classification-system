@@ -4,10 +4,13 @@ import base64
 import traceback
 import numpy as np
 from io import BytesIO
+from typing import Tuple
 import tensorflow as tf
+from tensorflow.keras.layers import Dense, Dropout, GlobalAveragePooling2D
+from tensorflow.keras.applications import MobileNet
 import tensorflow_hub as hub 
 from PIL import Image, ImageDraw, ImageFont, ImageColor
-from tensorflow.keras.applications.efficientnet import preprocess_input as EFNetPreProcessInput
+# from tensorflow.keras.applications.efficientnet import preprocess_input as EFNetPreProcessInput
 
 import random
 import smtplib
@@ -179,11 +182,71 @@ class AnimalDetector:
         
         return (object_class, image_with_boxes)
 
+class AnimalClassifier(tf.keras.Model):
+    """MobileNetV2-based classifier for animal classification."""
+    
+    def __init__(self, 
+                 input_feature: Tuple[int], output_dimension: int, model_name: str = 'animal_classifier'):
+        """
+        Create a transfer learning model based on MobileNetV2 for animal classification.
+
+        Parameters:
+            input_feature (List[int]): Shape of the input image (height, width, channels).
+            output_dimension (int): Number of output classes.
+            model_name (str): Name of the model (optional).
+        """
+        super(AnimalClassifier, self).__init__(name=model_name)
+
+        self.input_feature = input_feature
+        self.output_dimension = output_dimension
+
+        # Define the model
+        self.model = tf.keras.Sequential([
+            MobileNet(input_shape=self.input_feature, include_top=False),  
+            Dense(64, activation="relu", name="dense_layer", kernel_regularizer=tf.keras.regularizers.l2(0.01)),
+            Dropout(0.4),
+            Dense(32, activation="relu", name="dense_layer_2", kernel_regularizer=tf.keras.regularizers.l2(0.01)),
+            Dropout(0.2),
+            Dense(16, activation="relu", name="dense_layer_3", kernel_regularizer=tf.keras.regularizers.l2(0.01)),
+            Dropout(0.1),
+            Dense(8, activation="relu", name="dense_layer_4", kernel_regularizer=tf.keras.regularizers.l2(0.01)),
+            Dropout(0.1),
+            GlobalAveragePooling2D(name="global_average_pooling_layer"),
+            Dense(output_dimension, activation="softmax", name="output_layer")
+        ])
+        
+        self.model.layers[0].trainable = False  # Freeze the pre-trained weights
+
+    def call(self, inputs, training=False, mask=None):
+        """Forward pass of the model."""
+        return self.model.call(inputs, training, mask)
+
+    def get_config(self):
+        """
+        Get the model configuration for serialization.
+        """
+        return {
+            "input_feature": self.input_feature,
+            "output_dimension": self.output_dimension,
+            "model_name": self.name
+        }
+
+    @classmethod
+    def from_config(cls, config):
+        """
+        Create a new model instance from the given configuration.
+        """
+        return cls(**config)
+
 class Classification:
-    def register_species(self, species, classifier, real_classes):
-        self.species = species
-        self.classifier_loaded = classifier
-        self.real_classes = real_classes
+    def __init__(self, classifier, img_size):
+        self.classifier = classifier
+        self.img_size = img_size
+
+    # def register_species(self, species, classifier, real_classes):
+    #     self.species = species
+    #     self.classifier_loaded = classifier
+    #     self.real_classes = real_classes
 
     def decode_base64_image(self, base64_image_string:str) -> np.array:
         """Decode the base64 string and return the image as a PIL object"""
@@ -196,23 +259,25 @@ class Classification:
         self.img_array = np.array(img) # Convert the PIL image to a NumPy array
         return self.img_array
 
-    def Model_Predict(self, base64_image_string:str) -> str:
+    def Model_Predict(self, base64_image_string:str, real_classes:list) -> str:
         """Predict image after preprocessing and return predicted class"""
         # Image preprocessing
         image_rgb = self.decode_base64_image(base64_image_string)
-        image_rgb = image_rgb.astype(np.float32)
-        resized_image = cv2.resize(image_rgb, IMG_SIZE) # resize image to (224, 224, 3)
-        processed_image = EFNetPreProcessInput(resized_image)  # preprocess image
-        image_for_pred = np.expand_dims(processed_image, axis=0) # add a batch dim
+        image = tf.image.convert_image_dtype(image_rgb, tf.float32)
+        image_for_pred = tf.image.resize(image, size=[self.img_size, self.img_size])[tf.newaxis, ...]
+        # image_rgb = image_rgb.astype(np.float32)
+        # resized_image = cv2.resize(image_rgb, IMG_SIZE) # resize image to (224, 224, 3)
+        # processed_image = EFNetPreProcessInput(resized_image)  # preprocess image
+        # image_for_pred = np.expand_dims(processed_image, axis=0) # add a batch dim
         
         # Model prediction
-        model_pred = self.classifier_loaded.predict(image_for_pred) # predict image
+        model_pred = self.classifier.predict(image_for_pred) # predict image
         pred_index = np.argmax(np.squeeze(model_pred)) # get the highest class index
-        final_class = self.real_classes[pred_index] # final image class
+        final_class = real_classes[pred_index] # final image class
         
         return final_class
 
-    def send_results(self, base64_image_string:str) -> dict:
+    def send_results(self, base64_image_string:str, real_classes:list) -> dict:
         """
         Send model prediction results to front-end in JSON data type.
         1. Model predicts the breed of image.
@@ -220,7 +285,7 @@ class Classification:
         3. Convert results data into JSON format.
         """
         try:
-            final_pred = self.Model_Predict(base64_image_string)
+            final_pred = self.Model_Predict(base64_image_string, real_classes)
             results = { 'status': 'ok', 'model_pred': final_pred }
         except Exception as E:
             traceback.print_exc()
@@ -318,5 +383,59 @@ def update_password(user_name:str, new_password:str):
     return user_updated
 
 if __name__ == "__main__":
-    verifier = Verification()
-    print(verifier.login_verify({"user_name": "Leo"}))
+    
+    import base64
+    import io
+    import numpy as np
+    from PIL import Image
+    import tensorflow as tf
+
+    class ImageReader:
+        def __init__(self, image_path):
+            self._image_path = image_path
+
+        def read(self):
+            with open(self._image_path, 'rb') as file:
+                self._image_bytes = file.read()
+            return self._image_bytes
+        
+        def from_base64(self, image_bytes):
+            base64_string = base64.b64encode(image_bytes).decode('utf-8')
+            img_data = base64.b64decode(base64_string)
+            image_io = io.BytesIO(img_data)
+            image_array = Image.open(image_io)
+            return image_array
+        
+        def to_numpy(self, image_array: Image) -> np.array:
+            return np.array(image_array)
+        
+        def run(self):
+            image_byte = self.read()
+            image = self.from_base64(image_byte)
+            image = self.to_numpy(image)
+            image = tf.image.convert_image_dtype(image, tf.float32)
+            image = tf.image.resize(image, size=[224, 224])
+            return image[tf.newaxis, ...]
+
+    imgPath = 'Bengal.jpg'
+    image_reader = ImageReader(imgPath)
+    image = image_reader.run()
+    # print(image)
+
+    def custom_loss_fn(y_true, y_pred):
+        loss_fn = tf.keras.losses.CategoricalCrossentropy()
+        loss = loss_fn(y_true, y_pred)
+
+        return loss
+
+    loaded_final_classifier = tf.keras.models.load_model(
+        'model_data/three_final_classifier', 
+        custom_objects={
+            'MobileNetClassifier': AnimalClassifier, 
+            'custom_loss_fn': custom_loss_fn
+        }
+    )
+
+    pred_prob = loaded_final_classifier(image)
+    
+    print(pred_prob)

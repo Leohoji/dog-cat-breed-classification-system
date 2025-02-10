@@ -9,7 +9,8 @@ from PIL import Image
 from io import BytesIO
 from pathlib import Path
 from tensorflow.keras.models import load_model
-from backend import Verification, Classification, AnimalDetector
+from tensorflow.keras.losses import CategoricalCrossentropy
+from backend import Verification, Classification, AnimalDetector, AnimalClassifier
 from backend import collect_animal_info, save_results_to_database, collect_historical_data
 from backend import send_verification_code, update_password
 
@@ -19,6 +20,7 @@ from backend import send_verification_code, update_password
 USERNAME = 'LoHoLeo2'
 USER_IMG_PATH = 'user_img.txt'
 USER_BOX_IMG_PATH = 'user_box_img.txt'
+IMG_SIZE = 224 
 
 # -----------------------
 # Verifier loading
@@ -26,22 +28,36 @@ USER_BOX_IMG_PATH = 'user_box_img.txt'
 verifier = Verification()
 
 # Load real classes
-cat_real_classes = np.load(Path('label_data').joinpath('cats_classes.npy'))
-dog_real_classes = np.load(Path('label_data').joinpath('dogs_classes.npy'))
+# cat_real_classes = np.load(Path('label_data').joinpath('cats_classes.npy'))
+# dog_real_classes = np.load(Path('label_data').joinpath('dogs_classes.npy'))
+label_data = np.load("label_data/three_categories.npz", allow_pickle=True)
 
 # -----------------------
 # Model loading
 # -----------------------
-cats_classifier_path = Path('model_data').joinpath('cats_classifier.h5')
-dogs_classifier_path = Path('model_data').joinpath('dogs_classifier.h5')
-cat_classifier_loaded = load_model(cats_classifier_path)
-dog_classifier_loaded = load_model(dogs_classifier_path)
+def custom_loss_fn(y_true, y_pred):
+    loss_fn = CategoricalCrossentropy()
+    loss = loss_fn(y_true, y_pred)
+
+    return loss
+
+model_loaded = load_model(
+    'model_data/three_final_classifier', 
+    custom_objects={
+        'MobileNetClassifier': AnimalClassifier, 
+        'custom_loss_fn': custom_loss_fn
+    }
+)
+# cats_classifier_path = Path('model_data').joinpath('cats_classifier.h5')
+# dogs_classifier_path = Path('model_data').joinpath('dogs_classifier.h5')
+# cat_classifier_loaded = load_model(cats_classifier_path)
+# dog_classifier_loaded = load_model(dogs_classifier_path)
 
 # Animal detector
 animal_detector = AnimalDetector()
 
 # Load classifiers
-classifier = Classification()
+classifier = Classification(model_loaded, img_size=IMG_SIZE)
 
 # Create your views here.
 def save_base64_to_file(base64_string, fpath):
@@ -181,12 +197,14 @@ def upload_image_classification(request):
 
 
             if object_class == "Cat":
-                classifier.register_species("Cat", cat_classifier_loaded, cat_real_classes)
+                # classifier.register_species("Cat", cat_classifier_loaded, cat_real_classes)
+                real_classes = label_data['cats']
             else:
-                classifier.register_species("Dog", dog_classifier_loaded, dog_real_classes)
+                # classifier.register_species("Dog", dog_classifier_loaded, dog_real_classes)
+                real_classes = label_data['dogs']
 
             # Model prediction
-            pred_results = classifier.send_results(user_img_uploaded)
+            pred_results = classifier.send_results(user_img_uploaded, real_classes)
             print(pred_results, type(pred_results))
             status = pred_results.get('status')
             if status  == 'ok': 
