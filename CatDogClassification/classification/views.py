@@ -14,6 +14,7 @@ from backend import Verification, Classification, AnimalDetector, AnimalClassifi
 from backend import collect_animal_info, save_results_to_database, collect_historical_data
 from backend import send_verification_code, update_password
 
+
 # -----------------------
 # Default variables
 # -----------------------
@@ -28,8 +29,6 @@ IMG_SIZE = 224
 verifier = Verification()
 
 # Load real classes
-# cat_real_classes = np.load(Path('label_data').joinpath('cats_classes.npy'))
-# dog_real_classes = np.load(Path('label_data').joinpath('dogs_classes.npy'))
 label_data = np.load("label_data/three_categories.npz", allow_pickle=True)
 
 # -----------------------
@@ -48,10 +47,6 @@ model_loaded = load_model(
         'custom_loss_fn': custom_loss_fn
     }
 )
-# cats_classifier_path = Path('model_data').joinpath('cats_classifier.h5')
-# dogs_classifier_path = Path('model_data').joinpath('dogs_classifier.h5')
-# cat_classifier_loaded = load_model(cats_classifier_path)
-# dog_classifier_loaded = load_model(dogs_classifier_path)
 
 # Animal detector
 animal_detector = AnimalDetector()

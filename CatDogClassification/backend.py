@@ -15,7 +15,8 @@ import smtplib
 from email.mime.text import MIMEText
 from python_mail import Gmail_Account, Gmail_Password
 
-from mysql_manager import DatabaseManager
+# from mysql_manager import DatabaseManager
+from classification.models import DatabaseManager
 
 data_manager = DatabaseManager() # initialize DatabaseManager
 IMG_SIZE = (224, 224)
