@@ -240,7 +240,7 @@ def show_classification_results(request, cls_species, model_pred, username):
             Description = animal_data['animal_description'] 
             Link = animal_data['animal_link']
             Data = {'description': Description, 'link': Link}
-            real_classes = cat_real_classes if cls_species == "Cat" else dog_real_classes
+            real_classes = label_data['cats'] if cls_species == "Cat" else label_data['dogs']
 
             # full context
             context = {'Results': result_title,'image_nums': image_nums, 'Data': Data,

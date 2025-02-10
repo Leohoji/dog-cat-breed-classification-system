@@ -1,4 +1,3 @@
-import cv2
 import json
 import base64
 import traceback
@@ -10,7 +9,6 @@ from tensorflow.keras.layers import Dense, Dropout, GlobalAveragePooling2D
 from tensorflow.keras.applications import MobileNet
 import tensorflow_hub as hub 
 from PIL import Image, ImageDraw, ImageFont, ImageColor
-# from tensorflow.keras.applications.efficientnet import preprocess_input as EFNetPreProcessInput
 
 import random
 import smtplib
@@ -243,11 +241,6 @@ class Classification:
         self.classifier = classifier
         self.img_size = img_size
 
-    # def register_species(self, species, classifier, real_classes):
-    #     self.species = species
-    #     self.classifier_loaded = classifier
-    #     self.real_classes = real_classes
-
     def decode_base64_image(self, base64_image_string:str) -> np.array:
         """Decode the base64 string and return the image as a PIL object"""
         try:
@@ -265,10 +258,6 @@ class Classification:
         image_rgb = self.decode_base64_image(base64_image_string)
         image = tf.image.convert_image_dtype(image_rgb, tf.float32)
         image_for_pred = tf.image.resize(image, size=[self.img_size, self.img_size])[tf.newaxis, ...]
-        # image_rgb = image_rgb.astype(np.float32)
-        # resized_image = cv2.resize(image_rgb, IMG_SIZE) # resize image to (224, 224, 3)
-        # processed_image = EFNetPreProcessInput(resized_image)  # preprocess image
-        # image_for_pred = np.expand_dims(processed_image, axis=0) # add a batch dim
         
         # Model prediction
         model_pred = self.classifier.predict(image_for_pred) # predict image
