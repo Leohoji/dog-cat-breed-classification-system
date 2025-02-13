@@ -123,7 +123,7 @@ document
         const fileName = file.name;
         const base64Data = reader.result;
         const img = createImgDisplay(e.target.result); // Create img element to show image
-        const fileNameDisplay = createFileNameDisplay(fileName); // Create element for fine name display
+        const fileNameDisplay = createFileNameDisplay(fileName); // Create element for file name display
         const { buttonContainer, deleteButton, classifyButton } =
           createDeleteClassifyButton(); // Create a delete and classify button
 
@@ -160,7 +160,6 @@ document
             )
             .then(function (response) {
               const data = response.data;
-              console.log(data);
               const status = data.status;
               if (status === "ok") {
                 const species = data.species;

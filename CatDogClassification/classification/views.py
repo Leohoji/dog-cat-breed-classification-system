@@ -34,165 +34,95 @@ from classification.models import DatabaseManager
 data_manager = DatabaseManager() # initialize DatabaseManager
 IMG_SIZE = (224, 224)
 
-class Verification(DatabaseManager):
-    def user_exists(self, username:str):
-        """
-        Verify whether user account exists.
-
-        Args:
-            username: User's account information.
-        Returns:
-            String of 'user not exists' or 'yes'.
-        """
-        # get member information
-        member_info = self.get_member_info({"user_name": username})
-
-        # check information
-        if not member_info:
-            result = 'user not exists'
-        else:
-           result = 'yes'
-
-        return result
-    
-    def login_verify(self, user_data:dict) -> str:
-        """
-        Verify user data from login interface.
-
-        Args:
-            user_data: Dictionary of user's information.
-        Returns:
-            String of 'user not exists', 'wrong password', or 'yes'.
-        """
-        # get member information
-        member_info = self.get_member_info(user_data)
-
-        # check information
-        if not member_info:
-            result = 'user not exists'
-        else:
-            _, UserName, UserPassword, _ = member_info # (id, user_name, user_password, timestamp)
-            result = (UserName, UserPassword)
-            print(f"output: {result}")
-            if user_data.get('password') != UserPassword:
-                result = 'wrong password' # password is incorrect
-            else:
-                result = 'yes'
-
-        return result
-    
-    def sign_up_verify(self, user_data:dict) -> str:
-        """
-        Verify user data from sign_up interface.
-
-        Args:
-            user_data: Dictionary of user's information.
-        Returns:
-            String of 'success', or 'fail'.
-        """
-        # get member information
-        member_info = self.get_member_info(user_data)
-        print(member_info)
-
-        # check information
-        if not member_info:
-            user_name, user_password  = self.get_user_info(user_data)
-            self.add_member(user_name, user_password)
-            response = {'result':'success', 'msg': 'Sing up successfully !'}
-        else: 
-            response = {'result':'fail', 'msg': 'This username has been exists.'}
-
-        return response
-
-class AnimalDetector:
-    def __init__(self):
-        # ---------------------------------------------------------------------------------------------------
-        # Object detection model URL
-        # MobileNetV2: "https://tfhub.dev/google/openimages_v4/ssd/mobilenet_v2/1"
-        # Inception_ResNetV2: "https://tfhub.dev/google/faster_rcnn/openimages_v4/inception_resnet_v2/1"
-        # ---------------------------------------------------------------------------------------------------
-        self.module_handle = "https://tfhub.dev/google/openimages_v4/ssd/mobilenet_v2/1" 
-        self.detector = hub.load(self.module_handle).signatures['default']
+# class AnimalDetector:
+#     def __init__(self):
+#         # ---------------------------------------------------------------------------------------------------
+#         # Object detection model URL
+#         # MobileNetV2: "https://tfhub.dev/google/openimages_v4/ssd/mobilenet_v2/1"
+#         # Inception_ResNetV2: "https://tfhub.dev/google/faster_rcnn/openimages_v4/inception_resnet_v2/1"
+#         # ---------------------------------------------------------------------------------------------------
+#         self.module_handle = "https://tfhub.dev/google/openimages_v4/ssd/mobilenet_v2/1" 
+#         self.detector = hub.load(self.module_handle).signatures['default']
         
-    def load_img_from_base64(self, base64_image_string):
-        """Load image from a Base64 string."""
-        # Decode the Base64 string
-        try:
-            base64_image_string = base64_image_string.split(",")[-1]
-        except:
-            base64_image_string = base64_image_string
-        img_data = base64.b64decode(base64_image_string) # Decode the base64 string back to bytes
+#     def load_img_from_base64(self, base64_image_string):
+#         """Load image from a Base64 string."""
+#         # Decode the Base64 string
+#         try:
+#             base64_image_string = base64_image_string.split(",")[-1]
+#         except:
+#             base64_image_string = base64_image_string
+#         img_data = base64.b64decode(base64_image_string) # Decode the base64 string back to bytes
 
-        # Convert to a NumPy array
-        img = tf.image.decode_jpeg(img_data, channels=3)
-        return img
+#         # Convert to a NumPy array
+#         img = tf.image.decode_jpeg(img_data, channels=3)
+#         return img
 
-    def draw_bounding_box_on_image(self, image,
-                                   ymin, xmin, ymax, xmax,
-                                   color, font, thickness=4,
-                                   display_str_list=()):
-        """Adds a bounding box to an image."""
-        draw = ImageDraw.Draw(image)
-        im_width, im_height = image.size
-        (left, right, top, bottom) = (xmin * im_width, xmax * im_width, ymin * im_height, ymax * im_height)
-        draw.line([(left, top), (left, bottom), (right, bottom), (right, top), (left, top)],
-                width=thickness,
-                fill=color)
+#     def draw_bounding_box_on_image(self, image,
+#                                    ymin, xmin, ymax, xmax,
+#                                    color, font, thickness=4,
+#                                    display_str_list=()):
+#         """Adds a bounding box to an image."""
+#         draw = ImageDraw.Draw(image)
+#         im_width, im_height = image.size
+#         (left, right, top, bottom) = (xmin * im_width, xmax * im_width, ymin * im_height, ymax * im_height)
+#         draw.line([(left, top), (left, bottom), (right, bottom), (right, top), (left, top)],
+#                 width=thickness,
+#                 fill=color)
 
-        display_str_heights = [font.getbbox(ds)[3] for ds in display_str_list]
-        total_display_str_height = (1 + 2 * 0.05) * sum(display_str_heights)
+#         display_str_heights = [font.getbbox(ds)[3] for ds in display_str_list]
+#         total_display_str_height = (1 + 2 * 0.05) * sum(display_str_heights)
 
-        if top > total_display_str_height:
-            text_bottom = top
-        else:
-            text_bottom = top + total_display_str_height
+#         if top > total_display_str_height:
+#             text_bottom = top
+#         else:
+#             text_bottom = top + total_display_str_height
 
-        for display_str in display_str_list[::-1]:
-            bbox = font.getbbox(display_str)
-            text_width, text_height = bbox[2], bbox[3]
-            margin = np.ceil(0.05 * text_height)
-            draw.rectangle([(left, text_bottom - text_height - 2 * margin), (left + text_width, text_bottom)],
-                        fill=color)
-            draw.text((left + margin, text_bottom - text_height - margin),
-                    display_str,
-                    fill="black",
-                    font=font)
-            text_bottom -= text_height - 2 * margin
+#         for display_str in display_str_list[::-1]:
+#             bbox = font.getbbox(display_str)
+#             text_width, text_height = bbox[2], bbox[3]
+#             margin = np.ceil(0.05 * text_height)
+#             draw.rectangle([(left, text_bottom - text_height - 2 * margin), (left + text_width, text_bottom)],
+#                         fill=color)
+#             draw.text((left + margin, text_bottom - text_height - margin),
+#                     display_str,
+#                     fill="black",
+#                     font=font)
+#             text_bottom -= text_height - 2 * margin
 
-    def draw_one_boxes(self, image, boxes, class_names, scores):
-        """Overlay labeled boxes on an image with formatted scores and label names."""
-        colors = list(ImageColor.colormap.values())
-        font = ImageFont.load_default()
+#     def draw_one_boxes(self, image, boxes, class_names, scores):
+#         """Overlay labeled boxes on an image with formatted scores and label names."""
+#         colors = list(ImageColor.colormap.values())
+#         font = ImageFont.load_default()
         
-        ymin, xmin, ymax, xmax = tuple(boxes)
-        display_str = "{}: {}%".format(class_names.decode("ascii"), int(100 * scores))
-        color = colors[hash(class_names) % len(colors)]
+#         ymin, xmin, ymax, xmax = tuple(boxes)
+#         display_str = "{}: {}%".format(class_names.decode("ascii"), int(100 * scores))
+#         color = colors[hash(class_names) % len(colors)]
         
-        image_pil = Image.fromarray(np.uint8(image)).convert("RGB")
+#         image_pil = Image.fromarray(np.uint8(image)).convert("RGB")
         
-        self.draw_bounding_box_on_image(image_pil, 
-                                        ymin, xmin, ymax, xmax,
-                                        color, font,
-                                        display_str_list=[display_str])
+#         self.draw_bounding_box_on_image(image_pil, 
+#                                         ymin, xmin, ymax, xmax,
+#                                         color, font,
+#                                         display_str_list=[display_str])
         
-        np.copyto(image, np.array(image_pil))
-        return image
+#         np.copyto(image, np.array(image_pil))
+#         return image
 
-    def run_detector_one_img(self, base64_str):
-        img = self.load_img_from_base64(base64_str)
+#     def run_detector_one_img(self, base64_str):
+#         img = self.load_img_from_base64(base64_str)
 
-        # Detector inference
-        converted_img  = tf.image.convert_image_dtype(img, tf.float32)[tf.newaxis, ...]
-        result = self.detector(converted_img)
-        result = {key: value.numpy() for key, value in result.items()}
+#         # Detector inference
+#         converted_img  = tf.image.convert_image_dtype(img, tf.float32)[tf.newaxis, ...]
+#         result = self.detector(converted_img)
+#         result = {key: value.numpy() for key, value in result.items()}
 
-        # Draw result
-        image_with_boxes = self.draw_one_boxes(img.numpy(), result["detection_boxes"][0],
-                                               result["detection_class_entities"][0], result["detection_scores"][0])
+#         # Draw result
+#         image_with_boxes = self.draw_one_boxes(img.numpy(), result["detection_boxes"][0],
+#                                                result["detection_class_entities"][0], result["detection_scores"][0])
 
-        object_class = result["detection_class_entities"][0].decode('utf-8')
+#         object_class = result["detection_class_entities"][0].decode('utf-8')
         
-        return (object_class, image_with_boxes)
+#         return (object_class, image_with_boxes)
 
 class AnimalClassifier(tf.keras.Model):
     """MobileNetV2-based classifier for animal classification."""
@@ -379,6 +309,76 @@ IMG_SIZE = 224
 # -----------------------
 # Verifier loading
 # -----------------------
+class Verification(DatabaseManager):
+    def user_exists(self, username:str):
+        """
+        Verify whether user account exists.
+
+        Args:
+            username: User's account information.
+        Returns:
+            String of 'user not exists' or 'yes'.
+        """
+        # get member information
+        member_info = self.get_member_info({"user_name": username})
+
+        # check information
+        if not member_info:
+            result = 'user not exists'
+        else:
+           result = 'yes'
+
+        return result
+    
+    def login_verify(self, user_data:dict) -> str:
+        """
+        Verify user data from login interface.
+
+        Args:
+            user_data: Dictionary of user's information.
+        Returns:
+            String of 'user not exists', 'wrong password', or 'yes'.
+        """
+        # get member information
+        member_info = self.get_member_info(user_data)
+
+        # check information
+        if not member_info:
+            result = 'user not exists'
+        else:
+            _, UserName, UserPassword, _ = member_info # (id, user_name, user_password, timestamp)
+            result = (UserName, UserPassword)
+            print(f"output: {result}")
+            if user_data.get('password') != UserPassword:
+                result = 'wrong password' # password is incorrect
+            else:
+                result = 'yes'
+
+        return result
+    
+    def sign_up_verify(self, user_data:dict) -> str:
+        """
+        Verify user data from sign_up interface.
+
+        Args:
+            user_data: Dictionary of user's information.
+        Returns:
+            String of 'success', or 'fail'.
+        """
+        # get member information
+        member_info = self.get_member_info(user_data)
+        print(member_info)
+
+        # check information
+        if not member_info:
+            user_name, user_password  = self.get_user_info(user_data)
+            self.add_member(user_name, user_password)
+            response = {'result':'success', 'msg': 'Sing up successfully !'}
+        else: 
+            response = {'result':'fail', 'msg': 'This username has been exists.'}
+
+        return response
+    
 verifier = Verification()
 
 # Load real classes
@@ -402,7 +402,7 @@ model_loaded = load_model(
 )
 
 # Animal detector
-animal_detector = AnimalDetector()
+# animal_detector = AnimalDetector()
 
 # Load classifiers
 classifier = Classification(model_loaded, img_size=IMG_SIZE)
@@ -525,6 +525,16 @@ def numpy_array_to_base64_image(array):
     # Create the HTML <img> tag with Base64 data
     return base64_data
 
+class AnimalDetector:
+    def __init__(self):
+        self.img_path = 'C:/Users/User/Desktop/cat_dog_project/output_with_boxes.png'
+
+    def run_detector_one_img(self, base64_str):
+        self.output_img = np.array(Image.open(self.img_path).convert('RGB'))
+        return 'Cat', self.output_img
+    
+animal_detector = AnimalDetector()
+
 def upload_image_classification(request):
     """Receive image data from user and return the results of species classification"""
     global classifier
@@ -534,22 +544,14 @@ def upload_image_classification(request):
             # Read data from request.body
             user_img_uploaded = json.loads(request.body).get('image').replace('data:image/jpeg;base64,', '')
             save_base64_to_file(user_img_uploaded, fpath=USER_IMG_PATH) # save user's original image
-            print(type(user_img_uploaded))
 
             # Cat-Dog Detection....
             object_class, image_with_boxes = animal_detector.run_detector_one_img(user_img_uploaded)
-            print(object_class)
 
             image_with_boxes_base64 = numpy_array_to_base64_image(image_with_boxes)
             save_base64_to_file(image_with_boxes_base64, fpath=USER_BOX_IMG_PATH) # save user's boxed image
 
-
-            if object_class == "Cat":
-                # classifier.register_species("Cat", cat_classifier_loaded, cat_real_classes)
-                real_classes = label_data['cats']
-            else:
-                # classifier.register_species("Dog", dog_classifier_loaded, dog_real_classes)
-                real_classes = label_data['dogs']
+            real_classes = label_data['cats'] if object_class == "Cat" else label_data['dogs']
 
             # Model prediction
             pred_results = classifier.send_results(user_img_uploaded, real_classes)
@@ -557,6 +559,7 @@ def upload_image_classification(request):
             status = pred_results.get('status')
             if status  == 'ok': 
                 model_pred =  pred_results.get('model_pred')
+
                 return JsonResponse({'status': status, 'species': object_class, 'model_pred': model_pred, 'message': None})
             else: 
                 msg = pred_results.get('msg')
@@ -564,8 +567,9 @@ def upload_image_classification(request):
 
         except Exception as e:
             return JsonResponse({'status': 'error', 'message': str(e)})
-
-    return JsonResponse({'status': 'error', 'message': 'Invalid request method'})
+    else:
+        print("Invalid request method:", request.method)
+        return JsonResponse({'status': 'error', 'message': 'Invalid request method'})
 
 def show_classification_results(request, cls_species, model_pred, username):
     """Show results of species classification on the '/show_results/' page"""

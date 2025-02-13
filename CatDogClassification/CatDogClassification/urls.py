@@ -38,7 +38,7 @@ urlpatterns = [
     path('signUp_verify/', sign_up_verification, name='sing_up_verification'), # sign up verification
     path('upload/<str:username>', show_user_upload_page, name='image_uploading'), # user upload image
     path('imgCls/', upload_image_classification, name='classification'), # image classification
-    path('show_results/<str:cls_species>&<str:model_pred>&<str:username>', show_classification_results, name='show_results'), # show results
+    path('show_results/<str:cls_species>&<str:model_pred>&<str:username>', show_classification_results, name='show_results'),
     path('save_data/', save_data, name='save_results'), # save classification result
-    path('historical_data/<str:username>&cur_page=<str:cur_page>', update_user_historical_data, name='user_historical_data'), # user's data
+    path('historical_data/<str:username>&cur_page=<str:cur_page>', update_user_historical_data, name='user_historical_data'),
 ]
