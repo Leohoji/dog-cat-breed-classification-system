@@ -131,3 +131,18 @@ class ClassificationTestCase(SimpleTestCase):
         self.assertEqual(results.get("object_class"), "Cat")
         self.assertEqual(results.get("model_pred"), "Bengal")
 
+    def test_get_images(self):
+        base64_img = self.create_dummy_base64_image()
+        _, _ = self.classification_instance.class_predict(base64_image_string=base64_img)
+        img_with_boxes, cropped_image = self.classification_instance.get_images()
+        self.assertIsNotNone(img_with_boxes)
+        self.assertIsNotNone(cropped_image)
+
+        # Verify that the returned images are valid Base64 strings and can be decoded into PIL Images
+        try:
+            decode_box = base64.b64decode(img_with_boxes)
+            Image.open(BytesIO(decode_box))
+            decode_crop = base64.b64decode(cropped_image)
+            Image.open(BytesIO(decode_crop))
+        except Exception as e:
+            self.fail("The Base64 image data returned by get_images cannot be properly decoded.")
