@@ -14,7 +14,7 @@ class DummyAnimalDetector:
     def __init__(self, detector):
         self.detector = detector
 
-    def run_detector_one_img(self):
+    def run_detector_one_img(self, image):
         """
         Simulate object detection by always returning "Cat" along with two dummy images.
         Here, we return a numpy array filled with a constant value (shape: (100, 100, 3)).
@@ -112,4 +112,22 @@ class ClassificationTestCase(SimpleTestCase):
         image = Image.open(BytesIO(image_data))
         self.assertEqual(image.mode, "RGB")
         self.assertEqual(image.size, (100, 100))
+
+    def test_class_predict(self):
+        base64_img = self.create_dummy_base64_image()
+        object_class, final_class = self.classification_instance.class_predict(base64_image_string=base64_img)
+
+        # Since DummyAnimalDetector always returns "Cat" and dummy_classifier forces np.argmax to return 1,
+        # the expected final prediction should be label_data['cats'][1], i.e., "Bengal"
+        self.assertEqual(object_class, "Cat")
+        self.assertEqual(final_class, "Bengal")
+    
+    def test_send_results(self):
+        base64_img = self.create_dummy_base64_image()
+        results = self.classification_instance.send_results(base64_image_string=base64_img)
+
+        # Check the returned JSON data format and content
+        self.assertEqual(results.get("status"), "ok")
+        self.assertEqual(results.get("object_class"), "Cat")
+        self.assertEqual(results.get("model_pred"), "Bengal")
 
