@@ -4,29 +4,22 @@ from django.http import HttpResponse, JsonResponse
 from django.core.paginator import Paginator
 
 # Model loading and predictions
-import tensorflow as tf
 import tensorflow_hub as hub 
-from tensorflow.keras.models import load_model
-from tensorflow.keras.applications import MobileNet
-from tensorflow.keras.losses import CategoricalCrossentropy
-from tensorflow.keras.layers import Dense, Dropout, GlobalAveragePooling2D
 
 # Image file operation
 import json
 import base64
 import numpy as np
 from io import BytesIO
-from PIL import Image, ImageDraw, ImageFont, ImageColor
+from PIL import Image
+from datetime import datetime
+from pathlib import Path
 
 # Mail operation
 import random
 import smtplib
 from email.mime.text import MIMEText
 from python_mail import Gmail_Account, Gmail_Password
-
-# Better debugging
-import traceback
-from typing import Tuple
 
 from model_loader import load_animal_classifier
 
@@ -51,21 +44,26 @@ def collect_animal_info(animal_breed:str):
     
     return animal_data
 
-def save_results_to_database(username:str, image:str, feedback:json): 
+def save_results_to_database(username:str, image_path:str, feedback:json): 
     """
     Save user's classification results to MySQL database
     
     Args:
         username: User's name from front-end interface
-        image: Image object in base64 data type
+        image_path: Image path for image saving
         feedback: Classification results from user's feedback
     Returns:
         Boolean, whether to save successfully
     """
     global data_manager
-    saved = data_manager.update_historical_data(user_name=username, image=image, feedback=feedback)
+    saved = data_manager.update_historical_data(user_name=username, image_path=image_path, feedback=feedback)
     
     return saved
+
+def read_base64_from_file(fpath):
+    """Read Base64 string from txt file"""
+    with open(fpath, 'r') as file:
+        return file.read()
 
 def collect_historical_data(user_name:str) -> list:
     """
@@ -78,7 +76,9 @@ def collect_historical_data(user_name:str) -> list:
     """
     global data_manager
     historical_data = data_manager.get_historical_data(user_name) # return a list
-    user_historical_data = [(data[2].decode('utf-8'), data[3], data[4].strftime("%Y/%m/%d %H:%M:%S")) for data in historical_data]
+    user_historical_data = [
+        (read_base64_from_file(data[2].split(',')[0]), data[3], data[4].strftime("%Y/%m/%d %H:%M:%S")) 
+        for data in historical_data]
 
     return user_historical_data
 
@@ -133,6 +133,7 @@ USERNAME = 'LoHoLeo2'
 USER_IMG_PATH = 'user_img.txt'
 USER_BOX_IMG_PATH = 'user_box_img.txt'
 IMG_SIZE = 224 
+IMAGE_STORAGE_DIR = Path('D:/cats_dogs_classification_storage')
 
 # -----------------------
 # Verifier loading
@@ -222,16 +223,6 @@ DETECTOR = hub.load(module_handle).signatures['default']
 
 classifier = load_animal_classifier(model_path, label_path, IMG_SIZE, DETECTOR)
 
-# Create your views here.
-def save_base64_to_file(base64_string, fpath):
-    """Save Base64 string to txt file"""
-    with open(fpath, 'w') as file:
-        file.write(base64_string)
-
-def read_base64_from_file(fpath):
-    """Read Base64 string from txt file"""
-    with open(fpath, 'r') as file:
-        return file.read()
 
 def show_page(request, page_name):
     if page_name == 'login':
@@ -315,31 +306,6 @@ def show_user_upload_page(request, username):
 
     return JsonResponse({'status': 'error', 'message': 'Invalid request method'})
 
-def numpy_array_to_base64_image(array):
-    """
-    Convert a NumPy array to a Base64 encoded image string.
-
-    Parameters:
-    array (numpy.ndarray): The input NumPy array representing the image.
-
-    Returns:
-    str: Base64 encoded image string that can be used in an <img> tag.
-    """
-    # Ensure the array is in the correct format (uint8)
-    if array.dtype != np.uint8:
-        array = array.astype(np.uint8)
-    
-    # Convert NumPy array to a PIL Image
-    image = Image.fromarray(array)
-
-    # Save the image to a BytesIO object
-    buffered = BytesIO()
-    image.save(buffered, format="JPEG")  # You can change the format if needed
-    base64_data = base64.b64encode(buffered.getvalue()).decode('utf-8')
-
-    # Create the HTML <img> tag with Base64 data
-    return base64_data
-
 def upload_image_classification(request):
     """Receive image data from user and return the results of species classification"""
     global classifier
@@ -348,28 +314,18 @@ def upload_image_classification(request):
         try:
             # Read data from request.body
             user_img_uploaded = json.loads(request.body).get('image').replace('data:image/jpeg;base64,', '')
-            # save_base64_to_file(user_img_uploaded, fpath=USER_IMG_PATH) # save user's original image
-
-            # Cat-Dog Detection....
-            # object_class, image_with_boxes = animal_detector.run_detector_one_img(user_img_uploaded)
-
-            # image_with_boxes_base64 = numpy_array_to_base64_image(image_with_boxes)
-            # save_base64_to_file(image_with_boxes_base64, fpath=USER_BOX_IMG_PATH) # save user's boxed image
-
-            # real_classes = label_data['cats'] if object_class == "Cat" else label_data['dogs']
 
             # Model prediction
             pred_results = classifier.send_results(user_img_uploaded)
-            print(pred_results, type(pred_results))
             status = pred_results.get('status')
             if status  == 'ok': 
                 model_pred =  pred_results.get('model_pred')
                 object_class = pred_results.get('object_class')
 
-                return JsonResponse({'status': status, 'species': object_class, 'model_pred': model_pred, 'message': None})
+                return JsonResponse({'status': status, 'species': object_class, 'model_pred': model_pred})
             else: 
                 msg = pred_results.get('msg')
-                return JsonResponse({'status': status, 'species': None, 'model_pred': None, 'message': msg})
+                return JsonResponse({'status': status, 'message': msg})
 
         except Exception as e:
             return JsonResponse({'status': 'error', 'message': str(e)})
@@ -379,6 +335,7 @@ def upload_image_classification(request):
 
 def show_classification_results(request, cls_species, model_pred, username):
     """Show results of species classification on the '/show_results/' page"""
+    global classifier
     if request.method == 'GET':
         try:
             # collect animal information from MySQL database
@@ -388,14 +345,11 @@ def show_classification_results(request, cls_species, model_pred, username):
             result_title = 'SPECIES: %s || BREED: %s' % (cls_species, model_pred)
             
             # images need to be decoded after MySQL querying
-            # user_img = read_base64_from_file(fpath=USER_BOX_IMG_PATH) # show the boxed image
-            _, user_img = classifier.get_images()
-            print('user_img 成功被調用')
-            print(type(user_img))
+            img_with_bbox, _ = classifier.get_images()
             image_1 = animal_data['image_1'].decode('utf-8')
             image_2 = animal_data['image_2'].decode('utf-8')
-            image_nums = zip(["Your Image", f"{model_pred} Image1", f"{model_pred} Image2"], 
-                             [user_img, image_1, image_2])
+            image_nums = zip([f"{cls_species}: {model_pred}", f"EX1: {model_pred}", f"EX2: {model_pred}"], 
+                             [img_with_bbox, image_1, image_2])
 
             # animal description and link
             Description = animal_data['animal_description'] 
@@ -416,20 +370,35 @@ def show_classification_results(request, cls_species, model_pred, username):
 
 def save_data(request):
     """Save user's feedback and classification result to database"""
+    global classifier
     if request.method == 'POST':
         try:
             # collect user's classification result
             user_data = json.loads(request.body)
-            print(user_data, type(user_data))
 
             # get username, user's image, user's feedback
             username = user_data.get('username')
-            user_img = read_base64_from_file(fpath=USER_IMG_PATH) # save user's original image
+            # user_img = read_base64_from_file(fpath=USER_IMG_PATH) # save user's original image
+            img_with_bbox, cropped_img = classifier.get_images()
             cls_result = user_data.get('feedback')
-            feedback = "%s,%s" %(cls_result['breedChoice'], cls_result['selectedBreed'])\
+            feedback = "%s,%s" %(cls_result['breedChoice'], cls_result['selectedBreed'])
+
+            # create username folder and save images
+            user_dir = IMAGE_STORAGE_DIR / username
+            if not user_dir.is_dir():
+                user_dir.mkdir(parents=True, exist_ok=True)
+            
+            paths = []
+            for fname, img in [('bbox_img', img_with_bbox), ('cropped_img', cropped_img)]:
+                image_save_to = str(user_dir / (fname + '_' + datetime.now().strftime("%Y%m%d-%H%M%S") + '.txt'))
+                with open(image_save_to, 'w') as file:
+                    file.write(img)
+                paths.append(image_save_to)
+            image_path = ', '.join(paths)
+            print(f"image path: {image_path}")
             
             # save to database
-            saved = save_results_to_database(username=username, image=user_img, feedback=feedback)
+            saved = save_results_to_database(username=username, image_path=image_path, feedback=feedback)
 
             if saved: print("Successfully save feedback to MySQL database!")
             else: print("Fail, please check the function!")
@@ -450,7 +419,7 @@ def update_user_historical_data(request, username, cur_page):
             cur_page = int(cur_page)
             paginator = Paginator(user_historical_data, 5) # pass all historical data and five per page
             print(f"historical_data_count: {len(user_historical_data)} | paginator's count (幾個，幾頁，頁碼): {paginator.count, paginator.num_pages, paginator.page_range}")
-            page_range = paginator.page_range # rage of all page numbers
+            page_range = paginator.page_range # range of all page numbers
             page = paginator.page(cur_page) # current page object
 
             # Over than 11 pages
@@ -534,62 +503,3 @@ def update_user_password(request):
             return JsonResponse({'status': 'error', 'message': str(e)})
 
     return JsonResponse({'status': 'error', 'message': 'Invalid request method'})
-
-
-if __name__ == "__main__":
-    
-    import base64
-    import io
-    import numpy as np
-    from PIL import Image
-    import tensorflow as tf
-
-    class ImageReader:
-        def __init__(self, image_path):
-            self._image_path = image_path
-
-        def read(self):
-            with open(self._image_path, 'rb') as file:
-                self._image_bytes = file.read()
-            return self._image_bytes
-        
-        def from_base64(self, image_bytes):
-            base64_string = base64.b64encode(image_bytes).decode('utf-8')
-            img_data = base64.b64decode(base64_string)
-            image_io = io.BytesIO(img_data)
-            image_array = Image.open(image_io)
-            return image_array
-        
-        def to_numpy(self, image_array: Image) -> np.array:
-            return np.array(image_array)
-        
-        def run(self):
-            image_byte = self.read()
-            image = self.from_base64(image_byte)
-            image = self.to_numpy(image)
-            image = tf.image.convert_image_dtype(image, tf.float32)
-            image = tf.image.resize(image, size=[224, 224])
-            return image[tf.newaxis, ...]
-
-    imgPath = 'Bengal.jpg'
-    image_reader = ImageReader(imgPath)
-    image = image_reader.run()
-    # print(image)
-
-    def custom_loss_fn(y_true, y_pred):
-        loss_fn = tf.keras.losses.CategoricalCrossentropy()
-        loss = loss_fn(y_true, y_pred)
-
-        return loss
-
-    loaded_final_classifier = tf.keras.models.load_model(
-        'model_data/three_final_classifier', 
-        custom_objects={
-            'MobileNetClassifier': AnimalClassifier, 
-            'custom_loss_fn': custom_loss_fn
-        }
-    )
-
-    pred_prob = loaded_final_classifier(image)
-    
-    print(pred_prob)

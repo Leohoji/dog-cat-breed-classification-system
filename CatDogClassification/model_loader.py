@@ -154,16 +154,43 @@ class Classification:
         self.img_array = tf.image.decode_jpeg(img_data, channels=3)
         return self.img_array
     
+    def numpy_array_to_base64_image(slf, array):
+        """
+        Convert a NumPy array to a Base64 encoded image string.
+
+        Parameters:
+        array (numpy.ndarray): The input NumPy array representing the image.
+
+        Returns:
+        str: Base64 encoded image string that can be used in an <img> tag.
+        """
+        # Ensure the array is in the correct format (uint8)
+        if array.dtype != np.uint8:
+            array = array.astype(np.uint8)
+        
+        # Convert NumPy array to a PIL Image
+        image = Image.fromarray(array)
+
+        # Save the image to a BytesIO object
+        buffered = BytesIO()
+        image.save(buffered, format="JPEG")  # You can change the format if needed
+        base64_data = base64.b64encode(buffered.getvalue()).decode('utf-8')
+
+        # Create the HTML <img> tag with Base64 data
+        return base64_data
+
     def class_predict(self, base64_image_string:str) -> str:
         """Predict image after preprocessing and return predicted class"""
         image_rgb = self.decode_base64_image(base64_image_string)
         
         # Object detection
-        object_class, self.image_with_boxes, self.cropped_image = self.detector.run_detector_one_img(image_rgb)
+        object_class, img_with_bbox, cropped_img = self.detector.run_detector_one_img(image_rgb)
         real_classes = self.label_data['cats'] if object_class == "Cat" else self.label_data['dogs']
+        self.image_with_boxes = self.numpy_array_to_base64_image(np.array(img_with_bbox))
+        self.cropped_image = self.numpy_array_to_base64_image(cropped_img)
 
         # Image preprocessing
-        image = tf.image.convert_image_dtype(self.cropped_image, tf.float32)
+        image = tf.image.convert_image_dtype(cropped_img, tf.float32)
         image_for_pred = tf.image.resize(image, size=[self.img_size, self.img_size])[tf.newaxis, ...]
         
         # Model prediction

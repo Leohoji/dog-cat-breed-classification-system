@@ -159,25 +159,28 @@ document
               { headers: { "Content-Type": "application/json" } }
             )
             .then(function (response) {
-              const data = response.data;
-              const status = data.status;
+              const status = response.data.status;
               if (status === "ok") {
-                const species = data.species;
-                const modelPred = data.model_pred;
+                const species = response.data.species;
+                const modelPred = response.data.model_pred;
 
-                // URL redirection --> to show_results
                 window.location.href =
                   `/show_results/` +
                   `${encodeURIComponent(species)}&` +
                   `${encodeURIComponent(modelPred)}&` +
                   `${encodeURIComponent(username)}`;
               } else {
-                const errorInfo = data.message;
+                const errorInfo = response.data.message;
                 swal("Error!", `${errorInfo}`, "error");
               }
             })
             .catch(function (error) {
-              console.log("Error: ", error);
+              if (error.response) {
+                const errorMsg = error.response.data.message;
+                swal("Error!", `${errorMsg}`, "error");
+              } else {
+                swal("Error!", "An unexpected error occurred.", "error");
+              }
             });
         });
       };

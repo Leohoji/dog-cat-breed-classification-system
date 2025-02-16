@@ -107,21 +107,21 @@ class DatabaseManager:
 
         return historical_data
 
-    def update_historical_data(self, user_name:str, image:bytes, feedback:str='') -> bool:
+    def update_historical_data(self, user_name:str, image_path:bytes, feedback:str='') -> bool:
         """
         Update historical data for user's classification result into MySQL database.
 
         Args:
-            user_name: Member's user name
-            image: Image for classification
+            user_name: Member's user name.
+            image_path: Image path for image saving.
             feedback: If classification result by classifier is wrong, user will add feedback.
         Returns:
             True for success or False for failure.
         """
         try:
             self.connect() # login database
-            query = f"INSERT INTO `user_history` (user_name, image, results) VALUES (%s, %s, %s);"
-            self.cursor.execute(query, (user_name, image, feedback))
+            query = f"INSERT INTO `user_history` (user_name, image_path, results) VALUES (%s, %s, %s);"
+            self.cursor.execute(query, (user_name, image_path, feedback))
             self.disconnect() # disconnect database
             return True
         except Exception as e:
