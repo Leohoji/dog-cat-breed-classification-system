@@ -154,7 +154,7 @@ class Classification:
         self.img_array = tf.image.decode_jpeg(img_data, channels=3)
         return self.img_array
     
-    def numpy_array_to_base64_image(slf, array):
+    def numpy_array_to_base64_image(self, array):
         """
         Convert a NumPy array to a Base64 encoded image string.
 
@@ -213,6 +213,9 @@ class Classification:
     
     def get_images(self):
         return self.image_with_boxes, self.cropped_image
+    
+    def get_label_data(self):
+        return self.label_data
     
 def custom_loss_fn(y_true, y_pred):
     loss_fn = CategoricalCrossentropy()

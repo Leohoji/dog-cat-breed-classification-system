@@ -8,10 +8,6 @@ import tensorflow_hub as hub
 
 # Image file operation
 import json
-import base64
-import numpy as np
-from io import BytesIO
-from PIL import Image
 from datetime import datetime
 from pathlib import Path
 
@@ -25,10 +21,7 @@ from model_loader import load_animal_classifier
 
 # Data manager from models.py file
 from classification.models import DatabaseManager
-
-data_manager = DatabaseManager() # initialize DatabaseManager
-IMG_SIZE = (224, 224)
-
+data_manager = DatabaseManager()
 
 def collect_animal_info(animal_breed:str):
     """
@@ -126,18 +119,6 @@ def update_password(user_name:str, new_password:str):
     
     return user_updated
 
-# -----------------------
-# Default variables
-# -----------------------
-USERNAME = 'LoHoLeo2'
-USER_IMG_PATH = 'user_img.txt'
-USER_BOX_IMG_PATH = 'user_box_img.txt'
-IMG_SIZE = 224 
-IMAGE_STORAGE_DIR = Path('D:/cats_dogs_classification_storage')
-
-# -----------------------
-# Verifier loading
-# -----------------------
 class Verification(DatabaseManager):
     def user_exists(self, username:str):
         """
@@ -207,22 +188,19 @@ class Verification(DatabaseManager):
             response = {'result':'fail', 'msg': 'This username has been exists.'}
 
         return response
-    
+ 
 verifier = Verification()
 
-# Load real classes
-label_data = np.load("label_data/three_categories.npz", allow_pickle=True)
+# Default variables
+IMG_SIZE = 224 
+IMAGE_STORAGE_DIR = Path('D:/cats_dogs_classification_storage')
 
-# -----------------------
 # Model loading
-# -----------------------
 model_path = 'model_data/three_final_classifier'
 label_path = 'label_data/three_categories.npz'
 module_handle = "https://tfhub.dev/google/openimages_v4/ssd/mobilenet_v2/1" 
 DETECTOR = hub.load(module_handle).signatures['default']
-
 classifier = load_animal_classifier(model_path, label_path, IMG_SIZE, DETECTOR)
-
 
 def show_page(request, page_name):
     if page_name == 'login':
@@ -230,7 +208,7 @@ def show_page(request, page_name):
     elif page_name == 'sign_up':
         return render(request, 'sign_up_page.html')
     elif page_name == 'upload':
-        return render(request, 'upload_img_page.html', { 'USERNAME': USERNAME })
+        return render(request, 'upload_img_page.html')
     elif page_name == 'gmail_verification':
         return render(request, 'gmail_verification.html')
     elif page_name == 'home':
@@ -352,6 +330,7 @@ def show_classification_results(request, cls_species, model_pred, username):
                              [img_with_bbox, image_1, image_2])
 
             # animal description and link
+            label_data = classifier.get_label_data()
             Description = animal_data['animal_description'] 
             Link = animal_data['animal_link']
             Data = {'description': Description, 'link': Link}
@@ -378,7 +357,6 @@ def save_data(request):
 
             # get username, user's image, user's feedback
             username = user_data.get('username')
-            # user_img = read_base64_from_file(fpath=USER_IMG_PATH) # save user's original image
             img_with_bbox, cropped_img = classifier.get_images()
             cls_result = user_data.get('feedback')
             feedback = "%s,%s" %(cls_result['breedChoice'], cls_result['selectedBreed'])
