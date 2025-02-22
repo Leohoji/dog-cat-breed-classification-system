@@ -15,6 +15,8 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from django.conf import settings
+from django.conf.urls.static import static
 from functools import partial
 from classification.views import show_page, show_user_upload_page, show_classification_results
 from classification.views import login_verification, sign_up_verification, user_verification
@@ -41,4 +43,4 @@ urlpatterns = [
     path('show_results/<str:cls_species>&<str:model_pred>&<str:username>', show_classification_results, name='show_results'),
     path('save_data/', save_data, name='save_results'), # save classification result
     path('historical_data/<str:username>&cur_page=<str:cur_page>', update_user_historical_data, name='user_historical_data'),
-]
+] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

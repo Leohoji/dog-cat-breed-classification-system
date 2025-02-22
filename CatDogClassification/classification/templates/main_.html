@@ -1,0 +1,154 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Pet Image Recognition System</title>
+    <!-- <link rel="stylesheet" href="{% static 'main_.css' %}" /> -->
+    <link rel="stylesheet" href="{% static 'main_.css' %}?v=1.0" />
+  </head>
+  <body>
+    <div class="container">
+      <header class="header">
+        <div class="logo">
+          <span>🐾 Cat & Dog Image Recognition</span>
+        </div>
+        <div class="auth-buttons">
+          <button class="btn btn-login" id="loginBtn" type="button">
+            Login
+          </button>
+          <button class="btn btn-signup" id="signupBtn" type="button">
+            SignUp
+          </button>
+        </div>
+      </header>
+
+      <main class="main">
+        <section class="hero">
+          <h1>PetVision: Accurate Pet Image Recognition</h1>
+          <p>
+            Upload your cat and dog photos and receive precise identification
+            results instantly. Our AI system accurately distinguishes between
+            different breeds of cats and dogs.
+          </p>
+        </section>
+
+        <section class="upload-section" id="uploadSection">
+          <div
+            class="upload-box"
+            id="uploadBox"
+            onclick="document.querySelector('#fileInput').click()"
+          >
+            <div class="upload-icon">📷</div>
+            <div class="upload-text">Click or Drag to Upload Pet Photos</div>
+            <div class="upload-hint">
+              Supports JPG and PNG formats, with a file size limit of 5MB.
+            </div>
+            <input
+              type="file"
+              id="fileInput"
+              style="display: none"
+              accept="image/jpeg, image/png"
+            />
+          </div>
+          <button class="btn-analyze" id="analyzeBtn">Start Recognition</button>
+        </section>
+
+        <section class="species-section">
+          <h2 class="section-title">可辨識的寵物品種</h2>
+          <div class="species-grid">
+            <!-- 第一行 -->
+            <div class="species-card">
+              <img
+                src="https://images.pexels.com/photos/46024/pexels-photo-46024.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+                alt="黃金獵犬"
+                class="species-image"
+              />
+              <div class="species-details">
+                <div class="species-name">黃金獵犬</div>
+                <div class="species-description">
+                  聰明友善，最受歡迎的家庭犬之一，適合各種家庭環境
+                </div>
+              </div>
+            </div>
+
+            <div class="species-card">
+              <img
+                src="https://images.pexels.com/photos/46024/pexels-photo-46024.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+                alt="英國短毛貓"
+                class="species-image"
+              />
+              <div class="species-details">
+                <div class="species-name">英國短毛貓</div>
+                <div class="species-description">
+                  性格溫和，外表圓潤可愛，是最古老的貓咪品種之一
+                </div>
+              </div>
+            </div>
+
+            <div class="species-card">
+              <img
+                src="https://images.pexels.com/photos/46024/pexels-photo-46024.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+                alt="哈士奇"
+                class="species-image"
+              />
+              <div class="species-details">
+                <div class="species-name">西伯利亞哈士奇</div>
+                <div class="species-description">
+                  精力充沛，友好活潑，擁有獨特的外表和性格特徵
+                </div>
+              </div>
+            </div>
+
+            <!-- 第二行 -->
+            <div class="species-card">
+              <img
+                src="https://images.pexels.com/photos/46024/pexels-photo-46024.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+                alt="緬因貓"
+                class="species-image"
+              />
+              <div class="species-details">
+                <div class="species-name">緬因貓</div>
+                <div class="species-description">
+                  體型巨大的溫柔巨人，擁有蓬鬆的毛髮和友善的性格
+                </div>
+              </div>
+            </div>
+
+            <div class="species-card">
+              <img
+                src="https://images.pexels.com/photos/46024/pexels-photo-46024.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+                alt="法國鬥牛犬"
+                class="species-image"
+              />
+              <div class="species-details">
+                <div class="species-name">法國鬥牛犬</div>
+                <div class="species-description">
+                  可愛的蝙蝠耳，性格活潑，適合公寓生活的小型犬
+                </div>
+              </div>
+            </div>
+
+            <div class="species-card">
+              <img
+                src="https://images.pexels.com/photos/46024/pexels-photo-46024.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+                alt="暹羅貓"
+                class="species-image"
+              />
+              <div class="species-details">
+                <div class="species-name">暹羅貓</div>
+                <div class="species-description">
+                  聰明好動，社交能力強，有著標誌性的點狀花紋
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+      <!-- <script src="{% static 'main_.js' %}"></script> -->
+      <script src="{% static 'main_.js' %}?v=1.0"></script>
+    </div>
+  </body>
+</html>
