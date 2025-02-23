@@ -51,11 +51,14 @@ User have to login the website first, if you do not have an account, you can reg
 
 User can upload their animal image for breed classification, in addition, users can also view the recognition result records of this account through button "Check historical data".
 
-<div style="display: flex; justify-content: space-around; width: 800px">
-  <img src="https://github.com/Leohoji/dog-cat-breed-classification-system/blob/main/Images/upload.png?raw=true" alt="Upload User's Image" style="width: 250px; height: 400px;"/>
-  <img src="https://github.com/Leohoji/dog-cat-breed-classification-system/blob/main/Images/uploaded_image.png?raw=true" alt="Image Uploaded" style="width: 250px; height: 400px;"/>
-  <img src="https://github.com/Leohoji/dog-cat-breed-classification-system/blob/main/Images/Show%20Historical%20Data.jpg?raw=true" alt="Historical Data" style="width: 250px; height: 400px;"/>
+<div style="display: flex; justify-content: space-around; width: 1000px">
+  <img src="https://github.com/Leohoji/dog-cat-breed-classification-system/blob/main/README_Images/upload_img.png?raw=true" alt="Image Uploaded" style="width: 800px; height: 500px;"/>
 </div>
+
+<div style="display: flex; justify-content: space-around; width: 500px">
+  <img src="https://github.com/Leohoji/dog-cat-breed-classification-system/blob/main/README_Images/Show%20Historical%20Data.jpg?raw=true" alt="Historical Data" style="width: 500px; height: 800px;"/>
+</div>
+
 
 ### Classification Result
 
