@@ -3,7 +3,7 @@
 This is a deep learning-based cat and dog recognition system aimed at helping users identify whether an image contains a cat or a dog. The system is developed using Python 3.8 and the Django framework, utilizing TensorFlow for training the deep learning model.
 
 <div style="display: flex; justify-content: center; margin: 0 auto;">
-  <img src="https://github.com/Leohoji/dog-cat-breed-classification-system/blob/main/Images/home_page.png?raw=true" alt="Home Page" style="width: 630px; height: 375px;"/>
+  <img src="https://github.com/Leohoji/dog-cat-breed-classification-system/blob/main/README_Images/home_page.png?raw=true" alt="Home Page" style="width: 630px; height: 375px;"/>
 </div>
 
 # How do I complete this project?
@@ -20,20 +20,22 @@ This project follows the [SDLC V-Model](https://www.geeksforgeeks.org/software-e
 6. **Acceptance Testing**: Perform comprehensive testing in the final environment.
 7. **Maintenance**: Continuously improve the system based on user feedback.
 
+## How do I train the model?
+
 ✨ How Do I Train My Model ▶▶▶ The deep neural network training for cats or dogs classification is [HERE](https://github.com/Leohoji/dog-cat-breed-classification-system/tree/main/model_training).
 
 ## Tech Stack
 
 - **Language**: Python 3.8
 - **Framework**: Django 2.2.28
-- **Deep Learning**: TensorFlow 2.5.0 
+- **Deep Learning**: TensorFlow 2.10.0 
 - **Frontend**: HTML, CSS, JavaScript
 
 **GPU Available** (optional) 【💻 My GPU is **GeForce GTX 1050 Ti**】
 
 If you have GPU to accelerate, devices I installed:
 
--  tensorflow-gpu 2.5.0
+-  tensorflow-gpu 2.10.0
 -  CUDA 11.2
 -  cuDNN 8.1
 
@@ -41,9 +43,9 @@ If you have GPU to accelerate, devices I installed:
 
 ### Login and Sign up
 
-User have to login the website first, if you do not have an account, they can register first.
+User have to login the website first, if you do not have an account, you can register first.
 
-<img src="https://github.com/Leohoji/dog-cat-breed-classification-system/blob/main/Images/Login%20and%20Sign-up.jpg?raw=true" alt="User Login" style="width: 500px; height: 400px;"/>
+<img src="https://github.com/Leohoji/dog-cat-breed-classification-system/blob/main/README_Images/Login%20and%20Sign-up.jpg?raw=true" alt="User Login" style="width: 500px; height: 400px;"/>
 
 ### Upload Image For Classification
 
@@ -76,9 +78,9 @@ User can enter their Gmail account to receive a verification code for password r
 3. Verify code and password reset
 
 <div style="display: flex; justify-content: space-around; width: 950px">
-  <img src="https://github.com/Leohoji/dog-cat-breed-classification-system/blob/main/Images/enter-user-gmail.png?raw=true" alt="Enter User's Gmail" style="width: 250px; height: 350px;"/>
+  <img src="https://github.com/Leohoji/dog-cat-breed-classification-system/blob/main/README_Images/enter-user-gmail.png?raw=true" alt="Enter User's Gmail" style="width: 250px; height: 350px;"/>
   <img src="https://github.com/Leohoji/dog-cat-breed-classification-system/blob/main/Images/send-verification-code.png?raw=true" alt="Send Verification Code To User" style="width: 250px; height: 350px;"/>
-  <img src="https://github.com/Leohoji/dog-cat-breed-classification-system/blob/main/Images/reset-user-password.png?raw=true" alt="Rest Password" style="width: 250px; height: 350px;"/>
+  <img src="https://github.com/Leohoji/dog-cat-breed-classification-system/blob/main/README_Images/reset-user-password.png?raw=true" alt="Rest Password" style="width: 250px; height: 350px;"/>
 </div>
 
 
@@ -111,15 +113,8 @@ User can enter their Gmail account to receive a verification code for password r
    Gmail_Password = "" # your Gmail app password
    ```
 5. Prepare dataset for learning system
-   Download the dataset from [Cats and Dogs Breeds Classification Oxford Dataset](https://www.kaggle.com/datasets/zippyz/cats-and-dogs-breeds-classification-oxford-dataset) nad create a `training_data_info.py`
-   at root directory with recording the dataset root dir and `list.txt` of annotation path:
-   ```python
-   from pathlib import Path
-   DATASET_DIR = '' # dataset root directory
-   DATA_PATH = Path(DATASET_DIR).joinpath('') # image data path
-   ANNOTATION_PATH = Path(DATASET_DIR).joinpath('') # list.txt file path of annotation folder
-   TEST_PATH = 'test_images'
-   ```
+   Download the dataset from [Cats and Dogs Breeds Classification Oxford Dataset](https://www.kaggle.com/datasets/zippyz/cats-and-dogs-breeds-classification-oxford-dataset) and put it to your own directory for model training.
+   
 7. Install required package
    ```bash
    pip install -r requirements.txt
@@ -132,13 +127,7 @@ User can enter their Gmail account to receive a verification code for password r
    ```
    
 ## Learning system
-
-The administrator can fine-tune the pre-train model on all the images including user's photo and training dataset via the following command:
-
-Go to the `user\folder\path\dog-cat-breed-classification-system\`
-```bash
-python learning_sys.py
-```
+To be continue...
 
 You will fine-tune the model to get better performance if the user's photo is large enough.
 
