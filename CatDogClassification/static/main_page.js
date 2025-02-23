@@ -66,8 +66,75 @@ function loadPetCards() {
   }
 }
 
+// Carousel functionality
+function initializeCarousel() {
+  // Get necessary DOM elements
+  const carousel = document.querySelector(".carousel");
+  const items = document.querySelectorAll(".carousel-item");
+  const dots = document.querySelectorAll(".dot");
+  const prevBtn = document.getElementById("prevBtn");
+  const nextBtn = document.getElementById("nextBtn");
+
+  if (!carousel || !items.length) return;
+
+  let currentIndex = 0;
+  const totalItems = items.length;
+  let autoPlayTimer = setInterval(nextSlide, 5000);
+
+  // Update carousel position and state
+  function updateCarousel() {
+    carousel.style.transform = `translateX(-${currentIndex * 100}%)`;
+
+    // Update navigation dots state
+    dots.forEach((dot, index) => {
+      dot.classList.toggle("active", index === currentIndex);
+    });
+
+    // Reset auto-play timer
+    clearInterval(autoPlayTimer);
+    autoPlayTimer = setInterval(nextSlide, 5000);
+  }
+
+  // Next slide
+  function nextSlide() {
+    currentIndex = (currentIndex + 1) % totalItems;
+    updateCarousel();
+  }
+
+  // Previous slide
+  function prevSlide() {
+    currentIndex = (currentIndex - 1 + totalItems) % totalItems;
+    updateCarousel();
+  }
+
+  // Event listeners setup
+  prevBtn.addEventListener("click", prevSlide);
+  nextBtn.addEventListener("click", nextSlide);
+
+  // Click navigation dots to switch
+  dots.forEach((dot, index) => {
+    dot.addEventListener("click", () => {
+      currentIndex = index;
+      updateCarousel();
+    });
+  });
+
+  // Pause auto-play on mouse hover
+  carousel.addEventListener("mouseenter", () => {
+    clearInterval(autoPlayTimer);
+  });
+
+  carousel.addEventListener("mouseleave", () => {
+    autoPlayTimer = setInterval(nextSlide, 5000);
+  });
+}
+
 // Execute after DOM is fully loaded
 document.addEventListener("DOMContentLoaded", () => {
+  // Initialize carousel
+  initializeCarousel();
+
+  // Load pet cards
   loadPetCards();
 
   // -------------------------------

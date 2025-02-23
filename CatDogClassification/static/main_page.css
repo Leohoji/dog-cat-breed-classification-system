@@ -92,7 +92,7 @@ body {
 }
 
 .species-section {
-  margin-top: 60px;
+  margin-top: 30px;
   width: 100%;
   max-width: 800px;
 }
@@ -147,4 +147,116 @@ body {
   font-size: 14px;
   color: #666;
   line-height: 1.4;
+}
+
+/* Carousel section container */
+.carousel-section {
+  max-width: 800px; /* Limit maximum width */
+  margin: 1rem auto; /* Horizontal center alignment */
+  position: relative; /* Reference for positioning */
+  overflow: hidden; /* Hide overflow content */
+}
+
+/* Carousel container */
+.carousel {
+  display: flex; /* Horizontal alignment for all items */
+  transition: transform 0.5s; /* Sliding animation effect */
+}
+
+/* Carousel item */
+.carousel-item {
+  min-width: 100%; /* Ensure each item takes full container width */
+  position: relative; /* For caption positioning */
+}
+
+/* Carousel image */
+.carousel-item img {
+  width: 100%;
+  height: 400px;
+  object-fit: cover; /* Image cropping and fitting */
+  border-radius: 12px; /* Rounded corners */
+}
+
+/* Image caption */
+.carousel-caption {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.6);
+  /* Other styles... */
+}
+
+.carousel-controls {
+  position: absolute;
+  top: 50%;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  transform: translateY(-50%);
+}
+
+.carousel-button {
+  background: rgba(0, 0, 0, 0.6);
+  color: white;
+  border: none;
+  padding: 15px;
+  cursor: pointer;
+  border-radius: 50%;
+  font-size: 18px;
+  margin: 0 10px;
+  transition: background-color 0.3s;
+}
+
+.carousel-button:hover {
+  background: rgba(0, 0, 0, 0.8);
+}
+
+.carousel-dots {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 1.5rem;
+  gap: 12px;
+}
+
+.dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #ffcdd2; /* Light pink background */
+  cursor: pointer;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 2px solid #ef9a9a; /* Slightly darker pink border */
+  position: relative;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.dot:hover {
+  transform: scale(1.2);
+  background: #ef9a9a; /* Darker pink on hover */
+}
+
+.dot.active {
+  background: #e57373; /* Even darker pink when active */
+  transform: scale(1.3);
+  border-color: #ef5350;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
+}
+
+/* Add paw print effect */
+.dot::before {
+  content: "🐾";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0);
+  font-size: 8px;
+  opacity: 0;
+  transition: all 0.3s ease;
+}
+
+.dot.active::before {
+  transform: translate(-50%, -50%) scale(1);
+  opacity: 1;
 }
