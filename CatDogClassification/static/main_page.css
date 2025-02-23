@@ -74,12 +74,13 @@ body {
 }
 
 .hero {
-  background-color: rgba(229, 234, 246, 0.5);
+  background-color: rgba(224, 232, 253, 0.5);
   text-align: center;
   padding: 10px;
   margin-bottom: 10px;
   border-radius: 15px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border: 2px solid rgba(123, 134, 155, 0.8);
 }
 
 .hero h1 {
@@ -110,7 +111,9 @@ body {
   margin-bottom: 20px;
   color: #333;
   text-align: center;
+  border-radius: 15px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border: 2px solid rgba(123, 134, 155, 0.8);
 }
 
 .species-grid {
@@ -184,16 +187,6 @@ body {
   height: 400px;
   object-fit: cover; /* Image cropping and fitting */
   border-radius: 12px; /* Rounded corners */
-}
-
-/* Image caption */
-.carousel-caption {
-  position: absolute;
-  bottom: 20px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: rgba(0, 0, 0, 0.6);
-  /* Other styles... */
 }
 
 .carousel-controls {

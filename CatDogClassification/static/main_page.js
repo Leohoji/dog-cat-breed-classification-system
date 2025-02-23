@@ -72,8 +72,8 @@ function initializeCarousel() {
   const carousel = document.querySelector(".carousel");
   const items = document.querySelectorAll(".carousel-item");
   const dots = document.querySelectorAll(".dot");
-  const prevBtn = document.getElementById("prevBtn");
-  const nextBtn = document.getElementById("nextBtn");
+  const prevBtn = document.querySelector("#prevBtn");
+  const nextBtn = document.querySelector("#nextBtn");
 
   if (!carousel || !items.length) return;
 
