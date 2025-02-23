@@ -2,42 +2,47 @@
 
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Upload File</title>
+    <link rel="stylesheet" href="{% static 'upload_img_stylesheet.css' %}" />
+    <script src="https://cdn.jsdelivr.net/npm/axios@1.6.7/dist/axios.min.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+  </head>
 
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Upload File</title>
-  <link rel="stylesheet" href="{% static 'upload_img_stylesheet.css' %}" />
-  <script src="https://cdn.jsdelivr.net/npm/axios@1.6.7/dist/axios.min.js"></script>
-  <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-</head>
-
-<body>
-  <div class="upload-container">
+  <body>
     <div class="logout">
       <a href="#">Logout</a>
     </div>
+    <div class="upload-container">
+      <section class="upload-section" id="uploadSection">
+        <div
+          class="upload-box"
+          id="uploadBox"
+          onclick="document.querySelector('#fileInput').click()"
+        >
+          <div class="upload-icon">📷</div>
+          <div class="upload-text">Click or Drag to Upload Pet Photos</div>
+          <div class="upload-hint">
+            Supports JPG and PNG formats, with a file size limit of 5MB.
+          </div>
+          <input
+            type="file"
+            id="fileInput"
+            style="display: none"
+            accept="image/jpeg, image/png"
+          />
+        </div>
+        <button class="btn-analyze" id="analyzeBtn">Start Recognition</button>
+      </section>
 
-    <div class="upload-box">
-      <label for="file-upload" class="custom-file-upload">
-        <svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor"
-          stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-upload">
-          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-          <polyline points="17 8 12 3 7 8"></polyline>
-          <line x1="12" y1="3" x2="12" y2="15"></line>
-        </svg>
-        Choose a file
-      </label>
-      <input id="file-upload" type="file" />
+      <div class="footer">
+        <a href="#">Check historical data</a>
+      </div>
     </div>
 
-    <div class="footer">
-      <a href="#">Check historical data</a>
-    </div>
-  </div>
-
-  <div id="user-account">{{ USERNAME }}</div>
-  <script src="{% static 'upload_img.js' %}"></script>
-</body>
-
+    <div id="user-account">{{ USERNAME }}</div>
+    <script src="{% static 'upload_img.js' %}"></script>
+  </body>
 </html>
