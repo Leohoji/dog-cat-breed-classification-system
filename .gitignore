@@ -1,5 +1,5 @@
 mysql_info.py
 python_mail.py
 model_training
-/staticfiles/
-__pycache__/
+staticfiles
+__pycache__

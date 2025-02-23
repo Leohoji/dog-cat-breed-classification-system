@@ -90,7 +90,7 @@ body {
   max-width: 600px;
   margin: 0 auto;
 }
-
+/* 
 .upload-section {
   background-color: white;
   border-radius: 12px;
@@ -145,7 +145,7 @@ body {
 
 .btn-analyze:hover {
   background-color: #3a5b9f;
-}
+} */
 
 .species-section {
   margin-top: 60px;

@@ -58,7 +58,7 @@ document.addEventListener("DOMContentLoaded", function () {
   // 檢查是否已登入（這裡需要根據你的實際登入狀態判斷邏輯來實現）
   function checkLoginStatus() {
     // 假設這裡通過某種方式檢查登入狀態
-    const isLoggedIn = false; // 這裡要改為實際的登入狀態檢查
+    const isLoggedIn = true; // 這裡要改為實際的登入狀態檢查
     if (isLoggedIn) {
       enableUpload();
     } else {

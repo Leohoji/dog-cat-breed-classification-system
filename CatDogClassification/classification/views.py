@@ -212,8 +212,8 @@ def show_page(request, page_name):
     elif page_name == 'gmail_verification':
         return render(request, 'gmail_verification.html')
     elif page_name == 'home':
-        # return render(request, 'main_page.html')
-        return render(request, 'main_.html')
+        return render(request, 'main_page.html')
+        # return render(request, 'main_.html')
     else:
         return HttpResponse('Error')
     
