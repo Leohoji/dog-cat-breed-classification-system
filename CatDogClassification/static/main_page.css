@@ -65,3 +65,86 @@ body {
 .btn-signup:hover {
   background-color: #3a5b9f;
 }
+
+.main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 40px;
+}
+
+.hero {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.hero h1 {
+  font-size: 32px;
+  margin-bottom: 16px;
+  color: #333;
+}
+
+.hero p {
+  font-size: 18px;
+  color: #666;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.species-section {
+  margin-top: 60px;
+  width: 100%;
+  max-width: 800px;
+}
+
+.section-title {
+  font-size: 20px;
+  margin-bottom: 20px;
+  color: #333;
+  text-align: center;
+}
+
+.species-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 25px;
+}
+
+.species-card {
+  background-color: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer;
+}
+
+.species-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+}
+
+.species-image {
+  width: 100%;
+  height: 160px;
+  object-fit: cover;
+  background-color: #f0f3f8;
+}
+
+.species-details {
+  padding: 18px;
+  text-align: center;
+}
+
+.species-name {
+  font-weight: bold;
+  font-size: 18px;
+  margin-bottom: 8px;
+  color: #333;
+}
+
+.species-description {
+  font-size: 14px;
+  color: #666;
+  line-height: 1.4;
+}
