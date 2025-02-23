@@ -3,44 +3,44 @@ const petsData = [
   {
     name: "Abyssinian",
     image:
-      "https://images.pexels.com/photos/46024/pexels-photo-46024.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+      "https://github.com/Leohoji/dog-cat-breed-classification-system/blob/main/Available_Breeds/Abyssinian.jpg?raw=true",
     description:
-      "A well-muscled, strong, and athletic breed known for its confidence, loyalty, and excellent guardian instincts",
+      "An active, playful cat known for its striking length, coat and stable social personality.",
   },
   {
     name: "Bengal",
     image:
-      "https://images.pexels.com/photos/46024/pexels-photo-46024.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+      "https://github.com/Leohoji/dog-cat-breed-classification-system/blob/main/Available_Breeds/Bengal.jpg?raw=true",
     description:
-      "An active, intelligent cat with a distinctive ticked tabby coat and graceful, athletic appearance",
+      "An energetic cat with a wild appearance, featuring leopard-like spots and a playful, affectionate nature.",
   },
   {
     name: "Birman",
     image:
-      "https://images.pexels.com/photos/46024/pexels-photo-46024.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+      "https://github.com/Leohoji/dog-cat-breed-classification-system/blob/main/Available_Breeds/Birman.jpg?raw=true",
     description:
-      "A breed known for its strength, confidence, and strong desire to please their owners",
+      "A gentle, affectionate cats distinguished by their striking blue eyes and soft, silky fur.",
   },
   {
     name: "American Bulldog",
     image:
-      "https://images.pexels.com/photos/46024/pexels-photo-46024.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+      "https://github.com/Leohoji/dog-cat-breed-classification-system/blob/main/Available_Breeds/american_bulldog.jpg?raw=true",
     description:
-      "A domestic cat breed developed to look like exotic wild cats, known for their distinctive spotted or marbled coat pattern",
+      "A strong, loyal breed known for its protective nature and friendly demeanor towards families.",
   },
   {
     name: "American Pit Bull Terrier",
     image:
-      "https://images.pexels.com/photos/46024/pexels-photo-46024.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+      "https://github.com/Leohoji/dog-cat-breed-classification-system/blob/main/Available_Breeds/american_pit_bull_terrier.jpg?raw=true",
     description:
-      "A short-legged breed of dog with long ears, excellent scenting abilities, and a gentle, patient temperament",
+      "A breed is known for its strength and intelligence, often characterized by loyalty and a playful attitude.",
   },
   {
     name: "Basset Hound",
     image:
-      "https://images.pexels.com/photos/46024/pexels-photo-46024.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+      "https://github.com/Leohoji/dog-cat-breed-classification-system/blob/main/Available_Breeds/basset_hound.jpg?raw=true",
     description:
-      "Known as the 'Sacred Cat of Burma', characterized by its silky coat, blue eyes, and white-gloved paws",
+      "A laid-back, friendly dog with long ears and a keen sense of smell, making them excellent scent hounds.",
   },
 ];
 
