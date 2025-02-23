@@ -67,7 +67,7 @@ After image uploading and classifying, the classification result will display to
 4. Display another two image to let user check the result
 5. Provide a `feedback` area to user for record and further model fine-tune
 
-<img src="https://github.com/Leohoji/dog-cat-breed-classification-system/blob/main/Images/classification_result.png?raw=true" alt="User Login" style="width: 800px; height: 600px;"/>
+<img src="https://github.com/Leohoji/dog-cat-breed-classification-system/blob/main/README_Images/classification_result.png?raw=true" alt="Classification Result" style="width: 800px; height: 600px;"/>
 
 <ins>Password Forgotting?</ins>
 
@@ -79,7 +79,7 @@ User can enter their Gmail account to receive a verification code for password r
 
 <div style="display: flex; justify-content: space-around; width: 950px">
   <img src="https://github.com/Leohoji/dog-cat-breed-classification-system/blob/main/README_Images/enter-user-gmail.png?raw=true" alt="Enter User's Gmail" style="width: 250px; height: 350px;"/>
-  <img src="https://github.com/Leohoji/dog-cat-breed-classification-system/blob/main/Images/send-verification-code.png?raw=true" alt="Send Verification Code To User" style="width: 250px; height: 350px;"/>
+  <img src="https://github.com/Leohoji/dog-cat-breed-classification-system/blob/main/README_Images/send-verification-code.png?raw=true" alt="Send Verification Code To User" style="width: 250px; height: 350px;"/>
   <img src="https://github.com/Leohoji/dog-cat-breed-classification-system/blob/main/README_Images/reset-user-password.png?raw=true" alt="Rest Password" style="width: 250px; height: 350px;"/>
 </div>
 
