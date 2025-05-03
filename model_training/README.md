@@ -50,6 +50,9 @@ Hyperparameters for dog-breed-classification training:
 
 Here are the training curves for both:
 
+<div>
+  <img src="https://github.com/Leohoji/dog-cat-breed-classification-system/blob/main/README_Images/results.png?raw=true" alt="Results" style="width: 800px; height: 800px;"/>
+</div>
 
 Final accuracy
 | Cats Testing Data	    | Dogs Testing Data	    |
