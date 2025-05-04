@@ -1,4 +1,4 @@
-# Cat and Dog Recognition System
+# Multi-Domain Classification System
 
 This is a deep learning-based cat and dog recognition system aimed at helping users identify whether an image contains a cat or a dog. The system is developed using Python 3.8 and the Django framework, utilizing TensorFlow for training the deep learning model.
 
@@ -96,8 +96,8 @@ User can enter their Gmail account to receive a verification code for password r
    ```
 2. Clone and enter this repository:
    ```bash
-   git clone https://github.com/Leohoji/dog-cat-breed-classification-system.git
-   cd dog-cat-breed-classification-system
+   git https://github.com/Leohoji/multi-domain-classification-system.git
+   cd multi-domain-classification-system
    ```
 3. Set MySQL database
    Download the [MySQL](https://www.mysql.com/downloads/) data base to your local computer, and create a file named `mysql_info.py ` to save the path to `\CatDogClassification\mysql_info.py`:
