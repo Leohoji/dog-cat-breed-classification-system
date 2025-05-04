@@ -1,4 +1,4 @@
-# Cat and Dog Recognition System
+# Multi-Domain Classification System
 
 This is a deep learning-based cat and dog recognition system aimed at helping users identify whether an image contains a cat or a dog. The system is developed using Python 3.8 and the Django framework, utilizing TensorFlow for training the deep learning model.
 
