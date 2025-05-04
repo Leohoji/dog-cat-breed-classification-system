@@ -126,6 +126,7 @@ User can enter their Gmail account to receive a verification code for password r
 8. Run the django server
    Run the following program instructions and copy the address `http://127.0.0.1:8000/` to your local device.
    ```bash
+   cd CatDogClassiification
    python manage.py runserver
    ```
    
